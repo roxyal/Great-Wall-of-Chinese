@@ -1,6 +1,6 @@
 <?php
 // A "secrets" file containing database credentials is stored in the parent directory of the web root so it is inaccessible by web users
-require "../../secrets.php";
+require dirname(__FILE__)."../../secrets.php";
 
 // Start the session if none exists
 if(!isset($_SESSION)) {
