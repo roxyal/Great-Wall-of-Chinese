@@ -21,9 +21,8 @@ function login(string $username, string $password) {
     // WITH mysqli_prepare: "select password from users where username = Bob\"; DROP TABLE users;" <- the user-input " is escaped and the DROP TABLE command is treated as part of the string. 
     // https://www.php.net/manual/en/mysqli.prepare.php
 
-    // Sample SQL statement as we do not have the table or variable names yet.
     // The ? is a placeholder for our variable. 
-    $sql = $conn->prepare("SELECT `userid`, `password` FROM `users` WHERE `username` = ?");
+    $sql = $conn->prepare("SELECT `account_id`, `password` FROM `accounts` WHERE `username` = ?");
     
     if(
         // Bind the parameter $username (from our function argument) as a string ("s"). The number of bind params have to match the number of "?"s in the prepare statement. 
@@ -34,7 +33,7 @@ function login(string $username, string $password) {
         // Store result
         $sql->store_result() &&
         // Bind the result(s) to new variables, according to the order of variables selected in the sql statement. Datatypes are auto assigned. 
-        $sql->bind_result($userid, $hash) &&
+        $sql->bind_result($account_id, $hash) &&
         // Fetch the value
         $sql->fetch()
     ) {
@@ -47,16 +46,16 @@ function login(string $username, string $password) {
                 // Correct password, log the user in. 
                 // $_SESSION is a global variable used across the website. It stores user data across multiple accesses of any page of the website that has session_start(). -> included in all our files, because we require config.php which has the session_start()
                 // https://www.php.net/manual/en/intro.session.php
-                $_SESSION["userid"] = $userid;
+                $_SESSION["account_id"] = $account_id;
                 $_SESSION["username"] = $username;
 
                 // The user is "logged in" at this point - their identifiers are stored in the session. However, we will also add a new record of the login to the database. 
-                $sql2 = $conn->prepare("INSERT INTO `logins` (`userid`, `timestamp`, `ip`) VALUES (?, ?, ?)");
+                $sql2 = $conn->prepare("INSERT INTO `logins` (`account_id`, `timestamp`, `ip_address`) VALUES (?, ?, ?)");
                 // Get the current unix timestamp
                 $time = time();
                 if( 
                     $sql2 &&
-                    $sql2->bind_param('iis', $userid, $time, $_SERVER['REMOTE_ADDR']) &&
+                    $sql2->bind_param('iis', $account_id, $time, $_SERVER['REMOTE_ADDR']) &&
                     $sql2->execute()
                     // Notice that we don't need to bind_result or store_result for INSERT queries, because no result is produced.
                 ) {
