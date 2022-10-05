@@ -10,7 +10,7 @@ require "config.php";
 // We are returning the same error code 1 for incorrect password OR username not found to limit the amount of info given to user for security purposes. This prevents user from trying a random username and being shown the message "your password is incorrect", meaning the username exists. Instead, they will just see "your login details are incorrect" which doesn't give them any hint that the account exists. Not so impt for username logins, moreso for email logins, but we'll just do it anyway. 
 
 // Function declarations start with function <function name> (<arguments>). 
-// This is the login function. It accepts the arguments string username and string password and returns the integer userId on success, or an integer <1 on error (because userIds start from 1). 
+// This is the login function. It accepts the arguments string username and string password and returns the integer 0 on success or 1 or 2 on error. 
 // PHP automatically assigns data types to variables, so you do not need to specify a data type for a new variable. However, we will use data type declarations in our function arguments to prevent unexpected errors from incorrect user input. 
 function login(string $username, string $password) {
 
