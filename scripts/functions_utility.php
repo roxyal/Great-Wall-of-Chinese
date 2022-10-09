@@ -1,8 +1,8 @@
 <?php
 // Miscellaneous utility functions that don't need their own files. 
-// Don't need config.php, as config.php will already be required in the other function files that access this file. 
 
 function checkUsernameExists(string $username) {
+    require "config.php";
     $sql = $conn->prepare("SELECT * FROM `accounts` WHERE `username` = ?");
     $sql->bind_param("s", $username);
     $sql->execute();
@@ -12,6 +12,7 @@ function checkUsernameExists(string $username) {
 }
 
 function checkEmailExists(string $email) {
+    require "config.php";
     $sql = $conn->prepare("SELECT * FROM `accounts` WHERE `email` = ?");
     $sql->bind_param("s", $email);
     $sql->execute();
@@ -21,6 +22,7 @@ function checkEmailExists(string $email) {
 }
 
 function checkTeacherExists(int $teacher_id) {
+    require "config.php";
     $sql = $conn->prepare("SELECT * FROM `accounts` WHERE `account_id` = ? AND `account_type` = 'Teacher'");
     $sql->bind_param("i", $teacher_id);
     $sql->execute();
@@ -30,6 +32,7 @@ function checkTeacherExists(int $teacher_id) {
 }
 
 function checkAccountIdExists(int $account_id) {
+    require "config.php";
     $sql = $conn->prepare("SELECT * FROM `accounts` WHERE `account_id` = ?");
     $sql->bind_param("i", $account_id);
     $sql->execute();

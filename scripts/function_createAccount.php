@@ -1,6 +1,5 @@
 <?php 
-require "config.php";
-require "functions_utility.php";
+
 
 // Function: Create Account
 // Inputs: string $username, string $name, string $email, string $password, int $timestamp, int $teacher_id, int $character
@@ -16,6 +15,9 @@ require "functions_utility.php";
 
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
 function createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character) {
+    
+    require "config.php";
+    require "functions_utility.php";
 
     // Check valid email format
     if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$/", $email) !== 1) return 6;

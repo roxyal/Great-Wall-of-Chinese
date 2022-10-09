@@ -1,5 +1,4 @@
 <?php 
-require "config.php";
 
 // Function: Create Assignment
 // Inputs: string $assignment_name, int $teacher_id, int $created_timestamp, int $due_timestamp
@@ -7,6 +6,9 @@ require "config.php";
 //          int 1 on invalid
 
 function createAssignment(string $assignment_name, int $account_id, int $created_timestamp, int $due_timestamp) {
+
+    require "config.php";
+    require "functions_utility.php";
 
     // Check if account id exists
     if(!checkAccountIdExists($account_id)) return 2;
