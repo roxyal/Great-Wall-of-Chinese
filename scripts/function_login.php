@@ -2,7 +2,7 @@
 // Add a POST handler here to handle any AJAX requests sent to this file.
 // isset($variable) checks if the variable "exists", i.e. defined or initialised.
 if(isset($_POST["username"]) && isset($_POST["password"])) {
-    login($_POST["username"], $_POST["password"]);
+    echo login($_POST["username"], $_POST["password"]);
 }
 
 // Login function and also function template
