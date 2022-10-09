@@ -1,6 +1,9 @@
 <?php 
-// Require the config.php file at the top of every function file. 
-require "config.php";
+// Add a POST handler here to handle any AJAX requests sent to this file.
+// isset($variable) checks if the variable "exists", i.e. defined or initialised.
+if(isset($_POST["username"]) && isset($_POST["password"])) {
+    login($username, $password);
+}
 
 // Login function and also function template
 // Function: Login
@@ -15,7 +18,8 @@ require "config.php";
 // This is the login function. It accepts the arguments string username and string password and returns the integer 0 on success or 1 or 2 on error. 
 // PHP automatically assigns data types to variables, so you do not need to specify a data type for a new variable. However, we will use data type declarations in our function arguments to prevent unexpected errors from incorrect user input. 
 function login(string $username, string $password) {
-
+    require "config.php";
+    
     // To prevent sql injection, we will use mysqli_prepare. It is like a string format that tells the system to treat each user input only as its specified data type. 
     // There are a few ways to do this but we are using the object-oriented method. 
     // So, even if a user were to input `Bob"; DROP TABLE users;`, the system will treat that whole input as just a string and not the "DROP TABLE" sql command. 
