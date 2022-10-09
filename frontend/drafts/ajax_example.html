@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Wall of Chinese</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <div class="content-window">
+            <h1>Login</h1>
+            <form>
+                <label for="username">Username:</label>
+                <input id = 'username' type="text" name="username">
+                <label for="password">Password:</label>
+                <input id = 'password' type="text" name="password">
+                <label for="teacher">Example select</label>
+                <select name="teacher" id="teacher">
+                    <option value=1>Mrs. Tan</option>
+                    <option value=2>Mr. Lim</option>
+                    <option value=3>Mr. Chandran</option>
+                </select>
+            </form>
+            <div class="back-next">
+                <!-- Add onclick event to the submit button, this will call the js function if it exists on this page. Don't need to pass any arguments here as we will retrieve relevant values in the function -->
+                <button id = 'loginButton' onclick="login()">Login</button>
+            </div>
+            <a id="forgetPassword" href="#">Forgot Password?</a>
+            <div id="response"></div>
+        </div>
+    </div>
+    <script src="login.js"></script>
+    <script>
+        // create the function here
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+            // Note that we're just getting the integer value of the dropdown here. The text displayed in the dropdown can be anything
+            var teacher = document.getElementById("teacher").value;
+            
+            console.log(`username: ${username}`);
+            console.log(`password: ${password}`);
+            console.log(`teacher id: ${teacher}`);
+
+            // AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
+            // The below structure is standard for AJAX requests
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                // On success
+                if (this.readyState == 4 && this.status == 200) {
+                    // Do something with the response
+                    console.log(this.responseText);
+
+                    // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
+                    var resp = document.getElementById("response");
+                    if(this.responseText == 0) resp.innerHTML = "Successfully logged in!"; // In the real code, you'd probably want to redirect the user to the world selection or account page
+                    else if(this.responseText == 1) resp.innerHTML = "Your login details were incorrect.";
+                    else if(this.responseText == 2) resp.innerHTML = "A server error occurred.";
+                    else resp.innerHTML = "An unknown error occurred.";
+                }
+            };
+            // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
+            // Example GET URI: https://example.com/target_script?username=test&password=abc123
+            // Example POST URI: https://example.com/target_script
+            // The target filepath of the script you want to send the variables to is specified here. 
+            xmlhttp.open("POST", "../../scripts/function_login", true);
+            // Request headers required for a POST request
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            // Send the variables here. We'll omit the teacher id since it's not needed on the login script
+            xmlhttp.send(`username=${username}&password=${password}`);
+        }
+    </script>
+</body>
+</html>

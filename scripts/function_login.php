@@ -5,7 +5,9 @@ require "config.php";
 // Login function and also function template
 // Function: Login
 // Inputs: string $username, string $password
-// Outputs: int 0 on success, int 1 on incorrect password or username not found, int 2 on server error. 
+// Outputs: int 0 on success
+//          int 1 on incorrect password or username not found
+//          int 2 on server error. 
 
 // We are returning the same error code 1 for incorrect password OR username not found to limit the amount of info given to user for security purposes. This prevents user from trying a random username and being shown the message "your password is incorrect", meaning the username exists. Instead, they will just see "your login details are incorrect" which doesn't give them any hint that the account exists. Not so impt for username logins, moreso for email logins, but we'll just do it anyway. 
 
