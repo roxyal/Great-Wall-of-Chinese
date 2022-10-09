@@ -37,12 +37,12 @@ function login(string $username, string $password) {
         // Execute the query
         $sql->execute() &&
         // Store result
-        $sql->store_result() &&
-        // Bind the result(s) to new variables, according to the order of variables selected in the sql statement. Datatypes are auto assigned. 
-        $sql->bind_result($account_id, $hash) &&
-        // Fetch the value
-        $sql->fetch()
+        $sql->store_result()
     ) {
+        // Bind the result(s) to new variables, according to the order of variables selected in the sql statement. Datatypes are auto assigned. 
+        $sql->bind_result($account_id, $hash);
+        // Fetch the value
+        $sql->fetch();
         // Check if any record exists; number of matching record rows greater than 0
         if($sql->num_rows > 0) {
             // To store passwords securely, we are using PHP's built-in password_hash and password_verify functions. We do not store plaintext or encrypted passwords in the database, only hashes. 
