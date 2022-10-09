@@ -56,10 +56,9 @@
 
                     // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
                     var resp = document.getElementById("response");
-                    if(this.responseText.includes(0)) resp.innerHTML = "Successfully logged in!"; // In the real code, you'd probably want to redirect the user to the world selection or account page
-                    else if(this.responseText.includes(0)) resp.innerHTML = "Your login details were incorrect.";
-                    else if(this.responseText.includes(0)) resp.innerHTML = "A server error occurred.";
-                    else resp.innerHTML = "An unknown error occurred.";
+                    if(this.responseText.includes("0")) resp.innerHTML = "Successfully logged in!"; // In the real code, you'd probably want to redirect the user to the world selection or account page
+                    if(this.responseText.includes("1")) resp.innerHTML = "Your login details were incorrect.";
+                    if(this.responseText.includes("2")) resp.innerHTML = "A server error occurred.";
                 }
             };
             // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
