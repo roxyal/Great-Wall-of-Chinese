@@ -2,7 +2,6 @@ const playButton = document.getElementById('playButton');
 playButton.addEventListener('click', goToLoginPage);
 
 function goToLoginPage(){
-	//console.log("test")
 	window.location.href = 'login.html';
 }
 

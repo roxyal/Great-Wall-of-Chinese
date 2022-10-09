@@ -20,6 +20,10 @@ body {
 #main-menu button {
     font-size: 20px;
     width: 40%;
+    border-radius: 5px;
+    color: black;
+    background-color: #4297A0;
+    cursor:pointer;
 }
 
 #main-menu {
@@ -34,8 +38,8 @@ body {
 }
 
 .content-window {
-    width: 60%;
-    height: 60%;
+    width: 80%;
+    height: 90%;
     background-color: lightcoral;
     border-radius: 12px;
     border: 2px solid black;
@@ -57,6 +61,7 @@ input, select {
     font-size: 20px;
 }
 
+/* back-next is the pair of buttons in login, register and forget password pages */
 .back-next {
     margin-top: 20px;
     display: flex;
@@ -67,56 +72,79 @@ input, select {
 .back-next button {
     font-size: 20px;
     width: 40%;
+    border-radius: 5px;
+    color: black;
+    background-color: #4297A0;
+    cursor:pointer;
 }
 
+
+/* For character selection in registration page */
 #characters {
     display: flex;
     justify-content: center;
-    width: 80%;
+    width: 100%;
+    align-self: center;
+    margin: 3px;
 }
 
 #characters button {
-    width: 100px;
-    height: 100px;
-    background-size: contain;
+    width: 95px;
+    height: 135px;
+    margin: 5px;
+    background-size: cover;
     background-repeat: no-repeat;
 }
 
+#characters button:hover {
+    border: 2px solid #E57F84;
+}
+
 #character-1 {
-    background-image: url("icons/visored-helm.svg");
-    border: 2px solid yellow;
+    background-image: url(images/guan_yu.PNG);
 }
 
 #character-2 {
-    background-image: url("icons/wizard-face.svg");
+    background-image: url(images/huang_zhong.PNG);
 }
 
 #character-3 {
-    background-image: url("icons/cowled.svg");
+    background-image: url(images/wei_yan.PNG);
 }
 
 #character-4 {
-    background-image: url("icons/monk-face.svg");
+    background-image: url(images/zhao_yun.PNG);
 }
 
 #description {
-    width: 70%;
+    width: 100%;
     border: 1px solid black;
-    margin-top: 16px;
+    margin-top: 10px;
 }
+
+
+
+
 
 a {
     margin-top: 24px;
     font-size: 20px;
 }
 
+/* buttons in the world selection */
 button.world, button#log-out, button#leaderboard, button#back {
-    font-size: 20px;
+    font-size: 25px;
+    margin: 20px;
+    border-radius: 5px;
+    color: black;
+    background-color: #4297A0;
+    cursor:pointer;
 }
 
 #world-selection {
     width: 60%;
     height: 60%;
+    border-radius: 12px;
     background-color: lightcoral;
     border: 2px solid black;
     display: flex;
@@ -136,12 +164,24 @@ button.world, button#log-out, button#leaderboard, button#back {
     gap: 16px;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 200px;
 }
 
 #log-out-container {
-    width: 100%;
+    position: fixed;
+    right:0;
+    bottom:0;
 }
 
+
+
+
+
+
+
+
+
+ /* Teacher stuff here */
 #assignment-container {
     border: 1px solid;
     width: fit-content;

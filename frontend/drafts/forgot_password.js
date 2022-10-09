@@ -12,10 +12,17 @@ const submitButton = document.getElementById('submitButton');
 submitButton.addEventListener('click', forgotPassword);
 
 // email input
-const emailInput = document.getElementById('emailInput');
+var emailElement = document.getElementById('emailInput');
 
 // forgot password function
 function forgotPassword(){
-	//var test = emailInput.value;
-	//console.log(test)
+	var email = emailElement.value;
+	console.log(email);
+
+	if(!email){
+		alert("Email is empty!")
+		return;
+	}
+
+	//backend stuff for forget password
 }

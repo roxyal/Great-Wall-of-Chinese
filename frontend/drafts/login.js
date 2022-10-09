@@ -21,11 +21,15 @@ function login(){
 	var userName = username.value;
 	var passWord = password.value;
 
-	//console.log(userName)
-	//console.log(passWord)
+	if(!userName || !passWord){
+		alert("username or password is empty!")
+		return;
+	}
+
+	//backend stuff for login
 }
 
-// forget password link
+// forget password
 const forgetPassword = document.getElementById('forgetPassword');
 forgetPassword.addEventListener('click', forgetPasswordPage);
 
