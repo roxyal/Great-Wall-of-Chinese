@@ -43,10 +43,12 @@ function createAccount(string $uname, string $name, string $email, string $pass,
     
     // Hash the password
     $hash = password_hash($pass, PASSWORD_DEFAULT);
+    
+    $actype = "Student";
 
     if( 
         $accounts_insert &&
-        $accounts_insert->bind_param('sssss', "Student", $uname, $hash, $email, $name) &&
+        $accounts_insert->bind_param('sssss', $actype, $uname, $hash, $email, $name) &&
         $accounts_insert->execute()
     ) {
         // Successfully created new account, now create the student profile
