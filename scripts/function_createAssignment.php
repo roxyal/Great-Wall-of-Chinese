@@ -1,9 +1,8 @@
 <?php 
-
-// Function: Create Assignment
+// Function: Create assignment for a student with assignment name
 // Inputs: string $assignment_name, int $teacher_id, int $created_timestamp, int $due_timestamp
 // Outputs: int 0 on success
-//          int 1 on invalid
+//          int 1 on invalid account
 
 function createAssignment(string $assignment_name, int $account_id, int $created_timestamp, int $due_timestamp) {
 
@@ -11,15 +10,13 @@ function createAssignment(string $assignment_name, int $account_id, int $created
     require "functions_utility.php";
 
     // Check if account id exists
-    if(!checkAccountIdExists($account_id)) return 2;
+    if(!checkAccountIdExists($account_id)) return 1;
 
     $sql = $conn->prepare("INSERT INTO `assignments`(`assignment_name`, `account_id`, `created_timestamp`, `due_timestamp`) VALUES (?, ?, ?, ?)");
 
-    $time = time();
-
     if( 
         $sql &&
-        $sql->bind_param('iiis', $time, $sender_id, $recipient_id, $message) &&
+        $sql->bind_param('siii', $assignment_name, $account_id, $created_timestamp, $due_timestamp) &&
         $sql->execute()
     ) {
         // Successfully inserted new message
@@ -31,7 +28,4 @@ function createAssignment(string $assignment_name, int $account_id, int $created
         return 4;
     }
 }
-
-echo createAssignment("assignment name", 1, 2, 3, 4);
-
 ?>
