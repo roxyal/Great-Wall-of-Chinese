@@ -1,4 +1,9 @@
 <?php 
+// Add a POST handler here to handle any AJAX requests sent to this file.
+// isset($variable) checks if the variable "exists", i.e. defined or initialised.
+if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["teacher_id"]) && isset($_POST["character"]) ) {
+    echo createAccount($_POST["username"], $_POST["name"], $_POST["email"], $_POST["password"], $_POST["teacher_id"], $_POST["character"]);
+}
 
 
 // Function: Create Account
