@@ -56,7 +56,7 @@ function login(string $uname, string $pass) {
                 $_SESSION["username"] = $uname;
 
                 // The user is "logged in" at this point - their identifiers are stored in the session. However, we will also add a new record of the login to the database. 
-                $sql2 = $conn->prepare("INSERT INTO `logins` (`account_id`, `timestamp`, `ip_address`) VALUES (?, ?, ?)");
+                $sql2 = $conn->prepare("INSERT INTO `access_log` (`account_id`, `timestamp`, `ip_address`) VALUES (?, ?, ?)");
                 // Get the current unix timestamp
                 $time = time();
                 if( 
