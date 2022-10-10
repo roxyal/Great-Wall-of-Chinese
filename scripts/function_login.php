@@ -7,7 +7,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
 
 // Login function and also function template
 // Function: Login
-// Inputs: string $username, string $password
+// Inputs: string $uname, string $pass
 // Outputs: int 0 on success
 //          int 1 on incorrect password or username not found
 //          int 2 on server error. 
@@ -17,7 +17,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
 // Function declarations start with function <function name> (<arguments>). 
 // This is the login function. It accepts the arguments string username and string password and returns the integer 0 on success or 1 or 2 on error. 
 // PHP automatically assigns data types to variables, so you do not need to specify a data type for a new variable. However, we will use data type declarations in our function arguments to prevent unexpected errors from incorrect user input. 
-function login(string $username, string $password) {
+function login(string $uname, string $pass) {
     require "config.php";
     
     // To prevent sql injection, we will use mysqli_prepare. It is like a string format that tells the system to treat each user input only as its specified data type. 
@@ -31,9 +31,9 @@ function login(string $username, string $password) {
     $sql = $conn->prepare("SELECT `account_id`, `password` FROM `accounts` WHERE `username` = ?");
     
     if(
-        // Bind the parameter $username (from our function argument) as a string ("s"). The number of bind params have to match the number of "?"s in the prepare statement. 
+        // Bind the parameter $uname (from our function argument) as a string ("s"). The number of bind params have to match the number of "?"s in the prepare statement. 
         // To bind multiple parameters (and multiple datatypes), it will look like: $stmt->bind_param("sidb", $someString, $someInteger, $someFloat, $someBlob) 
-        $sql->bind_param("s", $username) &&
+        $sql->bind_param("s", $uname) &&
         // Execute the query
         $sql->execute() &&
         // Store result
@@ -47,16 +47,16 @@ function login(string $username, string $password) {
         if($sql->num_rows > 0) {
             // To store passwords securely, we are using PHP's built-in password_hash and password_verify functions. We do not store plaintext or encrypted passwords in the database, only hashes. 
             // https://www.php.net/manual/en/function.password-hash.php
-            // Compare the user-input $password with the $hash we just fetched from database. 
-            if(password_verify($password, $hash)) {
+            // Compare the user-input $pass with the $hash we just fetched from database. 
+            if(password_verify($pass, $hash)) {
                 // Correct password, log the user in. 
                 // $_SESSION is a global variable used across the website. It stores user data across multiple accesses of any page of the website that has session_start(). -> included in all our files, because we require config.php which has the session_start()
                 // https://www.php.net/manual/en/intro.session.php
                 $_SESSION["account_id"] = $account_id;
-                $_SESSION["username"] = $username;
+                $_SESSION["username"] = $uname;
 
                 // The user is "logged in" at this point - their identifiers are stored in the session. However, we will also add a new record of the login to the database. 
-                $sql2 = $conn->prepare("INSERT INTO `logins` (`account_id`, `timestamp`, `ip_address`) VALUES (?, ?, ?)");
+                $sql2 = $conn->prepare("INSERT INTO `access_log` (`account_id`, `timestamp`, `ip_address`) VALUES (?, ?, ?)");
                 // Get the current unix timestamp
                 $time = time();
                 if( 
