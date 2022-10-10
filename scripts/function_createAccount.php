@@ -52,10 +52,11 @@ function createAccount(string $uname, string $name, string $email, string $pass,
         $accounts_insert->execute()
     ) {
         // Successfully created new account, now create the student profile
+        $account_id = $conn->insert_id;
         $students_insert = $conn->prepare("INSERT INTO `students`(`student_id`, `character_type`, `teacher_account_id`) VALUES (?, ?, ?)");
         if( 
             $students_insert &&
-            $students_insert->bind_param('iii', $conn->insert_id, $character, $teacher_id) &&
+            $students_insert->bind_param('iii', $account_id, $character, $teacher_id) &&
             $students_insert->execute()
         ) {
             // Successfully created student profile. 
