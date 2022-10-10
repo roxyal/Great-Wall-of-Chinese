@@ -103,14 +103,6 @@ function register(){
 		return;
 	}
 
-	console.log(userName);
-	console.log(realName);
-	console.log(email);
-	console.log(teacher)
-	console.log(password);
-	console.log(reenterpassword);
-	console.log(character);
-
 	// Include backend stuff here
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
     // The below structure is standard for AJAX requests
