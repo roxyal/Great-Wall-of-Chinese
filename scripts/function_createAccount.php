@@ -25,7 +25,7 @@ function createAccount(string $username, string $name, string $email, string $pa
     require "functions_utility.php";
 
     // Check valid email format
-    if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$/", $email) !== 1) return 6;
+    if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\..+$/", $email) !== 1) return 6;
     // Check valid username format
     if(preg_match("/^[a-zA-Z0-9]{3,}$/", $username) !== 1) return 7;
     // Check valid password format
