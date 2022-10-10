@@ -29,7 +29,7 @@ function createAccount(string $username, string $name, string $email, string $pa
     // Check valid username format
     if(preg_match("/^[a-zA-Z0-9]{3,}$/", $username) !== 1) return 7;
     // Check valid password format
-    if(preg_match("/^(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*)$/", $password) !== 1) return 8;
+    if(preg_match("/^(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,})$/", $password) !== 1) return 8;
     // Check if email exists
     if(checkEmailExists($email)) return 1;
     // Check if username exists
