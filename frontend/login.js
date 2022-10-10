@@ -1,3 +1,11 @@
+// Initialise boostrap tooltips on this page
+// https://getbootstrap.com/docs/5.2/components/tooltips/
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+
 // back button
 const backButton = document.getElementById('backButton');
 backButton.addEventListener('click', goToMainMenuPage);
@@ -18,11 +26,12 @@ const password = document.getElementById('password');
 
 // function for login
 function login(){
+    var resp = document.getElementById("response"); //response element to show messages
 	var userName = username.value;
 	var passWord = password.value;
 
 	if(!userName || !passWord){
-		alert("username or password is empty!")
+        resp.innerHTML = "username or password is empty!";
 		return;
 	}
 
@@ -41,7 +50,6 @@ function login(){
 
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
 			// a div to show message
-            var resp = document.getElementById("response");
             if(this.responseText.includes(0)){
 				window.location.href = 'world_selection.html'; //goes to world selection page upon successful login
 				// resp.innerHTML = "Successfully logged in!";

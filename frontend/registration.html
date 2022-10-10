@@ -6,43 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Great Wall of Chinese</title>
     <link rel="stylesheet" href="style.css">
+
+     <!-- Booststrap (CSS) assets -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+     <!-- Font Awesome (icons) assets -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div id="container">
-        <div class="content-window">
+    <div id="container" class="container">
+        <div class="content-window container-sm w-75 h-100">
             <h1>Create account</h1>
-            <form>
-                <label for="username">Username:</label>
-                <input id = 'username' type="text" name="username">
-                <label for="real-name">Real Name:</label>
-                <input id = 'realname' type="text" name="real-name">
-                <label for="email">Email:</label>
-                <input id = 'email' type="text" name="email">
-                <label for="teacher">Teacher:</label>
-                <select id = 'teacher' name="teacher" id="teacher">
-                    <option value="1">Mrs. Tan</option>
-                    <option value="2">Mr. Lim</option>
-                    <option value="3">Mr. Chandran</option>
-                </select>
-                <label for="password">Password:</label>
-                <input input type="password" id = 'password' type="text" name="password">
-                <label for="reenter">Re-enter Password:</label>
-                <input input type="password" id = 'reenterpassword' type="text" name="reenter">
-                <label for="character">Select your character:</label>
-                <div id="characters">
-                    <button type="button" id="character-1" value="Guan Yu"></button>
-                    <button type="button" id="character-2" value="Huang Zhong"></button>
-                    <button type="button" id="character-3" value="Wei Yan"></button>
-                    <button type="button" id="character-4" value="Zhao Yun"></button>
+            <div class="container w-75">
+                <div class="form-floating row mb-3">
+                    <input id = 'username' class="form-control" type="username" name="username" placeholder="Username">
+                    <label for="username">Username</label>    
                 </div>
-                <label for="selected character">Selected character:</label>
-                <input id = 'selectedCharacter' type="text" readonly>
-                <div id="description"></div>
-            </form>
-            <div class="back-next">
-                <button type="button" id = 'backButton'>Back</button>
-                <button type="button" id = 'registerButton'>Register</button>
-            </div>
+                <div class="form-floating row mb-3">
+                    <input id = 'realname' class="form-control" type="text" name="realname" placeholder="realname">
+                    <label for="realname">Real Name</label>    
+                </div>
+                <div class="form-floating row mb-3">
+                    <input id = 'email' class="form-control" type="email" name="email" placeholder="email">
+                    <label for="email">Email</label>    
+                </div>
+                <div class="form-floating row mb-3">
+                    <input id = 'password' data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Your password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter and 1 number." class="form-control" type="password" name="password" placeholder="password">
+                    <label for="password">Password</label>  
+                </div>
+                <div class="form-floating row mb-3">
+                    <input id = 'reenterpassword' class="form-control" type="password" name="reenter" placeholder="password">
+                    <label for="reenter">Confirm Password</label>  
+                </div>
+                <div class="row mb-3">
+                    <select class= "form-control" id="teacher">
+                        <option value= "">Select your teacher</option>
+                        <option value="1">Mrs. Tan</option>
+                        <option value="2">Mr. Lim</option>
+                        <option value="3">Mr. Chandran</option>
+                    </select>
+                </div>
+                <div class="row mb-3">
+                    <select class= "form-control" id="selectedCharacter">
+                        <option value= "">Select your character</option>
+                        <option value="1">Guan Yu</option>
+                        <option value="2">Huang Zhong</option>
+                        <option value="3">Wei Yan</option>
+                        <option value="4">Zhao Yun</option>
+                    </select>
+                </div>
+                <div style="text-align: center;">
+                    <img id="displayCharacter" src = "">
+                </div>
+                <div class="row mb-3" id="characters">
+                    <div id = "description"></div>
+                </div>
+                <div class="row mb-3">
+                    <button class="btn btn-info" id = 'registerButton'>Register</button>
+                </div>
+                <div class="row mb-3">
+                    <button class="btn btn-info" id = 'backButton'>Back</button>
+                </div>
+                <div style="margin-top: 20px;" id="response"></div>
+            </div>    
         </div>
     </div>
     <script src="registration.js"></script>

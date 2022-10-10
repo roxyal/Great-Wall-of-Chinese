@@ -1,3 +1,11 @@
+// Initialise boostrap tooltips on this page
+// https://getbootstrap.com/docs/5.2/components/tooltips/
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+
 // back button
 const backButton = document.getElementById('backButton');
 backButton.addEventListener('click', goToMainMenuPage);
@@ -13,30 +21,43 @@ let emailElement = document.getElementById('email');
 let teacherElement = document.getElementById('teacher');
 let passwordElement = document.getElementById('password');
 let reenterpasswordElement = document.getElementById('reenterpassword');
+var selectedCharacter = document.getElementById('selectedCharacter');
+var displayCharacter = document.getElementById('displayCharacter')
 
 let characterOne = document.getElementById('character-1');
 let characterTwo = document.getElementById('character-2');
 let characterThree = document.getElementById('character-3');
 let characterFour = document.getElementById('character-4');
-var selectedCharacter = document.getElementById('selectedCharacter');
 var characterDescription = document.getElementById('description');
 
-characterOne.addEventListener('click', function(){selectCharacter(characterOne.value)});
-characterOne.addEventListener('click', function(){guanyuDescribe()});
+selectedCharacter.addEventListener('change', function(){changePic(selectedCharacter.value)});
 
+function changePic(characterValue){
+	if(!characterValue){
+		displayCharacter.width = "0";
+		displayCharacter.height = "0";
+		characterDescription.innerHTML = ""
+		characterDescription.style.border = "0px"
+		return;
+	}
 
-characterTwo.addEventListener('click', function(){selectCharacter(characterTwo.value)});
-characterTwo.addEventListener('click', function(){huangzhongDescribe()});
+	displayCharacter.width = "95";
+	displayCharacter.height = "135";
+	characterDescription.style.border = "1px solid black";
 
-characterThree.addEventListener('click', function(){selectCharacter(characterThree.value)});
-characterThree.addEventListener('click', function(){weiyanDescribe()});
-
-characterFour.addEventListener('click', function(){selectCharacter(characterFour.value)});
-characterFour.addEventListener('click', function(){zhaoyunDescribe()});
-
-
-function selectCharacter(characterName){
-	selectedCharacter.value = characterName;
+	if(characterValue == 1){
+		displayCharacter.src = "images/guan_yu.PNG";
+		guanyuDescribe();
+	}else if(characterValue == 2){
+		displayCharacter.src = "images/huang_zhong.PNG";
+		huangzhongDescribe();
+	}else if(characterValue == 3){
+		displayCharacter.src = "images/wei_yan.PNG"
+		weiyanDescribe();
+	}else if(characterValue == 4){
+		displayCharacter.src = "images/zhao_yun.PNG"
+		zhaoyunDescribe();
+	}
 }
 
 function guanyuDescribe(){
@@ -66,12 +87,12 @@ function register(){
 	var password = passwordElement.value
 	var reenterpassword = reenterpasswordElement.value
 	var teacher = teacherElement.value
-
 	var character = selectedCharacter.value
-	var characterInput;
+
+	var resp = document.getElementById("response"); //response element to show messages
 
 	// check empty fields
-	if(!userName || !realName || !email || !password || !reenterpassword || !character){
+	if(!userName || !realName || !email || !password || !reenterpassword || !character || !teacher){
 		alert("Please fill in all the fields");
 		return;
 	}
@@ -82,24 +103,13 @@ function register(){
 		return;
 	}
 
-	// change character input to integer
-	if(character == "Guan Yu"){
-		characterInput = 1;
-	}else if(character == "Huang Zhong"){
-		characterInput = 2;
-	}else if(character == "Wei Yan"){
-		characterInput = 3;
-	}else{
-		characterInput = 4;
-	}
-
 	console.log(userName);
 	console.log(realName);
 	console.log(email);
 	console.log(teacher)
 	console.log(password);
 	console.log(reenterpassword);
-	console.log(characterInput);
+	console.log(character);
 
 	// Include backend stuff here
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
@@ -114,17 +124,17 @@ function register(){
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
             // var resp = document.getElementById("response");
             if(this.responseText.includes(0)){
-				alert("Account has been created!");
+				alert("Registration successful!");
 				//resp.innerHTML = "Registration successful!";
 			}
-            if(this.responseText.includes(1)) alert("Email is taken");
-            if(this.responseText.includes(2)) alert("Username is taken");
-			if(this.responseText.includes(3)) alert("invalid teacher");
-            if(this.responseText.includes(4)) alert("invalid characters");
-			if(this.responseText.includes(5)) alert("A server error occurred.");
-            if(this.responseText.includes(6)) alert("invalid email format");
-			if(this.responseText.includes(7)) alert("Invalid username format");
-            if(this.responseText.includes(8)) alert("Invalid password format!");
+            if(this.responseText.includes(1)) resp.innerHTML = "Email is taken";
+            if(this.responseText.includes(2)) resp.innerHTML = "Username is taken";
+			if(this.responseText.includes(3)) resp.innerHTML = "invalid teacher";
+            if(this.responseText.includes(4)) resp.innerHTML = "invalid characters";
+			if(this.responseText.includes(5)) resp.innerHTML = "A server error occurred.";
+            if(this.responseText.includes(6)) resp.innerHTML = "invalid email format";
+			if(this.responseText.includes(7)) resp.innerHTML = "Invalid username format!";
+            if(this.responseText.includes(8)) resp.innerHTML = "Invalid password format!";
         }
     };
     // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
@@ -135,5 +145,5 @@ function register(){
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     // Send the variables here. We'll omit the teacher id since it's not needed on the login script
-    xmlhttp.send(`username=${userName}&name=${realName}&email=${email}&password=${password}&teacher_id=${teacher}&character=${characterInput}`);
+    xmlhttp.send(`username=${userName}&name=${realName}&email=${email}&password=${password}&teacher_id=${teacher}&character=${character}`);
 }
