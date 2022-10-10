@@ -60,7 +60,7 @@ function login(){
     // Example GET URI: https://example.com/target_script?username=test&password=abc123
     // Example POST URI: https://example.com/target_script
     // The target filepath of the script you want to send the variables to is specified here. 
-    xmlhttp.open("POST", "../../scripts/function_login", true);
+    xmlhttp.open("POST", "../scripts/function_login", true);
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     // Send the variables here. We'll omit the teacher id since it's not needed on the login script
