@@ -114,11 +114,17 @@ function register(){
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
             // var resp = document.getElementById("response");
             if(this.responseText.includes(0)){
-				alert("Account has been created!")
+				alert("Account has been created!");
 				//resp.innerHTML = "Registration successful!";
 			}
-            if(this.responseText.includes(1)) alert("Details are invalid.");
-            if(this.responseText.includes(2)) alert("A server error occurred.");
+            if(this.responseText.includes(1)) alert("Email is taken");
+            if(this.responseText.includes(2)) alert("Username is taken");
+			if(this.responseText.includes(3)) alert("invalid teacher");
+            if(this.responseText.includes(4)) alert("invalid characters");
+			if(this.responseText.includes(5)) alert("A server error occurred.");
+            if(this.responseText.includes(6)) alert("invalid email format");
+			if(this.responseText.includes(7)) alert("Invalid username format");
+            if(this.responseText.includes(8)) alert("Invalid password format!");
         }
     };
     // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
