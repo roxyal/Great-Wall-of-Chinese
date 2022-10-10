@@ -1,10 +1,10 @@
 <?php
 // Miscellaneous utility functions that don't need their own files. 
 
-function checkUsernameExists(string $username) {
+function checkUsernameExists(string $uname) {
     require "config.php";
     $sql = $conn->prepare("SELECT * FROM `accounts` WHERE `username` = ?");
-    $sql->bind_param("s", $username);
+    $sql->bind_param("s", $uname);
     $sql->execute();
     $sql->store_result();
     if($sql->num_rows < 1) return false;
