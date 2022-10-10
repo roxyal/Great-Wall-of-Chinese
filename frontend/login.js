@@ -26,8 +26,8 @@ function login(){
 		return;
 	}
 
-	console.log(`username: ${username}`);
-    console.log(`password: ${password}`);
+	console.log(`username: ${userName}`);
+    console.log(`password: ${passWord}`);
 
 	//backend stuff for login
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
@@ -59,7 +59,7 @@ function login(){
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     // Send the variables here. We'll omit the teacher id since it's not needed on the login script
-    xmlhttp.send(`username=${username}&password=${password}`);
+    xmlhttp.send(`username=${userName}&password=${passWord}`);
 }
 
 // forget password page
