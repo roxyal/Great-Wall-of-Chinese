@@ -13,17 +13,13 @@ loginButton.addEventListener('click', login);
 
 // username
 const username = document.getElementById('username');
-
 // password
 const password = document.getElementById('password');
-
-var teacher = document.getElementById('teacher');
 
 // function for login
 function login(){
 	var userName = username.value;
 	var passWord = password.value;
-	var teacherInput = teacher.value;
 
 	if(!userName || !passWord){
 		alert("username or password is empty!")
@@ -32,7 +28,6 @@ function login(){
 
 	console.log(`username: ${username}`);
     console.log(`password: ${password}`);
-    console.log(`teacher id: ${teacher}`);
 
 	//backend stuff for login
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
