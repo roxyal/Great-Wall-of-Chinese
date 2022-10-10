@@ -21,7 +21,7 @@ if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) 
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
 function createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character) {
     
-    if($debug_mode) echo $password;
+    echo $password;
     require "config.php";
     require "functions_utility.php";
 
