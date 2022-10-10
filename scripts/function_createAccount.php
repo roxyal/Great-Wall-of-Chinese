@@ -2,7 +2,6 @@
 // Add a POST handler here to handle any AJAX requests sent to this file.
 // isset($variable) checks if the variable "exists", i.e. defined or initialised.
 if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["teacher_id"]) && isset($_POST["character"]) ) {
-    echo $_POST["password"];
     echo createAccount($_POST["username"], $_POST["name"], $_POST["email"], $_POST["password"], $_POST["teacher_id"], $_POST["character"]);
 }
 
@@ -22,6 +21,7 @@ if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) 
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
 function createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character) {
     
+    if($debug_mode) echo $password;
     require "config.php";
     require "functions_utility.php";
 
@@ -30,7 +30,6 @@ function createAccount(string $username, string $name, string $email, string $pa
     // Check valid username format
     if(preg_match("/^[a-zA-Z0-9]{3,}$/", $username) !== 1) return 7;
     // Check valid password format
-    if($debug_mode) echo $password;
     if(preg_match("/^(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,})$/", $password) !== 1) return 8;
     // Check if email exists
     if(checkEmailExists($email)) return 1;
