@@ -5,7 +5,6 @@ if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) 
     echo createAccount($_POST["username"], $_POST["name"], $_POST["email"], $_POST["password"], $_POST["teacher_id"], $_POST["character"]);
 }
 
-
 // Function: Create Account
 // Inputs: string $uname, string $name, string $email, string $pass, int $timestamp, int $teacher_id, int $character
 // Outputs: int 0 on success
@@ -19,7 +18,6 @@ if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) 
 //          int 8 on invalid password format
 
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
-echo createAccount("aqwrqe", "asqw", "qweqwe@wqer.co", "Abc12345", 1, 3);
 function createAccount(string $uname, string $name, string $email, string $pass, int $teacher_id, int $character) {
     
     require "config.php";
