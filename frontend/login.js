@@ -49,12 +49,8 @@ function login(){
             console.log(this.responseText);
 
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
+            // code 0: successful login
 			// a div to show message
-            if(this.responseText.includes(0)){
-                // need to redirect teacher/student to respective pages
-				window.location.href = 'world_selection.html'; //goes to world selection page upon successful login
-				
-			}
             if(this.responseText.includes(1)) resp.innerHTML = "Your login details were incorrect.";
             if(this.responseText.includes(2)) resp.innerHTML = "A server error occurred.";
         }
