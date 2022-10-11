@@ -14,7 +14,7 @@ function goToMainMenuPage(){
 	window.location.href = 'main_menu.html';
 }
 
-// get Username, Real Name, Teacher, password, re-enter password elements
+// get registration elements
 let usernameElement = document.getElementById('username');
 let realnameElement = document.getElementById('realname');
 let emailElement = document.getElementById('email');
@@ -23,11 +23,6 @@ let passwordElement = document.getElementById('password');
 let reenterpasswordElement = document.getElementById('reenterpassword');
 var selectedCharacter = document.getElementById('selectedCharacter');
 var displayCharacter = document.getElementById('displayCharacter')
-
-let characterOne = document.getElementById('character-1');
-let characterTwo = document.getElementById('character-2');
-let characterThree = document.getElementById('character-3');
-let characterFour = document.getElementById('character-4');
 var characterDescription = document.getElementById('description');
 
 selectedCharacter.addEventListener('change', function(){changePic(selectedCharacter.value)});
@@ -63,15 +58,12 @@ function changePic(characterValue){
 function guanyuDescribe(){
 	characterDescription.innerHTML = "This is a description about Guan Yu"
 }
-
 function huangzhongDescribe(){
 	characterDescription.innerHTML = "This is a description about Huang Zhong"
 }
-
 function weiyanDescribe(){
 	characterDescription.innerHTML = "This is a description about Wei Yan"
 }
-
 function zhaoyunDescribe(){
 	characterDescription.innerHTML = "This is a description about Zhao Yun"
 }
@@ -93,13 +85,13 @@ function register(){
 
 	// check empty fields
 	if(!userName || !realName || !email || !password || !reenterpassword || !character || !teacher){
-		alert("Please fill in all the fields");
+		resp.innerHTML = "Please fill in all the fields!"
 		return;
 	}
 
 	// check if password == reenterpassword
 	if(password != reenterpassword){
-		alert("Passwords do not match!")
+		resp.innerHTML = "Passwords do not match!"
 		return;
 	}
 

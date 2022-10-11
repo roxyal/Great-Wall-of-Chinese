@@ -52,7 +52,6 @@ function login(){
 			// a div to show message
             if(this.responseText.includes(0)){
                 // need to redirect teacher/student to respective pages
-
 				window.location.href = 'world_selection.html'; //goes to world selection page upon successful login
 				
 			}

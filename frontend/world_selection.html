@@ -15,9 +15,9 @@
 </head>
 <body>
     <div id="container"  class="container">
-        <div id="world-selection" class="content-window container-sm w-120 h-50"> 
+        <div id="world-selection" > 
             <div id="world-selection-body">
-                <h1 style = "margin-top: -100px;">World Selection</h1>
+                <h1 style = "margin-top: -50px;">World Selection</h1>
                 <div class="container w-75">
                     <div class="row mb-3">
                         <button class="btn btn-primary" id = 'idoms'>Idoims</button>
@@ -29,32 +29,33 @@
                         <button class="btn btn-primary" id = 'Fill in the blanks'>Fill in the blanks</button>
                     </div>
                     <div style = "margin-top: 80px;" class="row mb-3">
-                        <a class="btn btn-secondary" id = 'log-out' type="button" data-toggle="modal" data-target="#exampleModal">Log out</a>
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body">
-                                  ...
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+    <!--Modal starts here-->
+    <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Log Out</h5>
+            <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to log out?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Modal ends here-->
+    <script src="world_selection.js"></script>
 </body>
 </html>
