@@ -28,7 +28,7 @@ function login(string $uname, string $pass) {
     // https://www.php.net/manual/en/mysqli.prepare.php
 
     // The ? is a placeholder for our variable. 
-    $sql = $conn->prepare("SELECT `account_id`, `password` FROM `accounts` WHERE `username` = ?");
+    $sql = $conn->prepare("SELECT `account_type`, `account_id`, `password` FROM `accounts` WHERE `username` = ?");
     
     if(
         // Bind the parameter $uname (from our function argument) as a string ("s"). The number of bind params have to match the number of "?"s in the prepare statement. 
@@ -40,7 +40,7 @@ function login(string $uname, string $pass) {
         $sql->store_result()
     ) {
         // Bind the result(s) to new variables, according to the order of variables selected in the sql statement. Datatypes are auto assigned. 
-        $sql->bind_result($account_id, $hash);
+        $sql->bind_result($account_type, $account_id, $hash);
         // Fetch the value
         $sql->fetch();
         // Check if any record exists; number of matching record rows greater than 0
@@ -66,7 +66,9 @@ function login(string $uname, string $pass) {
                     // Notice that we don't need to bind_result or store_result for INSERT queries, because no result is produced.
                 ) {
                     // Successfully created new login record. 
-                    return 0;
+                    if($account_type == "Teacher") header("Location: ../frontend/teacher_menu");
+                    else header("Location: ../frontend/main_menu");
+                    // return 0;
                 }
                 else {
                     // Database error
