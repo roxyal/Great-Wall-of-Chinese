@@ -67,7 +67,7 @@ function login(string $uname, string $pass) {
                 ) {
                     // Successfully created new login record. 
                     if($account_type == "Teacher") header("Location: ../frontend/teacher_menu");
-                    else header("Location: ../frontend/main_menu");
+                    else header("Location: ../frontend/world_selection");
                     // return 0;
                 }
                 else {
