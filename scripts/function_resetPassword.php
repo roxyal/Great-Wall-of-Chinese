@@ -33,7 +33,7 @@ function resetPassword(string $pass, string $token) {
             $hash = password_hash($pass, PASSWORD_DEFAULT);
 
             // Update the user's password
-            if($conn->query("update accounts set password = $hash where account_id = $account_id")) {
+            if($conn->query("update accounts set password = `$hash` where account_id = $account_id")) {
                 // Successfully updated password
                 return 0;
             }
