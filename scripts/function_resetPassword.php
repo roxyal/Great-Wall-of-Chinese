@@ -9,7 +9,7 @@ if(isset($_POST["p1"]) && isset($_POST["token"])) echo resetPassword($_POST["p1"
 //          int 2 on server error
 //          int 3 on invalid password format
 
-function forgotPassword(string $pass, string $token) {
+function resetPassword(string $pass, string $token) {
     require "config.php";
 
     // Check password format
