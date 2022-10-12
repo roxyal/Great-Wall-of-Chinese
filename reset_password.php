@@ -18,29 +18,8 @@
         <div class="content-window container-sm w-50 h-75">
 
             <?php 
-            // require "./scripts/config.php";
-
-            function validToken(string $token): bool {
-                $sql = $conn->prepare("select account_id, timestamp from password_resets where hash = ? and valid = 1 and timestamp ");
-                if(
-                    $sql->bind_param("s", $_POST["token"]) &&
-                    $sql->execute() &&
-                    $sql->store_result()
-                 ) {
-                    $sql->bind_result($account_id, $timestamp); 
-                    $sql->fetch();
-
-                    // If token doesn't exist
-                    if($sql->num_rows < 1) return false;
-                    
-                    // If token is timed out (> 3 days since generated)
-                    // if()
-                }
-                else {
-                    if($debug_mode) echo "A database error occurred.";
-                    return false;
-                }
-            }
+            require "./scripts/config.php";
+            require "./scripts/functions_utility.php";
 
             if(isset($_GET["token"]) && validToken($_GET["token"])) {
             ?>
@@ -71,13 +50,46 @@
                     function resetPassword() {
                         document.getElementById("newPassword").classList.remove("is-invalid");
                         document.getElementById("newPasswordConfirm").classList.remove("is-invalid");
-                        document.getElementById("response").innerHTML = "";
-                        document.getElementById("response").classList.remove("alert-danger");
+                        var resp = document.getElementById("response");
+                        resp.innerHTML = "";
+                        resp.classList.remove("alert-danger", "alert-success");
 
                         var p1 = document.getElementById("newPassword").value;
                         var p2 = document.getElementById("newPasswordConfirm").value;
                         if(p1 == p2) {
-                            
+                            var xmlhttp = new XMLHttpRequest();
+                            xmlhttp.onreadystatechange = function() {
+                                // On success
+                                if (this.readyState == 4 && this.status == 200) {
+                                    // Do something with the response
+                                    console.log(this.responseText);
+
+                                    if(this.responseText.includes(0)) {
+                                        resp.classList.add("alert-success");
+                                        resp.innerHTML = "Password successfully changed. You may now <a href='./frontend/login'>log in</a>.";
+                                    }
+                                    if(this.responseText.includes(1)) {
+                                        resp.classList.add("alert-danger");
+                                        resp.innerHTML = "Invalid password reset token, please request a new one <a href='./frontend/forgot_password'>here</a>.";
+                                    }
+                                    if(this.responseText.includes(2)) {
+                                        resp.classList.add("alert-danger");
+                                        resp.innerHTML = "A server error occurred.";
+                                    }
+                                    if(this.responseText.includes(3)) {
+                                        document.getElementById("newPassword").classList.add("is-invalid");
+                                        resp.classList.add("alert-danger");
+                                        resp.innerHTML = "Your password is in an invalid format. Passwords must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter and 1 number.";
+                                    }
+                                }
+                            };
+                            // The target filepath of the script you want to send the variables to is specified here. 
+                            xmlhttp.open("POST", "./scripts/function_resetPassword", true);
+                            // Request headers required for a POST request
+                            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            // Get the token from the url params
+                            var token = window.location.search.substr(1).split("token=")[1];
+                            xmlhttp.send(`p1=${p1}&token=${token}`);
                         }
                         else {
                             document.getElementById("newPassword").classList.add("is-invalid");

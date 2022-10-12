@@ -38,6 +38,7 @@ function forgotPassword(){
             if(this.responseText.includes(1)) resp.innerHTML = "Email address not found!";
 			if(this.responseText.includes(2)) resp.innerHTML = "Server Error";
 			if(this.responseText.includes(3)) resp.innerHTML = "Reset Password failed";
+            if(this.responseText.includes(4)) resp.innerHTML = "Please wait 15 minutes before requesting another password reset. The email may take some time to arrive in your inbox.";
         }
     };
     // The target filepath of the script you want to send the variables to is specified here. 
