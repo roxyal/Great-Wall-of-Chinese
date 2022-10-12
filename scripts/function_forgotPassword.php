@@ -54,17 +54,17 @@ function forgotPassword(string $email) {
                     $mail->Port       = 587;
                 
                     //Recipients
-                    $mail->setFrom('qinshihuang@chinese.ilovefriedorc.com', 'Qin Shi Huang');
+                    $mail->setFrom('qinshihuang@ilovefriedorc.com', 'Qin Shi Huang');
                     $mail->addAddress($email);
                 
                     //Content
                     $mail->isHTML(true);
                     $mail->Subject = "Password Reset for Great Wall of Chinese";
                     $mail->Body    = "Dear $uname,<br/><br/>
-                                      Please click on this link to reset your password:<br/>
-                                      https://chinese.ilovefriedorc.com/reset_password?token=$hash";
+                                      Please visit this link to reset your password:<br/>
+                                      <a href='https://chinese.ilovefriedorc.com/reset_password?token=$hash'>https://chinese.ilovefriedorc.com/reset_password?token=$hash</a>";
                     $mail->AltBody = "Dear $uname,
-                                      Please click on this link to reset your password: 
+                                      Please visit this link to reset your password: 
                                       https://chinese.ilovefriedorc.com/reset_password?token=$hash";
                 
                     $mail->send();
