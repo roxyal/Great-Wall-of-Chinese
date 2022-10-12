@@ -11,7 +11,7 @@
 if(isset($_POST["username"]) && isset($_POST["password"])) {
     // login($_POST["username"], $_POST["password"]);
     $uname = $_POST["username"];
-    $pass = $_POST["pass"];
+    $pass = $_POST["password"];
 
 // PHP automatically assigns data types to variables, so you do not need to specify a data type for a new variable. However, we will use data type declarations in our function arguments to prevent unexpected errors from incorrect user input. 
 // function login(string $uname, string $pass) {
