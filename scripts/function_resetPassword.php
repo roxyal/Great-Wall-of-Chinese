@@ -25,15 +25,14 @@ function resetPassword(string $pass, string $token) {
         $check->bind_result($account_id);
         $check->fetch();
         if($check->num_rows > 0) { 
-            
-            // Make all the user's previous password requests invalid. 
-            $conn->query("update password_resets set valid = 0 where account_id = $account_id");
 
             // Create a hash of the password 
             $hash = password_hash($pass, PASSWORD_DEFAULT);
 
             // Update the user's password
-            if($conn->query("update accounts set password = `$hash` where account_id = $account_id")) {
+            if($conn->query("update accounts set password = '$hash' where account_id = $account_id")) {
+                // Make all the user's previous password requests invalid. 
+                $conn->query("update password_resets set valid = 0 where account_id = $account_id");
                 // Successfully updated password
                 return 0;
             }

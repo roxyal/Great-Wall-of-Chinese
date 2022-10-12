@@ -38,15 +38,15 @@ function forgotPassword(string $email) {
             $time = time();
             $valid = 1;
 
-            // Make all the user's previous password requests invalid. 
-            $conn->query("update password_resets set valid = 0 where account_id = $account_id");
-
             // Insert random token into the password resets table
             $inserthash = $conn->prepare("insert into password_resets (account_id, email_address, hash, timestamp, valid) values (?, ?, ?, ?, ?)");
             if(
                 $inserthash->bind_param("issii", $account_id, $email, $hash, $time, $valid) &&
                 $inserthash->execute()
             ) {
+                // Make all the user's previous password requests invalid. 
+                $conn->query("update password_resets set valid = 0 where account_id = $account_id");
+
                 // Send email to user
 
                 // Require composer
