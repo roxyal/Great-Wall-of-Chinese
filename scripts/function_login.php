@@ -1,23 +1,20 @@
 <?php 
-// Add a POST handler here to handle any AJAX requests sent to this file.
-// isset($variable) checks if the variable "exists", i.e. defined or initialised.
-if(isset($_POST["username"]) && isset($_POST["password"])) {
-    login($_POST["username"], $_POST["password"]);
-}
-
-// Login function and also function template
 // Function: Login
 // Inputs: string $uname, string $pass
-// Outputs: int 0 on success
-//          int 1 on incorrect password or username not found
+// Outputs: int 1 on incorrect password or username not found
 //          int 2 on server error. 
 
 // We are returning the same error code 1 for incorrect password OR username not found to limit the amount of info given to user for security purposes. This prevents user from trying a random username and being shown the message "your password is incorrect", meaning the username exists. Instead, they will just see "your login details are incorrect" which doesn't give them any hint that the account exists. Not so impt for username logins, moreso for email logins, but we'll just do it anyway. 
 
-// Function declarations start with function <function name> (<arguments>). 
-// This is the login function. It accepts the arguments string username and string password and returns the integer 0 on success or 1 or 2 on error. 
+// Add a POST handler here to handle any AJAX requests sent to this file.
+// isset($variable) checks if the variable "exists", i.e. defined or initialised.
+if(isset($_POST["username"]) && isset($_POST["password"])) {
+    // login($_POST["username"], $_POST["password"]);
+    $uname = $_POST["username"];
+    $pass = $_POST["pass"];
+
 // PHP automatically assigns data types to variables, so you do not need to specify a data type for a new variable. However, we will use data type declarations in our function arguments to prevent unexpected errors from incorrect user input. 
-function login(string $uname, string $pass) {
+// function login(string $uname, string $pass) {
     require "config.php";
     
     // To prevent sql injection, we will use mysqli_prepare. It is like a string format that tells the system to treat each user input only as its specified data type. 
@@ -66,8 +63,14 @@ function login(string $uname, string $pass) {
                     // Notice that we don't need to bind_result or store_result for INSERT queries, because no result is produced.
                 ) {
                     // Successfully created new login record. 
-                    if($account_type == "Teacher") header("Location: ../frontend/teacher_menu");
-                    else header("Location: ../frontend/world_selection");
+                    if($account_type == "Teacher") {
+                        header("Location: ../frontend/teacher_menu");
+                        exit;
+                    }
+                    else {
+                        header("Location: ../frontend/world_selection");
+                        exit;
+                    } 
                     // return 0;
                 }
                 else {
