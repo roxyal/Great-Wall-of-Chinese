@@ -48,7 +48,6 @@ function validToken(string $token): bool {
     $sql->bind_param("s", $_POST["token"]);
     $sql->execute();
     $sql->store_result();
-    $sql->fetch();
     if($sql->num_rows > 0) return true;
     return false;
 }
