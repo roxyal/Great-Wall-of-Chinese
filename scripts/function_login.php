@@ -65,12 +65,12 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
                 ) {
                     // Successfully created new login record. 
                     if($account_type == "Teacher") {
-                        header("Location: ../frontend/teacher_menu");
-                        exit;
+                        header('Content-Type: application/json');
+                        echo json_encode(['location'=>'../frontend/teacher_menu']);
                     }
                     else {
-                        header("Location: ../frontend/world_selection");
-                        exit;
+                        header('Content-Type: application/json');
+                        echo json_encode(['location'=>'../frontend/world_selection']);
                     } 
                     // return 0;
                 }
