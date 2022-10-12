@@ -39,7 +39,7 @@
                     <div class="row mb-3">
                         <button class="btn btn-info" id = 'submitButton' onclick="resetPassword()">Reset Password</button>
                     </div>
-                    <div id="response" class="alert d-flex align-items-center" role="alert">
+                    <div id="response" class="alert align-items-center" role="alert">
                 </div>
                 <script>
                     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
