@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Wall of Chinese</title>
+    <link rel="stylesheet" href="style2.css">
+
+    <!-- Booststrap (CSS) assets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <!-- Font Awesome (icons) assets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div id="container" class="container">
+        <div class="content-window container-sm w-50 h-75">
+            <h1>Login</h1>
+            <div class="container w-75">
+                <div class="form-floating row mb-3">
+                    <input id = 'username' class="form-control" type="text" name="username" placeholder="Username">
+                    <label for="username">Username</label>    
+                </div>
+                <div class="form-floating row mb-3">
+                    <input id = 'password' data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Your password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter and 1 number." class="form-control" type="text" name="password" placeholder="Password">
+                    <label for="password">Password</label>
+                    <div class="invalid-feedback">
+                        Incorrect login details, please try again.
+                    </div> 
+                </div>
+                <div class="row mb-3">
+                    <!-- Add onclick event to the submit button, this will call the js function if it exists on this page. Don't need to pass any arguments here as we will retrieve relevant values in the function -->
+                    <button class="btn btn-info" id = 'loginButton' onclick="login()">Login</button>
+                </div>
+            </div>
+            <a id="forgetPassword" href="#">Forgot Password?</a>
+            <div id="response" class="alert d-flex align-items-center" role="alert">
+        </div>
+    </div>
+    <script src="login.js"></script>
+    <script>
+        // Initialise boostrap tooltips on this page
+        // https://getbootstrap.com/docs/5.2/components/tooltips/
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // create the function here
+        function login() {
+            // Reset any previous feedback            
+            document.getElementById("username").classList.remove("is-invalid");
+            document.getElementById("password").classList.remove("is-invalid");
+            var resp = document.getElementById("response");
+            resp.classList.remove("alert-danger");
+            resp.innerHTML = "";
+
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+            console.log(`username: ${username}`);
+            console.log(`password: ${password}`);
+
+            // AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
+            // The below structure is standard for AJAX requests
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                // On success
+                if (this.readyState == 4 && this.status == 200) {
+                    // Do something with the response
+                    console.log(this.responseText);
+
+                    // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
+                    if(this.responseText.includes(0)) {
+                        resp.innerHTML = '<i class="fa-solid fa-circle-check"></i> Successfully logged in!'; 
+                        resp.classList.add("alert-success");
+                        // In the real code, you'd probably want to redirect the user to the world selection or account page
+                    }
+                    if(this.responseText.includes(1)) {
+                        document.getElementById("username").classList.add("is-invalid");
+                        document.getElementById("password").classList.add("is-invalid");
+                    }
+                    if(this.responseText.includes(2)) {
+                        resp.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> A server error occurred.';
+                        resp.classList.add("alert-danger");
+                    }
+                }
+            };
+            // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
+            // Example GET URI: https://example.com/target_script?username=test&password=abc123
+            // Example POST URI: https://example.com/target_script
+            // The target filepath of the script you want to send the variables to is specified here. 
+            xmlhttp.open("POST", "../scripts/function_login", true);
+            // Request headers required for a POST request
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            // Send the variables here. 
+            xmlhttp.send(`username=${username}&password=${password}`);
+        }
+    </script>
+</body>
+</html>

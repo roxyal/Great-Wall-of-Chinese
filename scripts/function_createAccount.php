@@ -1,9 +1,12 @@
 <?php 
-require "config.php";
-require "functions_utility.php";
+// Add a POST handler here to handle any AJAX requests sent to this file.
+// isset($variable) checks if the variable "exists", i.e. defined or initialised.
+if(isset($_POST["username"]) && isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["teacher_id"]) && isset($_POST["character"]) ) {
+    echo createAccount($_POST["username"], $_POST["name"], $_POST["email"], $_POST["password"], $_POST["teacher_id"], $_POST["character"]);
+}
 
 // Function: Create Account
-// Inputs: string $username, string $name, string $email, string $password, int $timestamp, int $teacher_id, int $character
+// Inputs: string $uname, string $name, string $email, string $pass, int $timestamp, int $teacher_id, int $character
 // Outputs: int 0 on success
 //          int 1 on email taken
 //          int 2 on username taken
@@ -15,18 +18,21 @@ require "functions_utility.php";
 //          int 8 on invalid password format
 
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
-function createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character) {
+function createAccount(string $uname, string $name, string $email, string $pass, int $teacher_id, int $character) {
+    
+    require "config.php";
+    require "functions_utility.php";
 
     // Check valid email format
-    if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$/", $email) !== 1) return 6;
+    if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\..+$/", $email) !== 1) return 6;
     // Check valid username format
-    if(preg_match("/^[a-zA-Z0-9]{3,}$/", $username) !== 1) return 7;
+    if(preg_match("/^[a-zA-Z0-9]{3,}$/", $uname) !== 1) return 7;
     // Check valid password format
-    if(preg_match("/^(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*)$/", $email) !== 1) return 8;
+    if(preg_match("/^(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,})$/", $pass) !== 1) return 8;
     // Check if email exists
     if(checkEmailExists($email)) return 1;
     // Check if username exists
-    if(checkUsernameExists($username)) return 2;
+    if(checkUsernameExists($uname)) return 2;
     // Check if teacher exists
     if(!checkTeacherExists($teacher_id)) return 3;
     // Assume that there are 4 characters with ids from 1 to 4
@@ -36,18 +42,21 @@ function createAccount(string $username, string $name, string $email, string $pa
     $accounts_insert = $conn->prepare("INSERT INTO `accounts`(`account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?)");
     
     // Hash the password
-    $hash = password_hash($password, PASSWORD_DEFAULT);
+    $hash = password_hash($pass, PASSWORD_DEFAULT);
+    
+    $actype = "Student";
 
     if( 
         $accounts_insert &&
-        $accounts_insert->bind_param('sssss', "Student", $username, $hash, $email, $name) &&
+        $accounts_insert->bind_param('sssss', $actype, $uname, $hash, $email, $name) &&
         $accounts_insert->execute()
     ) {
         // Successfully created new account, now create the student profile
+        $account_id = $conn->insert_id;
         $students_insert = $conn->prepare("INSERT INTO `students`(`student_id`, `character_type`, `teacher_account_id`) VALUES (?, ?, ?)");
         if( 
             $students_insert &&
-            $students_insert->bind_param('iii', $conn->insert_id, $character, $teacher_id) &&
+            $students_insert->bind_param('iii', $account_id, $character, $teacher_id) &&
             $students_insert->execute()
         ) {
             // Successfully created student profile. 

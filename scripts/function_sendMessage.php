@@ -1,6 +1,4 @@
 <?php 
-require "config.php";
-require "functions_utility.php";
 
 // Function: Send chat message
 // Inputs: int $recipient_id, int $sender_id, string $message
@@ -11,7 +9,9 @@ require "functions_utility.php";
 //          int 4 on server error
 
 function sendMessage(int $recipient_id, int $sender_id, string $message) {
-
+    require "config.php";
+    require "functions_utility.php";
+    
     // Check valid recipient, empty string for world
     if(!checkAccountIdExists($recipient_id) && $recipient_id !== 0) return 1;
     // Check if sender id exists
