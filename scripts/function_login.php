@@ -2,7 +2,7 @@
 // Add a POST handler here to handle any AJAX requests sent to this file.
 // isset($variable) checks if the variable "exists", i.e. defined or initialised.
 if(isset($_POST["username"]) && isset($_POST["password"])) {
-    echo login($_POST["username"], $_POST["password"]);
+    login($_POST["username"], $_POST["password"]);
 }
 
 // Login function and also function template
@@ -73,23 +73,23 @@ function login(string $uname, string $pass) {
                 else {
                     // Database error
                     if($debug_mode) echo $conn->error;
-                    return 2;
+                    echo 2;
                 }
             }
             else {
                 // Wrong password
-                return 1;
+                echo 1;
             }
         }
         else {
             // Username not found
-            return 1;
+            echo 1;
         }
     }
     else {
         // Database error
         if($debug_mode) echo $conn->error;
-        return 2;
+        echo 2;
     }
 }
 ?>
