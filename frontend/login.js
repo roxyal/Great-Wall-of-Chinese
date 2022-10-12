@@ -35,8 +35,8 @@ function login(){
 		return;
 	}
 
-	console.log(`username: ${userName}`);
-    console.log(`password: ${passWord}`);
+	// console.log(`username: ${userName}`);
+    // console.log(`password: ${passWord}`);
 
 	//backend stuff for login
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 

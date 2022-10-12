@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 // Function: Login
 // Inputs: string $uname, string $pass
 // Outputs: int 1 on incorrect password or username not found
