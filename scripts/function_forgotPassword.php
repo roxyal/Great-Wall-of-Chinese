@@ -30,9 +30,10 @@ function forgotPassword(string $email) {
             // Generate a random hex value and insert into the password resets table
             $hash = bin2hex(random_bytes(16));
             $time = time();
-            $inserthash = $conn->prepare("insert into password_resets (account_id, email, hash, timestamp) values (?, ?, ?, ?)");
+            $valid = 1;
+            $inserthash = $conn->prepare("insert into password_resets (account_id, email_address, hash, timestamp, valid) values (?, ?, ?, ?, ?)");
             if(
-                $inserthash->bind_param("issi", $account_id, $email, $hash, $time) &&
+                $inserthash->bind_param("issii", $account_id, $email, $hash, $time, $valid) &&
                 $inserthash->execute()
             ) {
                 // Send email to user
@@ -43,9 +44,9 @@ function forgotPassword(string $email) {
                 $mail = new PHPMailer(true);
                 try {
                     //Server settings
-                    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                    // $mail->SMTPDebug  = SMTP::DEBUG_SERVER;
                     $mail->isSMTP();
-                    $mail->Host       = 'mail.chinese.ilovefriedorc.com';
+                    $mail->Host       = 'smtp.gmail.com';
                     $mail->SMTPAuth   = true;
                     $mail->Username   = $email_username;
                     $mail->Password   = $email_password; 
@@ -57,10 +58,10 @@ function forgotPassword(string $email) {
                     $mail->addAddress($email);
                 
                     //Content
-                    $mail->isHTML(true);                                  //Set email format to HTML
+                    $mail->isHTML(true);
                     $mail->Subject = "Password Reset for Great Wall of Chinese";
                     $mail->Body    = "Dear $uname,<br/><br/>
-                                      Please click on this link to reset your password: 
+                                      Please click on this link to reset your password:<br/>
                                       https://chinese.ilovefriedorc.com/reset_password?token=$hash";
                     $mail->AltBody = "Dear $uname,
                                       Please click on this link to reset your password: 
