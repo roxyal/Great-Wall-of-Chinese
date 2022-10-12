@@ -45,11 +45,9 @@ function validToken(string $token): bool {
     // Checks if a password reset token is valid and was requested within 15 minutes
     require "config.php";
     $sql = $conn->prepare("select * from password_resets where hash = ? and valid = 1 and timestamp >= UNIX_TIMESTAMP() - 900");
-    $sql->bind_param("s", $_POST["token"]);
+    $sql->bind_param("s", $token);
     $sql->execute();
     $sql->store_result();
-    echo $token;
-    echo $sql->num_rows;
     if($sql->num_rows > 0) return true;
     return false;
 }
