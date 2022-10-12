@@ -62,7 +62,7 @@ function forgotPassword(string $email) {
                     $mail->Subject = "Password Reset for Great Wall of Chinese";
                     $mail->Body    = "Dear $uname,<br/><br/>
                                       Please visit this link to reset your password:<br/>
-                                      <a href='https://chinese.ilovefriedorc.com/reset_password?token=$hash'>https://chinese.ilovefriedorc.com/reset_password?token=$hash</a>";
+                                      <a href='https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/reset_password?token=$hash'>https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/reset_password?token=$hash</a>";
                     $mail->AltBody = "Dear $uname,
                                       Please visit this link to reset your password: 
                                       https://chinese.ilovefriedorc.com/reset_password?token=$hash";
