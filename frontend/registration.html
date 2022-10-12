@@ -38,15 +38,16 @@
                     <input id = 'reenterpassword' class="form-control" type="password" name="reenter" placeholder="password">
                     <label for="reenter">Confirm Password</label>  
                 </div>
-                <div class="row mb-3">
+                <div class="form-floating row mb-3">
                     <select class= "form-control" id="teacher">
                         <option value= "">Select your teacher</option>
                         <option value="1">Mrs. Tan</option>
                         <option value="2">Mr. Lim</option>
                         <option value="3">Mr. Chandran</option>
                     </select>
+                    <label for="teacher">Teacher</label>
                 </div>
-                <div class="row mb-3">
+                <div class="form-floating row mb-3">
                     <select class= "form-control" id="selectedCharacter">
                         <option value= "">Select your character</option>
                         <option value="1">Guan Yu</option>
@@ -54,8 +55,9 @@
                         <option value="3">Wei Yan</option>
                         <option value="4">Zhao Yun</option>
                     </select>
+                    <label for="selectedCharacter">Character</label>
                 </div>
-                <div style="text-align: center;">
+                <div class="text-center">
                     <img id="displayCharacter" src = "">
                 </div>
                 <div class="row mb-3">
@@ -67,7 +69,7 @@
                 <div class="row mb-3">
                     <button class="btn btn-info" id = 'backButton'>Back</button>
                 </div>
-                <div class="text-center font-italic" style="margin-top: 20px;" id="response"></div>
+                <div class="mt-2 text-center font-italic" id="response"></div>
             </div>    
         </div>
     </div>
