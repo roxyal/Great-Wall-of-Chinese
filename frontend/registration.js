@@ -36,36 +36,36 @@ function changePic(characterValue){
 		return;
 	}
 
-	displayCharacter.width = "95";
-	displayCharacter.height = "135";
+	displayCharacter.width = "100";
+	displayCharacter.height = "150";
 	characterDescription.style.border = "1px solid black";
 
 	if(characterValue == 1){
-		displayCharacter.src = "images/guan_yu.PNG";
-		guanyuDescribe();
+		displayCharacter.src = "images/martialHero.PNG";
+		martialHeroDescribe();
 	}else if(characterValue == 2){
-		displayCharacter.src = "images/huang_zhong.PNG";
-		huangzhongDescribe();
+		displayCharacter.src = "images/huntress.PNG";
+		huntressDescribe();
 	}else if(characterValue == 3){
-		displayCharacter.src = "images/wei_yan.PNG"
-		weiyanDescribe();
+		displayCharacter.src = "images/heroKnight.PNG"
+		heroKnightDescribe();
 	}else if(characterValue == 4){
-		displayCharacter.src = "images/zhao_yun.PNG"
-		zhaoyunDescribe();
+		displayCharacter.src = "images/wizard.PNG"
+		wizardDescribe();
 	}
 }
 
-function guanyuDescribe(){
-	characterDescription.innerHTML = "This is a description about Guan Yu"
+function martialHeroDescribe(){
+	characterDescription.innerHTML = "This is a description about Martial Hero"
 }
-function huangzhongDescribe(){
-	characterDescription.innerHTML = "This is a description about Huang Zhong"
+function huntressDescribe(){
+	characterDescription.innerHTML = "This is a description about Huntress"
 }
-function weiyanDescribe(){
-	characterDescription.innerHTML = "This is a description about Wei Yan"
+function heroKnightDescribe(){
+	characterDescription.innerHTML = "This is a description about Hero Knight"
 }
-function zhaoyunDescribe(){
-	characterDescription.innerHTML = "This is a description about Zhao Yun"
+function wizardDescribe(){
+	characterDescription.innerHTML = "This is a description about Wizard"
 }
 
 // register button
