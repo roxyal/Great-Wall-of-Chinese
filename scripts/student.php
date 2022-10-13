@@ -92,6 +92,21 @@ class Student
         }
     }
     
+    // A utility function to check if the student created before CustomGame
+    public function checkCustomGameExists($account_id)
+    {
+        $sql = "SELECT * FROM custom_levels WHERE account_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $account_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $num_row = $result->num_rows;
+        if($num_row < 1){
+            return false;
+        } 
+        return true;
+    }
+    
     // A helper function for createCustomGame function.
     public function generateQnBank(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
                                         int $fill_lower_count, int $fill_upper_count,
@@ -155,16 +170,27 @@ class Student
     }
     
     // Send Pvp request to opponent
-    public function sendPvpRequest(int $requester_id, int $opponent_id, int $choice)
+    public function sendPvpRequest(int $requester_id, int $opponent_id, int $pvp_room_type)
     {
+        
+        // pvp_room_type -> 0 denotes choose CustomGame for PVP; 1 denotes choose RandomizeGame for PVP;
+        if ($pvp_room_type == 0){
+            // Check to see if user has create a custom game before anot
+            // No Custom Game created return 1; (Please go create ..)
+            if (!$this->checkCustomGameExists($requester_id)){
+                return 1;
+            }
+        }
+        
         // When you send a pvp request, it will create a row in the pvp_session table
         $status = 2; // when u send request the status default is 2 = Waiting 
         $timestamp = time();
-        $sql = "INSERT INTO pvp_session (requester_id, opponent_id, status, timestamp, choice) VALUES (?, ?, ?, ?, ?)";
+        
+        $sql = "INSERT INTO pvp_session (requester_id, opponent_id, status, timestamp, pvp_room_type) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
         
         if (
-            $stmt->bind_param('iiiii', $requester_id, $opponent_id, $status, $timestamp, $choice) &&
+            $stmt->bind_param('iiiii', $requester_id, $opponent_id, $status, $timestamp, $pvp_room_type) &&
             $stmt->execute()
         ){
             return 0;
