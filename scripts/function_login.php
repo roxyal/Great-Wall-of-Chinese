@@ -66,7 +66,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])) {
                     // Successfully created new login record. 
                     if($account_type == "Teacher") {
                         header('Content-Type: application/json');
-                        echo json_encode(['location'=>'../frontend/teacher_menu']);
+                        echo json_encode(['location'=>'../frontend/teacher_summary']);
                     }
                     else {
                         header('Content-Type: application/json');

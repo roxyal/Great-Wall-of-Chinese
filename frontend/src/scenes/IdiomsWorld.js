@@ -3,6 +3,8 @@ export class IdiomsWorld extends Phaser.Scene {
         super("idiomsWorld");
     }
 
+    // call backend functions here to get username and character id
+
     preload() {
         this.load.image("field", "./assets/field.jpg");
         this.load.image("brownButton", "./assets/buttonLong_brown.png");
@@ -86,6 +88,8 @@ export class IdiomsWorld extends Phaser.Scene {
         this.martialHero.body.syncBounds = true;
         this.martialHero.setBounce(1);
         this.martialHero.setCollideWorldBounds(true);
+        
+        // set name according to player's username here
         this.followText = this.add.text(this.martialHero.x, this.martialHero.y, "michael0123", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC

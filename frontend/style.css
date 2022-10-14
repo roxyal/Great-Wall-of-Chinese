@@ -18,7 +18,7 @@ body {
 
 .content-window {
     width: 80%;
-    height: 90%;
+    height: 80%;
     background-color: lightcoral;
     border-radius: 12px;
     border: 2px solid black;
@@ -75,11 +75,18 @@ a {
     background-color: lightgray
 }
 
-#teacher-buttons {
-    display: flex;
-    justify-content: space-evenly;
-    width: 60%;
-    margin-bottom: 16px;
+#teacherNavButtons a{
+    margin-top: 0px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+#assignmentNameInput{
+    margin-left: 85%;
+}
+
+#assignmentNameButton{
+    margin-right: 15px;
 }
 
 table {
