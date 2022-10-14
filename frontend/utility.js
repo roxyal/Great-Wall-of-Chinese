@@ -6,7 +6,7 @@ function getLoggedInUsername() {
         }
     };
     xmlhttp.open("GET", "../scripts/functions_utility");
-    xmlhttp.send(`func=${Username}`);
+    xmlhttp.send(`func=Username`);
 }
 
 function getLoggedInAccountId() {
@@ -17,7 +17,7 @@ function getLoggedInAccountId() {
         }
     };
     xmlhttp.open("GET", "../scripts/functions_utility");
-    xmlhttp.send(`func=${AccountId}`);
+    xmlhttp.send(`func=AccountId`);
 }
 
 function getLoggedInCharacter() {
@@ -28,7 +28,7 @@ function getLoggedInCharacter() {
         }
     };
     xmlhttp.open("GET", "../scripts/functions_utility");
-    xmlhttp.send(`func=${Character}`);
+    xmlhttp.send(`func=Character`);
 }
 
 function getLoggedInTeacherId() {
@@ -39,7 +39,7 @@ function getLoggedInTeacherId() {
         }
     };
     xmlhttp.open("GET", "../scripts/functions_utility");
-    xmlhttp.send(`func=${TeacherId}`);
+    xmlhttp.send(`func=TeacherId`);
 }
 
 function getLoggedInAccountType() {
@@ -50,5 +50,5 @@ function getLoggedInAccountType() {
         }
     };
     xmlhttp.open("GET", "../scripts/functions_utility");
-    xmlhttp.send(`func=${AccountType}`);
+    xmlhttp.send(`func=AccountType`);
 }
