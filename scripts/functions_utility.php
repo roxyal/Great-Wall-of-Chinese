@@ -60,7 +60,7 @@ function getLoggedInUsername(): string {
 
 function getLoggedInAccountId(): string {
     require "config.php";
-    if(isset($_SESSION["username"])) return $_SESSION["username"];
+    if(isset($_SESSION["account_id"])) return $_SESSION["account_id"];
     else return "undefined";
 }
 
