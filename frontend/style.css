@@ -16,6 +16,14 @@ body {
     flex: 1;
 }
 
+.content-window2{
+    width: 80%;
+    height: 80%;
+    background-color: lightcoral;
+    border-radius: 12px;
+    border: 2px solid black;
+}
+
 .content-window {
     width: 80%;
     height: 80%;
@@ -73,6 +81,12 @@ a {
     width: fit-content;
     height: 50%;
     background-color: lightgray
+}
+
+#createAssignment input,
+#createAssignment select {
+    margin-top: 20px;
+    margin-bottom: 80px;
 }
 
 
