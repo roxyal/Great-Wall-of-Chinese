@@ -15,20 +15,25 @@
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <span class="navbar-brand mb-0 h1" href="#">Teacher's page</span>
-        <form class="form-inline" id = "teacherNavButtons">
-            <a class="btn btn-primary" type="button" href='teacher_summary.html'>View Summary Report</a>
-            <a class="btn btn-primary" type="button" href='teacher_createAssignment.html'>Create Assignment</a>
-            <a class="btn btn-primary" type="button" href='teacher_sendAssignment.html'>Send Assignment</a>
-            <a class="btn btn-primary" type="button">View leaderboard</a>
-        </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav" id="teacherNavBar">
+            <a class="nav-item nav-link" href='teacher_summary.html'>View Summary Report</a>
+            <a class="nav-item nav-link" href='teacher_createAssignment.html'>Create Assignment</a>
+            <a class="nav-item nav-link active" href='teacher_sendAssignment.html'>Send Assignment<span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Leaderboard</a>
+           </div>
+        </div>
         <form class="form-inline">
-            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
+            <button id="teacherLogOut" class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
         </form>
     </nav>
     <div id="container">
         <div class="content-window container-sm w-75 h-75">
+          <h1>Send Assignment</h1>
             <div id="assignment-container">
                 <table>
                     <colgroup>

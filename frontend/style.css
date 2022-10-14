@@ -81,6 +81,14 @@ a {
     margin-left: 15px;
 }
 
+#teacherNavBar a{
+    margin-top: 0px;
+}
+
+#teacherLogOut {
+    margin-right: 10px;
+}
+
 #assignmentNameInput{
     margin-left: 85%;
 }

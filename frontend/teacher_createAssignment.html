@@ -15,20 +15,25 @@
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <span class="navbar-brand mb-0 h1" href="#">Teacher's page</span>
-        <form class="form-inline" id = "teacherNavButtons">
-            <a class="btn btn-primary" type="button" href='teacher_summary.html'>View Summary Report</a>
-            <a class="btn btn-primary" type="button" href='teacher_createAssignment.html'>Create Assignment</a>
-            <a class="btn btn-primary" type="button" href='teacher_sendAssignment.html'>Send Assignment</a>
-            <a class="btn btn-primary" type="button">View leaderboard</a>
-        </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav" id="teacherNavBar">
+          <a class="nav-item nav-link" href='teacher_summary.html'>View Summary Report</a>
+          <a class="nav-item nav-link active" href='teacher_createAssignment.html'>Create Assignment<span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href='teacher_sendAssignment.html'>Send Assignment</a>
+          <a class="nav-item nav-link" href="#">Leaderboard</a>
+        </div>
+      </div>
         <form class="form-inline">
-            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
+            <button id="teacherLogOut" class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
         </form>
     </nav>
     <div id="container">
-        <div class="content-window container-sm w-75 h-75">
+        <div class="content-window container-sm w-75 h-100">
+           <h1>Create Assignment</h1>
         </div>
     </div>
 	<nav class="navbar navbar-dark bg-dark">
@@ -38,26 +43,26 @@
 		<button class="btn btn-success" type="submit" id = "assignmentNameButton">Save</button>
 	</nav>
 
-    <!--Modal starts here-->
-    <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modal-title">Log Out</h5>
-              <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
-            </div>
-            <div class="modal-body">
-              <p>
-                Are you sure you want to log out?
-              </p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
-            </div>
+  <!--Modal starts here-->
+  <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Log Out</h5>
+            <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to log out?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
           </div>
         </div>
       </div>
-      <!--Modal ends here-->
+  </div>
+  <!--Modal ends here-->
 </body>
 </html>
