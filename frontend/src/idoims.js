@@ -16,6 +16,7 @@ let config = {
         // Center vertically and horizontally
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
+    parent: 'idoimWorld',
     dom: {
         createContainer: true
     },
