@@ -51,4 +51,44 @@ function validToken(string $token): bool {
     if($sql->num_rows > 0) return true;
     return false;
 }
+
+function getLoggedInUsername(): string {
+    require "config.php";
+    if(isset($_SESSION["username"])) return $_SESSION["username"];
+    else return "undefined";
+}
+
+function getLoggedInAccountId(): string {
+    require "config.php";
+    if(isset($_SESSION["username"])) return $_SESSION["username"];
+    else return "undefined";
+}
+
+function getLoggedInCharacter(): int {
+    require "config.php";
+    if(isset($_SESSION["character_id"])) return $_SESSION["character_id"];
+    else return 0; // or some other default character id
+}
+
+function getLoggedInTeacherId(): int {
+    require "config.php";
+    if(isset($_SESSION["teacher_id"])) return $_SESSION["teacher_id"];
+    else return 0; 
+}
+
+function getLoggedInAccountType(): string {
+    require "config.php";
+    if(isset($_SESSION["account_type"])) return $_SESSION["account_type"];
+    else return "undefined"; 
+}
+
+if(isset($_GET["func"])) {
+    try {
+        echo call_user_func("getLoggedIn{$_GET["func"]}()");
+    }
+    catch (Exception $e) {
+        if($debug_mode) echo "Something went wrong.\n";
+        echo -1;
+    }
+}
 ?>
