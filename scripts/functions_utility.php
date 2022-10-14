@@ -84,10 +84,10 @@ function getLoggedInAccountType(): string {
 
 if(isset($_GET["func"])) {
     try {
-        echo call_user_func("getLoggedIn{$_GET["func"]}()");
+        echo call_user_func("getLoggedIn{$_GET["func"]}");
     }
     catch (Exception $e) {
-        if($debug_mode) echo "Something went wrong.\n";
+        // if($debug_mode) echo "Something went wrong.\n";
         echo -1;
     }
 }
