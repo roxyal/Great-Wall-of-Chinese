@@ -75,17 +75,12 @@ a {
     background-color: lightgray
 }
 
-/*
-#teacherNavButtons a{
-    margin-top: 0px;
-    margin-right: 15px;
-    margin-left: 15px;
-}
 
+/*
 #teacherNavBar a{
     margin-top: 0px;
 }
-*/
+
 
 #teacherLogOut {
     margin-right: 10px;
@@ -98,6 +93,7 @@ a {
 #assignmentNameButton{
     margin-right: 15px;
 }
+*/
 
 table {
     font-size: 20px;
