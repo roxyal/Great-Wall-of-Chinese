@@ -35,8 +35,8 @@ function login(){
 		return;
 	}
 
-	console.log(`username: ${userName}`);
-    console.log(`password: ${passWord}`);
+	// console.log(`username: ${userName}`);
+    // console.log(`password: ${passWord}`);
 
 	//backend stuff for login
 	// AJAX allows you to send variables from JS (frontend) to PHP (backend) without having to load a new page on the user end. 
@@ -45,8 +45,10 @@ function login(){
     xmlhttp.onreadystatechange = function() {
         // On success
         if (this.readyState == 4 && this.status == 200) {
-            // Do something with the response
-            console.log(this.responseText);
+            var response = JSON.parse(this.responseText);
+            if(response.location){
+                window.location.href = response.location;
+            }
 
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
             // code 0: successful login
