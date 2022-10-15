@@ -138,7 +138,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.physics.world.setFPS(120);
 
         // Limit world boundaries so characters cannot run too high up
-        this.physics.world.setBounds(0, 150, width, height);
+        this.physics.world.setBounds(0, 80, width, height);
 
         // Add wooden sign that has the name of the world
         this.sign = this.physics.add.sprite(width * 0.7, height * 0.2, "sign").setScale(2);
