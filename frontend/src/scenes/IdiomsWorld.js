@@ -137,6 +137,9 @@ export class IdiomsWorld extends Phaser.Scene {
         // Increase collision detection
         this.physics.world.setFPS(120);
 
+        // Limit world boundaries so characters cannot run too high up
+        this.physics.world.setBounds(0, 150, width, height);
+
         // Add wooden sign that has the name of the world
         this.sign = this.physics.add.sprite(width * 0.7, height * 0.2, "sign").setScale(2);
         this.sign.body.immovable = true;
@@ -180,7 +183,7 @@ export class IdiomsWorld extends Phaser.Scene {
         })
 
         // Add dialogue for NPC
-        this.dialogue = this.add.text(this.speech.x, this.speech.y, "Click me to enter adventure mode.", {fill: "white", fontSize: "11px"}).setOrigin(0.5);
+        this.dialogue = this.add.text(this.speech.x, this.speech.y, "Click me to enter adventure mode.", {fill: "yellow", backgroundColor: "black", fontSize: "11px"}).setOrigin(0.5);
         this.dialogue.setVisible(false);
         
         // Add colliders between player and world objects
@@ -223,7 +226,6 @@ export class IdiomsWorld extends Phaser.Scene {
 
         // Set text to follow character
         this.martialText.setPosition(this.martial.x, this.martial.y + this.martial.height);
-
 
         // Display NPC dialogue only when character is close
         if (Phaser.Math.Distance.Between(this.martial.x, this.martial.y, this.npc.x, this.npc.y) <= 150) {
