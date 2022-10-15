@@ -196,7 +196,7 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.heroKnight = this.physics.add.sprite(500, 300, "heroKnight").setScale(1.7);
         this.heroKnight.setBounce(1);
         this.heroKnight.setCollideWorldBounds(true);
-        this.heroKnightText = this.add.text(this.heroKnight.x, this.heroKnight.y + this.heroKnight.height, "sharon2403", {fill: "white", fontSize: "12px"}).setOrigin(0.5);
+        this.heroKnightText = this.add.text(this.heroKnight.x, this.heroKnight.y + this.heroKnight.height, "sharon2403", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
         this.heroKnight.anims.play("heroKnightIdle", true); 
 
         // Add NPC
