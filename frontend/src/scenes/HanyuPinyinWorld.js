@@ -150,7 +150,7 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.physics.world.setFPS(120);
 
         // Limit world boundaries so characters cannot run too high up
-        this.physics.world.setBounds(0, 150, width, height);
+        this.physics.world.setBounds(0, 150, width, height - 150);
 
         // Add wooden sign that has the name of the world
         this.sign = this.physics.add.sprite(width * 0.75, height * 0.25, "sign").setScale(2).setTint(0x301e01);

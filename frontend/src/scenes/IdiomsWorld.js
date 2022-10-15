@@ -18,7 +18,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.load.image("scroll", "assets/common/10b-parchmentborder.gif");
 
         // Load characters
-        this.load.atlas("martial", "assets/characters/huntress_spritesheet.png", "assets/characters/martial.json");
+        this.load.atlas("huntress", "assets/characters/huntress_spritesheet.png", "assets/characters/huntress.json");
         this.load.atlas("martialIdle", "assets/characters/martial-idle.png", "assets/characters/martial-idle.json");
         this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
         this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
@@ -33,7 +33,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.anims.create({
             key: "huntressIdle",
             frameRate: 8,
-            frames: this.anims.generateFrameNames("martial", {
+            frames: this.anims.generateFrameNames("huntress", {
                 prefix: "huntress0",
                 start: 1,
                 end: 10,
@@ -44,7 +44,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.anims.create({
             key: "huntressRunning",
             frameRate: 8,
-            frames: this.anims.generateFrameNames("martial", {
+            frames: this.anims.generateFrameNames("huntress", {
                 prefix: "huntress0",
                 start: 11,
                 end: 18
@@ -138,7 +138,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.physics.world.setFPS(120);
 
         // Limit world boundaries so characters cannot run too high up
-        this.physics.world.setBounds(0, 80, width, height);
+        this.physics.world.setBounds(0, 80, width, height - 80);
 
         // Add wooden sign that has the name of the world
         this.sign = this.physics.add.sprite(width * 0.7, height * 0.2, "sign").setScale(2);
