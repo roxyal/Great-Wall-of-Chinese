@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Wall of Chinese</title>
+    <link rel="stylesheet" href="style.css">
+
+    
+     <!-- Booststrap (CSS) assets -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+     <!-- Font Awesome (icons) assets -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav" id="teacherNavBar">
+          <a style = "margin-top: 0px;" class="nav-item nav-link" href='teacher_summary.html'>View Summary Report</a>
+          <a style = "margin-top: 0px;" class="nav-item nav-link active" href='teacher_createAssignment.html'>Create Assignment<span class="sr-only">(current)</span></a>
+          <a style = "margin-top: 0px;" class="nav-item nav-link" href='teacher_sendAssignment.html'>Send Assignment</a>
+          <a style = "margin-top: 0px;" class="nav-item nav-link" href="#">Leaderboard</a>
+        </div>
+      </div>
+        <form class="form-inline">
+            <button style = "margin-right: 10px;" id="teacherLogOut" class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
+        </form>
+    </nav>
+    <div id="container">
+        <div class="content-window2">
+          <h1 class= "text-center">Create Assignment</h1>
+          <div class="row text-center fw-bold" id="createAssignment">
+            <div class="col-4">
+              <label>Questions</label>
+              <input class="form-control" type="text" placeholder="Question 1">
+              <input class="form-control" type="text" placeholder="Question 2">
+              <input class="form-control" type="text" placeholder="Question 3">
+              <input class="form-control" type="text" placeholder="Question 4">
+              <input class="form-control" type="text" placeholder="Question 5">
+            </div>
+            <div class="col">
+              <p>Option 1</p>
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+            </div>
+            <div class="col">
+              <label>Option 2</label>
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+            </div>
+            <div class="col">
+              <label>Option 3</label>
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+            </div>
+            <div class="col">
+              <label>Option 4</label>
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+            </div>
+            <div class="col">
+              <label>Answers</label>
+              <select class= "form-control" id="teacher">
+                <option value= ""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+              <select class= "form-control" id="teacher">
+                <option value= ""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+              <select class= "form-control" id="teacher">
+                <option value= ""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+              <select class= "form-control" id="teacher">
+                <option value= ""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+              <select class= "form-control" id="teacher">
+                <option value= ""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label>Explanation</label>
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+              <input class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+    </div>
+	<nav class="navbar navbar-dark bg-dark">
+		<form style="margin-left: 85%;" class="form-inline" id = "assignmentNameInput">
+			<input class="form-control" type="text" name="Assignment name" placeholder="Assignment name" aria-label="Search">
+		</form>
+		<button style="margin-right: 15px;" class="btn btn-success" type="submit" id = "assignmentNameButton">Save</button>
+	</nav>
+
+  <!--Modal starts here-->
+  <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Log Out</h5>
+            <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to log out?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--Modal ends here-->
+</body>
+</html>
