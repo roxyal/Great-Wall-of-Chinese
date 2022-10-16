@@ -6,6 +6,8 @@ export class IdiomsWorld extends Phaser.Scene {
         super("idiomsWorld");
         this.userName = getLoggedInUsername();
         this.characterID = getLoggedInCharacter();
+        console.log(this.userName);
+        console.log(this.characterID);
     }
     
     preload() {
