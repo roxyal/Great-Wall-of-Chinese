@@ -1,10 +1,16 @@
+import {getLoggedInUsername} from "../../utility.js";
+import {getLoggedInCharacter} from "../../utility.js";
+
 export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
+        // call backend functions here to get username and character id
+        var userName = getLoggedInUsername;
+        var characterID = getLoggedInCharacter;
+
+        console.log(userName + characterID);
     }
-
-    // call backend functions here to get username and character id
-
+    
     preload() {
         // Load world assets
         this.load.image("field", "assets/idiomsWorld/field.jpg");

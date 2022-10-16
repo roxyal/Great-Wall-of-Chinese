@@ -1,4 +1,4 @@
-function getLoggedInUsername() {
+export function getLoggedInUsername() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -21,7 +21,7 @@ function getLoggedInAccountId() {
     xmlhttp.send();
 }
 
-function getLoggedInCharacter() {
+export function getLoggedInCharacter() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
