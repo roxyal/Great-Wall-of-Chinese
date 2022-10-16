@@ -67,64 +67,18 @@ a {
     margin-top: 180px;
 }
 
-
-
-
-
-
-
-
-
- /* Teacher stuff here */
-#assignment-container {
-    border: 1px solid;
-    width: fit-content;
-    height: 50%;
-    background-color: lightgray
-}
-
 #createAssignment input,
 #createAssignment select {
     margin-top: 20px;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
 }
 
-
-/*
-#teacherNavBar a{
-    margin-top: 0px;
-}
-
-
-#teacherLogOut {
+#assignmentButtons button{
+    margin-top: 10px;
     margin-right: 10px;
+    margin-left:10px;
 }
 
-#assignmentNameInput{
-    margin-left: 85%;
-}
-
-#assignmentNameButton{
-    margin-right: 15px;
-}
-*/
-
-table {
-    font-size: 20px;
-}
-
-td button {
-    font-size: 20px;
-}
-
-#teacher-buttons button {
-    font-size: 20px;
-}
-
-th {
-    text-align: left;
-}
-
-col#assignment {
-    width: 700px;
+#assignmentName h5{
+    margin-top: 24px;
 }
