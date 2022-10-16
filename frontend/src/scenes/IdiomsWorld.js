@@ -1,8 +1,10 @@
 import {getLoggedInUsername} from "../../utility.js";
 import {getLoggedInCharacter} from "../../utility.js";
 
-var userName = await getLoggedInUsername();
-var characterID = await getLoggedInCharacter();
+// var userName = await getLoggedInUsername();
+// var characterID = await getLoggedInCharacter();
+var userName = getLoggedInUsername();
+var characterID = getLoggedInCharacter();
 console.log(userName);
 console.log(characterID);
 
@@ -173,12 +175,12 @@ export class IdiomsWorld extends Phaser.Scene {
         this.martial.setCollideWorldBounds(true);
 
 
-        const userName = getLoggedInUsername();
-        const characterID = getLoggedInCharacter();
-        console.log(userName);
-        console.log(characterID);
+        // const userName = getLoggedInUsername();
+        // const characterID = getLoggedInCharacter();
+        // console.log(userName);
+        // console.log(characterID);
         // set name according to player's username here
-        this.martialText = this.add.text(this.martial.x, this.martial.y, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        this.martialText = this.add.text(this.martial.x, this.martial.y, userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.2, "stranger").setScale(4);

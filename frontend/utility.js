@@ -1,5 +1,5 @@
 export function getLoggedInUsername() {
-    return new Promise(function() {
+    // return new Promise(function() {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -8,7 +8,7 @@ export function getLoggedInUsername() {
         };
         xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
         xmlhttp.send();
-    })
+    // })
 }
 
 function getLoggedInAccountId() {
@@ -23,7 +23,7 @@ function getLoggedInAccountId() {
 }
 
 export function getLoggedInCharacter() {
-    return new Promise(function() {
+    // return new Promise(function() {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -33,7 +33,7 @@ export function getLoggedInCharacter() {
         };
         xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
         xmlhttp.send();
-    })
+    // })
 }
 
 function getLoggedInTeacherId() {
