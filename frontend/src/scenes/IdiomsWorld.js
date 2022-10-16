@@ -1,17 +1,18 @@
 import {getLoggedInUsername} from "../../utility.js";
 import {getLoggedInCharacter} from "../../utility.js";
 
+var userName = await getLoggedInUsername();
+var characterID = await getLoggedInCharacter();
+console.log(userName);
+console.log(characterID);
+
 export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
-        getLoggedInUsername().then(response => {
-            this.userName = response;
-        });
-        getLoggedInCharacter().then(response => {
-            this.characterID = response;
-        });
-        console.log(this.userName);
-        console.log(this.characterID);
+        this.userName = userName;
+        this.characterID = characterID;
+        // console.log(this.userName);
+        // console.log(this.characterID);
     }
     
     preload() {
