@@ -1,15 +1,15 @@
-export function getLoggedInUsername() {
+export function getLoggedInUsername(callback) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // console.log(this.responseText);
-            return this.responseText;
+            content = this.responseText;
+            if(content != '' && (content)) callback(content);
+            else callback("undefined");
         }
     };
-    xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
+    xmlhttp.open("GET", "../scripts/functions_utility?func=Username", false);
     xmlhttp.send();
-
-    return "undefined";
 }
 
 function getLoggedInAccountId() {
@@ -31,7 +31,7 @@ export function getLoggedInCharacter() {
             return this.responseText;
         }
     };
-    xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
+    xmlhttp.open("GET", "../scripts/functions_utility?func=Character", false);
     xmlhttp.send();
 }
 
