@@ -5,8 +5,8 @@ export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
         // call backend functions here to get username and character id
-        var userName = getLoggedInUsername;
-        var characterID = getLoggedInCharacter;
+        var userName = getLoggedInUsername();
+        var characterID = getLoggedInCharacter();
 
         console.log(userName + characterID);
     }
