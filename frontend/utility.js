@@ -8,6 +8,8 @@ export function getLoggedInUsername() {
     };
     xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
     xmlhttp.send();
+
+    return "undefined";
 }
 
 function getLoggedInAccountId() {
