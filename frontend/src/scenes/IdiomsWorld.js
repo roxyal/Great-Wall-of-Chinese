@@ -4,8 +4,12 @@ import {getLoggedInCharacter} from "../../utility.js";
 export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
-        this.userName = getLoggedInUsername();
-        this.characterID = getLoggedInCharacter();
+        getLoggedInUsername().then(response => {
+            this.userName = response;
+        });
+        getLoggedInCharacter().then(response => {
+            this.characterID = response;
+        });
         console.log(this.userName);
         console.log(this.characterID);
     }

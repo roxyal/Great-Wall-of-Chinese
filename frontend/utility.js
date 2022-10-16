@@ -1,17 +1,14 @@
 export function getLoggedInUsername() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.responseText);
-            // var content = this.responseText;
-            // if(content != '' && (content)) callback(content);
-            // else callback("undefined");
-            return this.responseText;
-        }
-    };
-    xmlhttp.open("GET", "../scripts/functions_utility?func=Username", false);
-    xmlhttp.send();
-    return "undefined";
+    return new Promise(function() {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                return this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
+        xmlhttp.send();
+    })
 }
 
 function getLoggedInAccountId() {
@@ -26,16 +23,17 @@ function getLoggedInAccountId() {
 }
 
 export function getLoggedInCharacter() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            // console.log(this.responseText);
-            return this.responseText;
-        }
-    };
-    xmlhttp.open("GET", "../scripts/functions_utility?func=Character", false);
-    xmlhttp.send();
-    return "undefined";
+    return new Promise(function() {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                // console.log(this.responseText);
+                return this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
+        xmlhttp.send();
+    })
 }
 
 function getLoggedInTeacherId() {
