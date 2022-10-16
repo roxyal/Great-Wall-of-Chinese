@@ -1,12 +1,6 @@
 import {getLoggedInUsername} from "../../utility.js";
 import {getLoggedInCharacter} from "../../utility.js";
 
-const userName = getLoggedInUsername();
-const characterID = getLoggedInCharacter();
-
-console.log(userName);
-console.log(characterID);
-
 export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
@@ -168,7 +162,12 @@ export class IdiomsWorld extends Phaser.Scene {
         this.martial.body.syncBounds = true;
         this.martial.setBounce(1);
         this.martial.setCollideWorldBounds(true);
-        
+
+
+        const userName = getLoggedInUsername();
+        const characterID = getLoggedInCharacter();
+        console.log(userName);
+        console.log(characterID);
         // set name according to player's username here
         this.martialText = this.add.text(this.martial.x, this.martial.y, userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
