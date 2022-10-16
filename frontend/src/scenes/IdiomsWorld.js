@@ -209,20 +209,20 @@ export class IdiomsWorld extends Phaser.Scene {
         if (this.cursors.right.isDown) {
             this.martial.setVelocityX(150);
             this.martial.flipX = false;
-            this.martial.anims.play("martialRunning", true);
+            this.martial.anims.play("wizardRunning", true);
         } else if (this.cursors.left.isDown) {
             this.martial.setVelocityX(-150);
             this.martial.flipX = true;
-            this.martial.anims.play("martialRunning", true);
+            this.martial.anims.play("wizardRunning", true);
         } else if (this.cursors.up.isDown) {
             this.martial.setVelocityY(-150);
-            this.martial.anims.play("martialRunning", true);
+            this.martial.anims.play("wizardRunning", true);
         } else if (this.cursors.down.isDown) {
             this.martial.setVelocityY(150);
-            this.martial.anims.play("martialRunning", true);
+            this.martial.anims.play("wizardRunning", true);
         } else {
             this.martial.setVelocity(0);
-            this.martial.anims.play("martialIdle", true);
+            this.martial.anims.play("wizardIdle", true);
         }
         if (this.cursors.up.isUp && this.cursors.down.isUp) {
             this.martial.setVelocityY(0);
