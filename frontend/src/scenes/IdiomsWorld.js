@@ -13,8 +13,8 @@ export class IdiomsWorld extends Phaser.Scene {
         super("idiomsWorld");
         this.userName = userName;
         this.characterID = characterID;
-        // console.log(this.userName);
-        // console.log(this.characterID);
+        console.log(this.userName);
+        console.log(this.characterID);
     }
     
     preload() {
@@ -180,7 +180,7 @@ export class IdiomsWorld extends Phaser.Scene {
         // console.log(userName);
         // console.log(characterID);
         // set name according to player's username here
-        this.martialText = this.add.text(this.martial.x, this.martial.y, userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        this.martialText = this.add.text(this.martial.x, this.martial.y, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.2, "stranger").setScale(4);
