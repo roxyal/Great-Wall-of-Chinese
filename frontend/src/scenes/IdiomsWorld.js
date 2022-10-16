@@ -1,10 +1,10 @@
 import {getLoggedInUsername} from "../../utility.js";
 import {getLoggedInCharacter} from "../../utility.js";
 
-// var userName = await getLoggedInUsername();
-// var characterID = await getLoggedInCharacter();
-var userName = getLoggedInUsername();
-var characterID = getLoggedInCharacter();
+var userName = await getLoggedInUsername();
+var characterID = await getLoggedInCharacter();
+// var userName = getLoggedInUsername();
+// var characterID = getLoggedInCharacter();
 console.log(userName);
 console.log(characterID);
 
