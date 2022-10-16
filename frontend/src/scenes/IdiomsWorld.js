@@ -1,15 +1,15 @@
 import {getLoggedInUsername} from "../../utility.js";
 import {getLoggedInCharacter} from "../../utility.js";
 
+const userName = getLoggedInUsername();
+const characterID = getLoggedInCharacter();
+
+console.log(userName);
+console.log(characterID);
+
 export class IdiomsWorld extends Phaser.Scene {
     constructor() {
         super("idiomsWorld");
-        // call backend functions here to get username and character id
-        var userName = getLoggedInUsername();
-        var characterID = getLoggedInCharacter();
-
-        console.log(userName);
-        console.log(characterID);
     }
     
     preload() {
@@ -162,8 +162,6 @@ export class IdiomsWorld extends Phaser.Scene {
         // Add rock for NPC to stand on
         this.add.image(width * 0.5, height * 0.32, "rock").setScale(2);
 
-        this.userName = getLoggedInUsername();
-
         // Need to select idle based on character id
         // Add player character, set physics, and add text that follows character.
         this.martial = this.physics.add.sprite(200, 200, "wizardIdle").setScale(2);
@@ -172,7 +170,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.martial.setCollideWorldBounds(true);
         
         // set name according to player's username here
-        this.martialText = this.add.text(this.martial.x, this.martial.y, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        this.martialText = this.add.text(this.martial.x, this.martial.y, userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.2, "stranger").setScale(4);
