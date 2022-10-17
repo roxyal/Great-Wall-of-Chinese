@@ -1,9 +1,21 @@
+import {getLoggedInUsername} from "../../utility.js";
+import {getLoggedInCharacter} from "../../utility.js";
+
+var userName = await getLoggedInUsername();
+var characterID = await getLoggedInCharacter();
+// var userName = getLoggedInUsername();
+// var characterID = getLoggedInCharacter();
+console.log(userName);
+console.log(characterID);
+
 export class HanyuPinyinWorld extends Phaser.Scene {
     constructor() {
         super("hanyuPinyinWorld");
+        this.userName = userName;
+        this.characterID = characterID;
+        console.log(this.userName);
+        console.log(this.characterID);
     }
-
-    // call backend functions here to get username and character id
 
     preload() {
         // Load world assets
@@ -12,6 +24,7 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.load.spritesheet("shadyGuy", "assets/hanyuPinyinWorld/shady_guy.png", {frameWidth: 34, frameHeight: 34});
         this.load.spritesheet("torch", "assets/hanyuPinyinWorld/torch.png", {frameWidth: 64, frameHeight: 64});
         this.load.audio("hanyu_music", "assets/hanyuPinyinWorld/night_theme_2.wav");
+        this.load.audio("ahem", "assets/hanyuPinyinWorld/ahem.wav");
 
         // Load common assets
         this.load.image("scroll", "assets/common/10b-parchmentborder.gif");
@@ -150,7 +163,7 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.physics.world.setFPS(120);
 
         // Limit world boundaries so characters cannot run too high up
-        this.physics.world.setBounds(0, 150, width, height);
+        this.physics.world.setBounds(0, 150, width, height - 150);
 
         // Add wooden sign that has the name of the world
         this.sign = this.physics.add.sprite(width * 0.75, height * 0.25, "sign").setScale(2).setTint(0x301e01);
@@ -175,35 +188,46 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         // Add box for NPC to stand on
         this.add.image(width * 0.5, height * 0.32, "box").setScale(2).setTint(0x3b2501);
 
-        // Add character, set physics, and add text to character
-        this.huntress = this.physics.add.sprite(200, 300, "huntress").setScale(2.2);
-        this.huntress.setBounce(1);
-        this.huntress.setCollideWorldBounds(true);
-        this.huntressText = this.add.text(this.huntress.x, this.huntress.y + this.huntress.height, "rachel9821", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        // Add player character based on characterID
+        switch (this.characterID) {
+            case "1":
+                this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                this.idleKey = "martialIdle";
+                this.runningKey = "martialRunning";
+                break;
+            case "2":
+                this.player = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
+                this.idleKey = "huntressIdle";
+                this.runningKey = "huntressRunning";
+                break;
+            case "3":
+                this.player = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
+                this.idleKey = "heroKnightIdle";
+                this.runningKey = "heroKnightRunning";
+                break;
+            case "4":
+                this.player = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
+                this.idleKey = "wizardIdle";
+                this.runningKey = "wizardRunning";
+                break;
+            default:
+                console.log("Something went wrong in player creation in create()");
+        }
+        this.player.body.syncBounds = true;
+        this.player.setBounce(1);
+        this.player.setCollideWorldBounds(true);
 
-        this.wizard = this.physics.add.sprite(300, 300, "wizard").setScale(1.3);
-        this.wizard.setBounce(1);
-        this.wizard.setCollideWorldBounds(true);
-        this.wizardText = this.add.text(this.wizard.x, this.wizard.y + this.wizard.height/2, "mark133", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
-        this.wizard.anims.play("wizardIdle", true);
-
-        this.martial = this.physics.add.sprite(400, 300, "martialIdle").setScale(2);
-        this.martial.setBounce(1);
-        this.martial.setCollideWorldBounds(true);
-        this.martialText = this.add.text(this.martial.x, this.martial.y + this.martial.height, "jeffrey1997", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
-        this.martial.anims.play("martialIdle", true);
-
-        this.heroKnight = this.physics.add.sprite(500, 300, "heroKnight").setScale(1.7);
-        this.heroKnight.setBounce(1);
-        this.heroKnight.setCollideWorldBounds(true);
-        this.heroKnightText = this.add.text(this.heroKnight.x, this.heroKnight.y + this.heroKnight.height, "sharon2403", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
-        this.heroKnight.anims.play("heroKnightIdle", true); 
+        // Add username below player character
+        this.playerName = this.add.text(this.player.x, this.player.y + this.player.height, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.22, "shadyGuy").setScale(3).setAlpha(0.7);
         this.npc.body.immovable = true;
         this.npc.flipX = true;
         this.npc.anims.play("npcIdle", true);
+
+        this.npc.setInteractive();
+        this.npc.on("pointerdown", () => this.sound.play("ahem"));
 
         // Add speech bubble for NPC
         this.speech = this.add.image(this.npc.x - this.npc.width / 2, this.npc.y - this.npc.displayHeight/2, "speech");
@@ -222,28 +246,8 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.dialogue.setVisible(false);
 
         // Add colliders between characters and world objects
-        this.physics.add.collider(this.sign, this.huntress);
-        this.physics.add.collider(this.npc, this.huntress);
-        this.physics.add.collider(this.sign, this.wizard);
-        this.physics.add.collider(this.npc, this.wizard);
-        this.physics.add.collider(this.sign, this.martial);
-        this.physics.add.collider(this.npc, this.martial);
-        // Display NPC dialogue on collision with player
-        /*
-        let colliderActivated = false; // to only execute collider callback once
-        this.physics.add.collider(this.npc, this.huntress, () => {
-            if (!colliderActivated) {
-                colliderActivated = true;
-                this.speech.setVisible(false);
-                this.dialogue.setVisible(true);
-                this.time.delayedCall(3000, () => {
-                    this.dialogue.setVisible(false);
-                    this.speech.setVisible(true);
-                    colliderActivated = false;
-                }, [], this);
-            }
-        });
-        */
+        this.physics.add.collider(this.sign, this.player);
+        this.physics.add.collider(this.npc, this.player);
 
         // Create buttons
         const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
@@ -256,35 +260,35 @@ export class HanyuPinyinWorld extends Phaser.Scene {
     update() {
         // Play animations based on keyboard controls
         if (this.cursors.right.isDown) {
-            this.huntress.setVelocityX(150);
-            this.huntress.flipX = false;
-            this.huntress.anims.play("huntressRunning", true);
+            this.player.setVelocityX(150);
+            this.player.flipX = false;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.left.isDown) {
-            this.huntress.setVelocityX(-150);
-            this.huntress.flipX = true;
-            this.huntress.anims.play("huntressRunning", true);
+            this.player.setVelocityX(-150);
+            this.player.flipX = true;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.up.isDown) {
-            this.huntress.setVelocityY(-150);
-            this.huntress.anims.play("huntressRunning", true);
+            this.player.setVelocityY(-150);
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.down.isDown) {
-            this.huntress.setVelocityY(150);
-            this.huntress.anims.play("huntressRunning", true);
+            this.player.setVelocityY(150);
+            this.player.anims.play(this.runningKey, true);
         } else {
-            this.huntress.setVelocity(0);
-            this.huntress.anims.play("huntressIdle", true);
+            this.player.setVelocity(0);
+            this.player.anims.play(this.idleKey, true);
         }
         if (this.cursors.up.isUp && this.cursors.down.isUp) {
-            this.huntress.setVelocityY(0);
+            this.player.setVelocityY(0);
         }
         if (this.cursors.left.isUp && this.cursors.right.isUp) {
-            this.huntress.setVelocityX(0);
+            this.player.setVelocityX(0);
         }
 
         // Set text to follow character
-        this.huntressText.setPosition(this.huntress.x, this.huntress.y + this.huntress.height);
+        this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
         // Display NPC dialogue only when character is close
-        if (Phaser.Math.Distance.Between(this.huntress.x, this.huntress.y, this.npc.x, this.npc.y) <= 150) {
+        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
             this.dialogue.setVisible(true);
             this.speech.setVisible(false);   
         } else {

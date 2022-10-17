@@ -13,6 +13,7 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
      <!-- Font Awesome (icons) assets -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -32,41 +33,18 @@
         </form>
     </nav>
     <div id="container">
-        <div class="content-window container-sm w-75 h-75">
-          <h1>Send Assignment</h1>
-            <div id="assignment-container">
-                <table>
-                    <colgroup>
-                        <col>
-                        <col id="assignment">
-                        <col>
-                    </colgroup>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <th>Assignment</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr>
-                        <td>1.</td>
-                        <td>Idioms 101</td>
-                        <td>
-                            <button>Send</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2.</td>
-                        <td>Fill in the blanks 101</td>
-                        <td>
-                            <button>Send</button>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                </table>
+        <div class="content-window2">
+          <h1 class= "text-center">View Assignment</h1>
+          <div class="row text-center">
+            <div class="col" id="assignmentName">
+              <h2>Assignments</h2>
+            </div>
+            <div class="col" id="assignmentButtons">
+              <h2>Actions</h2>
             </div>
         </div>
     </div>
-    <!--Modal starts here-->
+    <!--Log out Modal starts here-->
     <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -86,6 +64,43 @@
           </div>
         </div>
       </div>
-      <!--Modal ends here-->
+      <!--Log out Modal ends here-->
+      <!--Send Assignment Modal starts here-->
+    <div class="modal fade" id="sendAssignment-Modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Send Assignment</h5>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button onClick="sendAssignment()" type="button" class="btn btn-primary" id="sendAssignment" data-bs-dismiss="modal">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Send Assignment Modal ends here-->
+      <!--Delete Assignment Modal starts here-->
+    <div class="modal fade" id="deleteAssignment-Modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Delete Assignment</h5>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button onClick="deleteRow()" type="button" class="btn btn-danger" id="deleteAssignment" data-bs-dismiss="modal">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Delete Assignment Modal ends here-->
+    <script src="teacher_sendAssignment.js"></script>
 </body>
 </html>

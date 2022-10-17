@@ -41,16 +41,16 @@ function changePic(characterValue){
 	characterDescription.style.border = "1px solid black";
 
 	if(characterValue == 1){
-		displayCharacter.src = "images/martialHero.PNG";
+		displayCharacter.src = "images/martialHero.png";
 		martialHeroDescribe();
 	}else if(characterValue == 2){
-		displayCharacter.src = "images/huntress.PNG";
+		displayCharacter.src = "images/huntress.png";
 		huntressDescribe();
 	}else if(characterValue == 3){
-		displayCharacter.src = "images/heroKnight.PNG"
+		displayCharacter.src = "images/heroKnight.png"
 		heroKnightDescribe();
 	}else if(characterValue == 4){
-		displayCharacter.src = "images/wizard.PNG"
+		displayCharacter.src = "images/wizard.png"
 		wizardDescribe();
 	}
 }
