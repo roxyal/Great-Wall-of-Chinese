@@ -30,7 +30,7 @@ function forgotPassword(string $email) {
         if($checkemail->num_rows > 0) { 
             
             // Ensure the user didn't recently request a password reset within 15 mins. No need to use prepared query here since there is no user-input variable
-            $sql = $conn->query("select * from password_resets where account_id = $account_id and timestamp >= UNIX_TIMESTAMP() - 900");
+            $sql = $conn->query("select * from password_resets where account_id = $account_id and timestamp >= UNIX_TIMESTAMP() - 900 and valid = 1");
             if($sql->num_rows > 0) return 4;
 
             // Generate a random hex value
@@ -38,15 +38,15 @@ function forgotPassword(string $email) {
             $time = time();
             $valid = 1;
 
+            // Make all the user's previous password requests invalid. 
+            $conn->query("update password_resets set valid = 0 where account_id = $account_id");
+
             // Insert random token into the password resets table
             $inserthash = $conn->prepare("insert into password_resets (account_id, email_address, hash, timestamp, valid) values (?, ?, ?, ?, ?)");
             if(
                 $inserthash->bind_param("issii", $account_id, $email, $hash, $time, $valid) &&
                 $inserthash->execute()
             ) {
-                // Make all the user's previous password requests invalid. 
-                $conn->query("update password_resets set valid = 0 where account_id = $account_id");
-
                 // Send email to user
 
                 // Require composer
