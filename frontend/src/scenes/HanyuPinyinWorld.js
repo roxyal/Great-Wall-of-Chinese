@@ -15,8 +15,6 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.characterID = characterID;
         console.log(this.userName);
         console.log(this.characterID);
-        console.log(typeof this.userName);
-        console.log(typeof this.characterID);
     }
 
     preload() {
@@ -26,6 +24,7 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.load.spritesheet("shadyGuy", "assets/hanyuPinyinWorld/shady_guy.png", {frameWidth: 34, frameHeight: 34});
         this.load.spritesheet("torch", "assets/hanyuPinyinWorld/torch.png", {frameWidth: 64, frameHeight: 64});
         this.load.audio("hanyu_music", "assets/hanyuPinyinWorld/night_theme_2.wav");
+        this.load.audio("ahem", "assets/hanyuPinyinWorld/ahem.wav");
 
         // Load common assets
         this.load.image("scroll", "assets/common/10b-parchmentborder.gif");
@@ -197,17 +196,17 @@ export class HanyuPinyinWorld extends Phaser.Scene {
                 this.runningKey = "martialRunning";
                 break;
             case "2":
-                this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
+                this.player = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
                 this.idleKey = "huntressIdle";
                 this.runningKey = "huntressRunning";
                 break;
             case "3":
-                this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
+                this.player = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
                 this.idleKey = "heroKnightIdle";
                 this.runningKey = "heroKnightRunning";
                 break;
             case "4":
-                this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
+                this.player = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
                 this.idleKey = "wizardIdle";
                 this.runningKey = "wizardRunning";
                 break;
@@ -226,6 +225,9 @@ export class HanyuPinyinWorld extends Phaser.Scene {
         this.npc.body.immovable = true;
         this.npc.flipX = true;
         this.npc.anims.play("npcIdle", true);
+
+        this.npc.setInteractive();
+        this.npc.on("pointerdown", () => this.sound.play("ahem"));
 
         // Add speech bubble for NPC
         this.speech = this.add.image(this.npc.x - this.npc.width / 2, this.npc.y - this.npc.displayHeight/2, "speech");

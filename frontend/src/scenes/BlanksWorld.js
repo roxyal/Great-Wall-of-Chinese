@@ -15,8 +15,6 @@ export class BlanksWorld extends Phaser.Scene {
         this.characterID = characterID;
         console.log(this.userName);
         console.log(this.characterID);
-        console.log(typeof this.userName);
-        console.log(typeof this.characterID);
     }
 
     preload() {
@@ -182,17 +180,17 @@ export class BlanksWorld extends Phaser.Scene {
                 this.runningKey = "martialRunning";
                 break;
             case "2":
-                this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
+                this.player = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
                 this.idleKey = "huntressIdle";
                 this.runningKey = "huntressRunning";
                 break;
             case "3":
-                this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
+                this.player = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
                 this.idleKey = "heroKnightIdle";
                 this.runningKey = "heroKnightRunning";
                 break;
             case "4":
-                this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
+                this.player = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
                 this.idleKey = "wizardIdle";
                 this.runningKey = "wizardRunning";
                 break;

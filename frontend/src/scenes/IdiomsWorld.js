@@ -15,8 +15,6 @@ export class IdiomsWorld extends Phaser.Scene {
         this.characterID = characterID;
         console.log(this.userName);
         console.log(this.characterID);
-        console.log(typeof this.userName);
-        console.log(typeof this.characterID);
     }
     
     preload() {
@@ -25,6 +23,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.load.spritesheet("stranger", "assets/idiomsWorld/stranger.png", {frameWidth: 32, frameHeight: 32});
         this.load.image("rock", "assets/idiomsWorld/rock.png");
         this.load.audio("idioms_music", "assets/idiomsWorld/field_theme_2.wav");
+        this.load.audio("yo", "assets/idiomsWorld/yo.wav");
 
         // Load common assets
         this.load.spritesheet("sign", "assets/common/wooden-sign.png", {frameWidth: 65, frameHeight: 64});
@@ -177,17 +176,17 @@ export class IdiomsWorld extends Phaser.Scene {
                 this.runningKey = "martialRunning";
                 break;
             case "2":
-                this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
+                this.player = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
                 this.idleKey = "huntressIdle";
                 this.runningKey = "huntressRunning";
                 break;
             case "3":
-                this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
+                this.player = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
                 this.idleKey = "heroKnightIdle";
                 this.runningKey = "heroKnightRunning";
                 break;
             case "4":
-                this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
+                this.player = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
                 this.idleKey = "wizardIdle";
                 this.runningKey = "wizardRunning";
                 break;
@@ -206,6 +205,9 @@ export class IdiomsWorld extends Phaser.Scene {
         this.npc.body.immovable = true;
         this.npc.body.syncBounds = true;
         this.npc.anims.play("npcIdle", true);
+
+        this.npc.setInteractive();
+        this.npc.on("pointerdown", () => this.sound.play("yo"));
 
         // Add speech bubble for NPC
         this.speech = this.add.image(this.npc.x - this.npc.width, this.npc.y - this.npc.displayHeight/2, "speech");
