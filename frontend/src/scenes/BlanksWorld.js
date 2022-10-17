@@ -1,9 +1,21 @@
+import {getLoggedInUsername} from "../../utility.js";
+import {getLoggedInCharacter} from "../../utility.js";
+
+var userName = await getLoggedInUsername();
+var characterID = await getLoggedInCharacter();
+// var userName = getLoggedInUsername();
+// var characterID = getLoggedInCharacter();
+console.log(userName);
+console.log(characterID);
+
 export class BlanksWorld extends Phaser.Scene {
     constructor() {
         super("blanksWorld");
+        this.userName = userName;
+        this.characterID = characterID;
+        console.log(this.userName);
+        console.log(this.characterID);
     }
-
-    // call backend functions here to get username and character id
 
     preload() {
         // Load world assets
@@ -160,12 +172,37 @@ export class BlanksWorld extends Phaser.Scene {
         // Add chest
         this.add.image(width * 0.4, height * 0.4, "chest").setScale(2);
         
-        // Add character, set physics, and add text to character
-        this.heroKnight = this.physics.add.sprite(500, 300, "heroKnight").setScale(1.7);
-        this.heroKnight.setBounce(1);
-        this.heroKnight.setCollideWorldBounds(true);
-        this.heroKnightText = this.add.text(this.heroKnight.x, this.heroKnight.y + this.heroKnight.height, "sharon2403", {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
-        this.heroKnight.anims.play("heroKnightIdle", true); 
+        // Add player character based on characterID
+        switch (this.characterID) {
+            case 1:
+                this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                this.idleKey = "martialIdle";
+                this.runningKey = "martialRunning";
+                break;
+            case 2:
+                this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
+                this.idleKey = "huntressIdle";
+                this.runningKey = "huntressRunning";
+                break;
+            case 3:
+                this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
+                this.idleKey = "heroKnightIdle";
+                this.runningKey = "heroKnightRunning";
+                break;
+            case 4:
+                this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
+                this.idleKey = "wizardIdle";
+                this.runningKey = "wizardRunning";
+                break;
+            default:
+                console.log("Something went wrong in player creation in create()");
+        }
+        this.player.body.syncBounds = true;
+        this.player.setBounce(1);
+        this.player.setCollideWorldBounds(true);
+
+        // Add username below player character
+        this.playerName = this.add.text(this.player.x, this.player.y + this.player.height, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
         
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.29, "merchant").setScale(3);
@@ -192,8 +229,8 @@ export class BlanksWorld extends Phaser.Scene {
         this.dialogue.setVisible(false);
 
         // Add colliders between characters and world objects
-        this.physics.add.collider(this.sign, this.heroKnight);
-        this.physics.add.collider(this.npc, this.heroKnight);
+        this.physics.add.collider(this.sign, this.player);
+        this.physics.add.collider(this.npc, this.player);
     
         // Create buttons
         const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
@@ -206,35 +243,35 @@ export class BlanksWorld extends Phaser.Scene {
     update() {
         // Play animations based on keyboard controls
         if (this.cursors.right.isDown) {
-            this.heroKnight.setVelocityX(150);
-            this.heroKnight.flipX = false;
-            this.heroKnight.anims.play("heroKnightRunning", true);
+            this.player.setVelocityX(150);
+            this.player.flipX = false;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.left.isDown) {
-            this.heroKnight.setVelocityX(-150);
-            this.heroKnight.flipX = true;
-            this.heroKnight.anims.play("heroKnightRunning", true);
+            this.player.setVelocityX(-150);
+            this.player.flipX = true;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.up.isDown) {
-            this.heroKnight.setVelocityY(-150);
-            this.heroKnight.anims.play("heroKnightRunning", true);
+            this.player.setVelocityY(-150);
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.down.isDown) {
-            this.heroKnight.setVelocityY(150);
-            this.heroKnight.anims.play("heroKnightRunning", true);
+            this.player.setVelocityY(150);
+            this.player.anims.play(this.runningKey, true);
         } else {
-            this.heroKnight.setVelocity(0);
-            this.heroKnight.anims.play("heroKnightIdle", true);
+            this.player.setVelocity(0);
+            this.player.anims.play(this.idleKey, true);
         }
         if (this.cursors.up.isUp && this.cursors.down.isUp) {
-            this.heroKnight.setVelocityY(0);
+            this.player.setVelocityY(0);
         }
         if (this.cursors.left.isUp && this.cursors.right.isUp) {
-            this.heroKnight.setVelocityX(0);
+            this.player.setVelocityX(0);
         }
 
         // Set text to follow character
-        this.heroKnightText.setPosition(this.heroKnight.x, this.heroKnight.y + this.heroKnight.height);
+        this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
         // Display NPC dialogue only when character is close
-        if (Phaser.Math.Distance.Between(this.heroKnight.x, this.heroKnight.y, this.npc.x, this.npc.y) <= 150) {
+        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
             this.dialogue.setVisible(true);
             this.speech.setVisible(false);   
         } else {

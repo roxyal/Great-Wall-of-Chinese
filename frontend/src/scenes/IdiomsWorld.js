@@ -31,8 +31,8 @@ export class IdiomsWorld extends Phaser.Scene {
 
         // Load characters
         this.load.atlas("huntress", "assets/characters/huntress_spritesheet.png", "assets/characters/huntress.json");
-        this.load.atlas("martialIdle", "assets/characters/martial-idle.png", "assets/characters/martial-idle.json");
-        this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
+        this.load.atlas("martialIdle", "assets/characters/player-idle.png", "assets/characters/player-idle.json");
+        this.load.atlas("martialRun", "assets/characters/player-run.png", "assets/characters/player-run.json");
         this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
         this.load.atlas("heroKnight", "assets/characters/heroKnight_spritesheet.png", "assets/characters/heroKnight.json");
     }
@@ -98,7 +98,7 @@ export class IdiomsWorld extends Phaser.Scene {
             key: "martialRunning",
             frameRate: 8,
             frames: this.anims.generateFrameNames("martialRun", {
-                prefix: "martial",
+                prefix: "player",
                 start: 5,
                 end: 12,
                 zeroPad: 3
@@ -167,20 +167,37 @@ export class IdiomsWorld extends Phaser.Scene {
         // Add rock for NPC to stand on
         this.add.image(width * 0.5, height * 0.32, "rock").setScale(2);
 
-        // Need to select idle based on character id
-        // Add player character, set physics, and add text that follows character.
-        this.martial = this.physics.add.sprite(200, 200, "wizardIdle").setScale(2);
-        this.martial.body.syncBounds = true;
-        this.martial.setBounce(1);
-        this.martial.setCollideWorldBounds(true);
+        // Add player character based on characterID
+        switch (this.characterID) {
+            case 1:
+                this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                this.idleKey = "martialIdle";
+                this.runningKey = "martialRunning";
+                break;
+            case 2:
+                this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
+                this.idleKey = "huntressIdle";
+                this.runningKey = "huntressRunning";
+                break;
+            case 3:
+                this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
+                this.idleKey = "heroKnightIdle";
+                this.runningKey = "heroKnightRunning";
+                break;
+            case 4:
+                this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
+                this.idleKey = "wizardIdle";
+                this.runningKey = "wizardRunning";
+                break;
+            default:
+                console.log("Something went wrong in player creation in create()");
+        }
+        this.player.body.syncBounds = true;
+        this.player.setBounce(1);
+        this.player.setCollideWorldBounds(true);
 
-
-        // const userName = getLoggedInUsername();
-        // const characterID = getLoggedInCharacter();
-        // console.log(userName);
-        // console.log(characterID);
-        // set name according to player's username here
-        this.martialText = this.add.text(this.martial.x, this.martial.y, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        // Add username below player character
+        this.playerName = this.add.text(this.player.x, this.player.y + this.player.height, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
         // Add NPC
         this.npc = this.physics.add.sprite(width * 0.5, height * 0.2, "stranger").setScale(4);
@@ -205,8 +222,8 @@ export class IdiomsWorld extends Phaser.Scene {
         this.dialogue.setVisible(false);
         
         // Add colliders between player and world objects
-        this.physics.add.collider(this.sign, this.martial);
-        this.physics.add.collider(this.martial, this.npc);
+        this.physics.add.collider(this.sign, this.player);
+        this.physics.add.collider(this.player, this.npc);
 
         // Create buttons
         const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
@@ -218,35 +235,35 @@ export class IdiomsWorld extends Phaser.Scene {
 
     update() {
         if (this.cursors.right.isDown) {
-            this.martial.setVelocityX(150);
-            this.martial.flipX = false;
-            this.martial.anims.play("wizardRunning", true);
+            this.player.setVelocityX(150);
+            this.player.flipX = false;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.left.isDown) {
-            this.martial.setVelocityX(-150);
-            this.martial.flipX = true;
-            this.martial.anims.play("wizardRunning", true);
+            this.player.setVelocityX(-150);
+            this.player.flipX = true;
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.up.isDown) {
-            this.martial.setVelocityY(-150);
-            this.martial.anims.play("wizardRunning", true);
+            this.player.setVelocityY(-150);
+            this.player.anims.play(this.runningKey, true);
         } else if (this.cursors.down.isDown) {
-            this.martial.setVelocityY(150);
-            this.martial.anims.play("wizardRunning", true);
+            this.player.setVelocityY(150);
+            this.player.anims.play(this.runningKey, true);
         } else {
-            this.martial.setVelocity(0);
-            this.martial.anims.play("wizardIdle", true);
+            this.player.setVelocity(0);
+            this.player.anims.play(this.idleKey, true);
         }
         if (this.cursors.up.isUp && this.cursors.down.isUp) {
-            this.martial.setVelocityY(0);
+            this.player.setVelocityY(0);
         }
         if (this.cursors.left.isUp && this.cursors.right.isUp) {
-            this.martial.setVelocityX(0);
+            this.player.setVelocityX(0);
         }
 
         // Set text to follow character
-        this.martialText.setPosition(this.martial.x, this.martial.y + this.martial.height);
+        this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
         // Display NPC dialogue only when character is close
-        if (Phaser.Math.Distance.Between(this.martial.x, this.martial.y, this.npc.x, this.npc.y) <= 150) {
+        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
             this.dialogue.setVisible(true);
             this.speech.setVisible(false);   
         } else {
