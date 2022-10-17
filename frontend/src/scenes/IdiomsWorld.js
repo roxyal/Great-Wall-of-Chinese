@@ -15,6 +15,8 @@ export class IdiomsWorld extends Phaser.Scene {
         this.characterID = characterID;
         console.log(this.userName);
         console.log(this.characterID);
+        console.log(typeof this.userName);
+        console.log(typeof this.characterID);
     }
     
     preload() {
@@ -31,8 +33,8 @@ export class IdiomsWorld extends Phaser.Scene {
 
         // Load characters
         this.load.atlas("huntress", "assets/characters/huntress_spritesheet.png", "assets/characters/huntress.json");
-        this.load.atlas("martialIdle", "assets/characters/player-idle.png", "assets/characters/player-idle.json");
-        this.load.atlas("martialRun", "assets/characters/player-run.png", "assets/characters/player-run.json");
+        this.load.atlas("martialIdle", "assets/characters/martial-idle.png", "assets/characters/martial-idle.json");
+        this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
         this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
         this.load.atlas("heroKnight", "assets/characters/heroKnight_spritesheet.png", "assets/characters/heroKnight.json");
     }
@@ -98,7 +100,7 @@ export class IdiomsWorld extends Phaser.Scene {
             key: "martialRunning",
             frameRate: 8,
             frames: this.anims.generateFrameNames("martialRun", {
-                prefix: "player",
+                prefix: "martial",
                 start: 5,
                 end: 12,
                 zeroPad: 3
@@ -169,22 +171,22 @@ export class IdiomsWorld extends Phaser.Scene {
 
         // Add player character based on characterID
         switch (this.characterID) {
-            case 1:
+            case "1":
                 this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
                 this.idleKey = "martialIdle";
                 this.runningKey = "martialRunning";
                 break;
-            case 2:
+            case "2":
                 this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
                 this.idleKey = "huntressIdle";
                 this.runningKey = "huntressRunning";
                 break;
-            case 3:
+            case "3":
                 this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
                 this.idleKey = "heroKnightIdle";
                 this.runningKey = "heroKnightRunning";
                 break;
-            case 4:
+            case "4":
                 this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
                 this.idleKey = "wizardIdle";
                 this.runningKey = "wizardRunning";

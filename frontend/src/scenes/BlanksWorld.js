@@ -15,6 +15,8 @@ export class BlanksWorld extends Phaser.Scene {
         this.characterID = characterID;
         console.log(this.userName);
         console.log(this.characterID);
+        console.log(typeof this.userName);
+        console.log(typeof this.characterID);
     }
 
     preload() {
@@ -171,25 +173,25 @@ export class BlanksWorld extends Phaser.Scene {
 
         // Add chest
         this.add.image(width * 0.4, height * 0.4, "chest").setScale(2);
-        
+
         // Add player character based on characterID
         switch (this.characterID) {
-            case 1:
+            case "1":
                 this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
                 this.idleKey = "martialIdle";
                 this.runningKey = "martialRunning";
                 break;
-            case 2:
+            case "2":
                 this.player = this.physics.add.sprite(200, 200, "huntress").setScale(2.2);
                 this.idleKey = "huntressIdle";
                 this.runningKey = "huntressRunning";
                 break;
-            case 3:
+            case "3":
                 this.player = this.physics.add.sprite(200, 200, "heroKnight").setScale(1.7);
                 this.idleKey = "heroKnightIdle";
                 this.runningKey = "heroKnightRunning";
                 break;
-            case 4:
+            case "4":
                 this.player = this.physics.add.sprite(200, 200, "wizard").setScale(1.3);
                 this.idleKey = "wizardIdle";
                 this.runningKey = "wizardRunning";
