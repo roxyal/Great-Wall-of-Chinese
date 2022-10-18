@@ -1,51 +1,54 @@
 // add question
 function addQuestion(){
 	let questionElement = document.getElementById("questions");
-	questionElement.innerHTML = `<div class="row">
+	newRow = document.createElement("div");
+	newRow.className = "row"
+	newRow.innerHTML = `
 	<div class="col-md-3 mb-3">
-	  <input type="text" name="question[]" class="form-control" 
-	  placeholder="Question" required>
-	</div>
+      <input type="text" name="question[]" class="form-control" 
+      placeholder="Question">
+    </div>
 
-	<div class="col-md-1 mb-3">
-	  <input type="text" name="option_1[]" class="form-control" 
-	  placeholder="option 1" required>
-	</div>
+    <div class="col-md-1 mb-3">
+      <input type="text" name="option_1[]" class="form-control" 
+      placeholder="option 1">
+    </div>
 
-	<div class="col-md-1 mb-3">
-	  <input type="text" name="option_2[]" class="form-control" 
-	  placeholder="option 2" required>
-	</div>
+    <div class="col-md-1 mb-3">
+      <input type="text" name="option_2[]" class="form-control" 
+      placeholder="option 2">
+    </div>
 
-	<div class="col-md-1 mb-3">
-	  <input type="text" name="option_3[]" class="form-control" 
-	  placeholder="option 3" required>
-	</div>
+    <div class="col-md-1 mb-3">
+      <input type="text" name="option_3[]" class="form-control" 
+      placeholder="option 3">
+    </div>
 
-	<div class="col-md-1 mb-3">
-	  <input type="text" name="option_4[]" class="form-control" 
-	  placeholder="option 4" required>
-	</div>
+    <div class="col-md-1 mb-3">
+      <input type="text" name="option_4[]" class="form-control" 
+      placeholder="option 4">
+    </div>
 
-	<div class="col-md-1 mb-3">
-	  <select type="text" name="answer[]" class="form-control" required>
-		<option value="" selected disabled>Answer</option>
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-	  </select>
-	</div>
+    <div class="col-md-1 mb-3">
+      <select type="text" name="answer[]" class="form-control" >
+        <option value="" selected disabled>Answer</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
 
-	<div class="col-md-2 mb-3">
-	  <input type="text" name="explanation[]" class="form-control" 
-	  placeholder="explanation" required>
-	</div>
+    <div class="col-md-2 mb-3">
+      <input type="text" name="explanation[]" class="form-control" 
+      placeholder="explanation" required>
+    </div>
 
 	<div class="col-md-2 mb-3 d-grid">
-	  <button onclick=removeQuestion(event) class="btn btn-secondary remove_item_btn">Remove</button>
+	  <button onclick=removeQuestion(event) class="btn btn-secondary remove-itm btn">Remove</button>
 	</div>
-	</div>` + questionElement.innerHTML;
+	`;
+	questionElement.insertBefore(newRow, questionElement.firstChild);
 }
 
 // remove question from page
