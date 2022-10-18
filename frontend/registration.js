@@ -85,7 +85,8 @@ function register(){
 
 	// check empty fields
 	if(!userName || !realName || !email || !password || !reenterpassword || !character || !teacher){
-		resp.innerHTML = "Please fill in all the fields!"
+		`<div class="alert alert-danger" role="alert">Invalid password format!</div>`
+		resp.innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`;
 		return;
 	}
 
@@ -108,17 +109,18 @@ function register(){
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
             // var resp = document.getElementById("response");
             if(this.responseText.includes(0)){
-				alert("Registration successful!");
+				resp.innerHTML = `<div class="alert alert-success" role="alert">Registration successful!</div>`
+				//alert("Registration successful!");
 				//resp.innerHTML = "Registration successful!";
 			}
-            if(this.responseText.includes(1)) resp.innerHTML = "Email is taken";
-            if(this.responseText.includes(2)) resp.innerHTML = "Username is taken";
-			if(this.responseText.includes(3)) resp.innerHTML = "invalid teacher";
-            if(this.responseText.includes(4)) resp.innerHTML = "invalid characters";
-			if(this.responseText.includes(5)) resp.innerHTML = "A server error occurred.";
-            if(this.responseText.includes(6)) resp.innerHTML = "invalid email format";
-			if(this.responseText.includes(7)) resp.innerHTML = "Invalid username format!";
-            if(this.responseText.includes(8)) resp.innerHTML = "Invalid password format!";
+            if(this.responseText.includes(1)) resp.innerHTML = `<div class="alert alert-danger" role="alert">Email is taken</div>`;
+            if(this.responseText.includes(2)) resp.innerHTML = `<div class="alert alert-danger" role="alert">Username is taken</div>`;
+			if(this.responseText.includes(3)) resp.innerHTML = `<div class="alert alert-danger" role="alert">invalid teacher</div>`;
+            if(this.responseText.includes(4)) resp.innerHTML = `<div class="alert alert-danger" role="alert">invalid characters</div>`;
+			if(this.responseText.includes(5)) resp.innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred.</div>`;
+            if(this.responseText.includes(6)) resp.innerHTML = `<div class="alert alert-danger" role="alert">invalid email format</div>`;
+			if(this.responseText.includes(7)) resp.innerHTML = `<div class="alert alert-danger" role="alert">Invalid username format!</div>`;
+            if(this.responseText.includes(8)) resp.innerHTML = `<div class="alert alert-danger" role="alert">Invalid password format!</div>`;
         }
     };
     // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
