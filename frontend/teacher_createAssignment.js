@@ -62,7 +62,8 @@ function saveAssignment(){
 	let emptyFields = false;
 
 	let assignmentName = document.getElementById("assignmentName").value;
-	let dateInput = document.getElementById("dueDate").value;
+	let dateInput = document.getElementById("assignmentDate").value;
+	//console.log(dateInput);
 
 	if(!assignmentName||!dateInput){
 		emptyFields = true;
