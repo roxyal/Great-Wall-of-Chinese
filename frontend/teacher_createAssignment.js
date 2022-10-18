@@ -41,7 +41,7 @@ function addQuestion(){
 
     <div class="col-md-2 mb-3">
       <input type="text" name="explanation[]" class="form-control" 
-      placeholder="explanation" required>
+      placeholder="explanation">
     </div>
 
 	<div class="col-md-2 mb-3 d-grid">
