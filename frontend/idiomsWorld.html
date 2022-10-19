@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav" id="teacherNavBar">
             <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#createCustomLevel-modal">Create custom level</a>
-            <a class="nav-item nav-link my-0" href='#'>View custom level</a>
+            <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#viewCustomLevel-modal">View custom level</a>
             <a class="nav-item nav-link my-0" href='world_selection.html'>Change World</a>
             <a class="nav-item nav-link my-0" href="#">Leaderboard</a>
           </div>
@@ -127,6 +127,34 @@
   </div>
   <!--Create custom level Modal ends here-->
 
+  <!--View custom level Modal starts here-->
+  <div class="modal fade" id="viewCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <h4 class="modal-title" id="modal-title">View custom levels</h4>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row text-center">
+              <div class="col auto" id="customLevelName">
+                <h5>Custom level</h5>
+              </div>
+              <div class="col auto" id="customLevelActions">
+                <h5>Actions</h5>
+              </div>
+            </div>
+          </div>
+          <div id="response"></div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--View custom level Modal ends here-->
+
   <!--Logout Modal starts here-->
   <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog">
@@ -169,5 +197,14 @@
       document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
     }
   }
+
+  let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal')
+	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+    console.log("open")
+		var customLevelNameCol = viewCustomLevelModal.querySelector('#customLevelName'); // column containing custom level names
+    var customLevelActionCol = viewCustomLevelModal.querySelector('#customLevelActions'); // column containing delete buttons
+
+    //link backend here to get custom level names
+	})
 </script>
 </html>

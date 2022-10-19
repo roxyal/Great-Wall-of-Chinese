@@ -21,10 +21,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav" id="teacherNavBar">
-            <a style = "margin-top: 0px;" class="nav-item nav-link" href='#'>Create custom level</a>
-            <a style = "margin-top: 0px;" class="nav-item nav-link" href='#'>View custom level</a>
-            <a style = "margin-top: 0px;" class="nav-item nav-link" href='world_selection.html'>Change World</a>
-            <a style = "margin-top: 0px;" class="nav-item nav-link" href="#">Leaderboard</a>
+            <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#createCustomLevel-modal">Create custom level</a>
+            <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#viewCustomLevel-modal">View custom level</a>
+            <a class="nav-item nav-link my-0" href='world_selection.html'>Change World</a>
+            <a class="nav-item nav-link my-0" href="#">Leaderboard</a>
           </div>
         </div>
           <form class="form-inline">
@@ -32,7 +32,130 @@
           </form>
       </nav>
     <div id="blanksWorld"></div>
-    <!--Modal starts here-->
+
+    <!--Create custom level Modal starts here-->
+    <div class="modal fade" id="createCustomLevel-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="modal-title">Create custom level</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="row text-center">
+                <div class="col auto">
+                  <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 1</option>
+                    <option value="Idoims">Idoims</option>
+                    <option value="Hanyu Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill in the blanks">Fill in the blanks</option>
+                  </select>
+                  <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 2</option>
+                    <option value="Idoims">Idoims</option>
+                    <option value="Hanyu Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill in the blanks">Fill in the blanks</option>
+                  </select>
+                  <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 3</option>
+                    <option value="Idoims">Idoims</option>
+                    <option value="Hanyu Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill in the blanks">Fill in the blanks</option>
+                  </select>
+                  <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 4</option>
+                    <option value="Idoims">Idoims</option>
+                    <option value="Hanyu Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill in the blanks">Fill in the blanks</option>
+                  </select>
+                  <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 5</option>
+                    <option value="Idoims">Idoims</option>
+                    <option value="Hanyu Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill in the blanks">Fill in the blanks</option>
+                  </select>
+                </div>
+                <div class="col auto">
+                  <select type="text" name="difficulty" class="form-control my-3" >
+                    <option value="" selected disabled>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Difficult">Difficult</option>
+                  </select>
+                  <select type="text" name="difficulty" class="form-control my-3" >
+                    <option value="" selected disabled>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Difficult">Difficult</option>
+                  </select>
+                  <select type="text" name="difficulty" class="form-control my-3" >
+                    <option value="" selected disabled>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Difficult">Difficult</option>
+                  </select>
+                  <select type="text" name="difficulty" class="form-control my-3" >
+                    <option value="" selected disabled>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Difficult">Difficult</option>
+                  </select>
+                  <select type="text" name="difficulty" class="form-control my-3" >
+                    <option value="" selected disabled>Select difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Difficult">Difficult</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row text-center justify-content-center mt-3">
+                <div class="col-auto">
+                  <input class="form-control" type="text" id="customLevelName" placeholder="Custom level name" aria-label="Search">
+                </div>
+                <div class="col-auto">
+                  <button onclick="saveCustomLevel()" class="btn btn-success" type="submit" id="saveCustomLevelBtn">Save Custom level</button>
+                </div>
+              </div>
+            </div>
+            <div id="response"></div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Create custom level Modal ends here-->
+
+    <!--View custom level Modal starts here-->
+    <div class="modal fade" id="viewCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="modal-title">View custom levels</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="row text-center">
+                <div class="col auto" id="customLevelName">
+                  <h5>Custom level</h5>
+                </div>
+                <div class="col auto" id="customLevelActions">
+                  <h5>Actions</h5>
+                </div>
+              </div>
+            </div>
+            <div id="response"></div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--View custom level Modal ends here-->
+
+    <!--Logout Modal starts here-->
     <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -52,6 +175,39 @@
           </div>
         </div>
     </div>
-      <!--Modal ends here-->
+    <!--Logout Modal ends here-->
 </body>
+<script>
+  // save custom level here
+  function saveCustomLevel(){
+    let emptyFields = false;
+    let customLevelName = document.getElementById("customLevelName").value;
+    if(!customLevelName){
+      emptyFields = true;
+    }
+    let allQuestions = document.querySelectorAll("[name='questionType']");
+    let allDifficulty = document.querySelectorAll("[name='difficulty']");
+    for(let i=0; i<allQuestions.length; i++){
+      if(!allQuestions[i].value||!allDifficulty[i].value){
+        emptyFields=true;
+        break;
+      }
+    }
+    if(emptyFields){
+  		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
+    }else{
+      document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
+    }
+  }
+
+  // view custom levels
+  let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal')
+	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+    console.log("open")
+		var customLevelNameCol = viewCustomLevelModal.querySelector('#customLevelName'); // column containing custom level names
+    var customLevelActionCol = viewCustomLevelModal.querySelector('#customLevelActions'); // column containing delete buttons
+
+    //link backend here to get custom level names
+	})
+</script>
 </html>
