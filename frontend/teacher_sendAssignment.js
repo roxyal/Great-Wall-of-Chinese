@@ -28,38 +28,19 @@ function addAssignmentButtons(rowNum){
 	var sendAssignmentHTML = '	<button onclick = sendAssignmentNotification("' + rowNum +  '") class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send"><span class="bi bi-send"></span></button>';
 	assignmentButtonElement.className = rowNum;
 	assignmentButtonElement.innerHTML = sendAssignmentHTML + deleteButtonHTML;
-	;
 
 	document.getElementById('assignmentButtons').appendChild(assignmentButtonElement);
 }
 
+// test assignments
 addAssignmentName("IDOIMS 101", "rownum1")
 addAssignmentButtons("rownum1")
-
 addAssignmentName("IDOIMS 102", "rownum2")
 addAssignmentButtons("rownum2")
-
 addAssignmentName("IDOIMS 103", "rownum3")
 addAssignmentButtons("rownum3")
 
-addAssignmentName("IDOIMS 104", "rownum4")
-addAssignmentButtons("rownum4")
-
-addAssignmentName("IDOIMS 105", "rownum5")
-addAssignmentButtons("rownum5")
-
-addAssignmentName("IDOIMS 106", "rownum6")
-addAssignmentButtons("rownum6")
-
-addAssignmentName("IDOIMS 107", "rownum7")
-addAssignmentButtons("rownum7")
-
-addAssignmentName("IDOIMS 108", "rownum8")
-addAssignmentButtons("rownum8")
-
-addAssignmentName("IDOIMS 109", "rownum9")
-addAssignmentButtons("rownum9")
-
+// shows a modal to confirm if user wants to send assignment
 function sendAssignmentNotification(rowNum){
 	assignmentToSend = document.getElementById(rowNum).innerHTML;
 	let notification = "Send " + assignmentToSend + "?";
@@ -74,13 +55,49 @@ function sendAssignmentNotification(rowNum){
 	assignmentModal.show();
 }
 
+// link backend script here to send assignment, then display a modal if successful
 function sendAssignment(){
-	console.log("ASSIGNMENT " + assignmentToSend + " SENT");
-	// link backend here to send Assignment
-	// once backend successful, open modal to notify success of sending assignment, with options to share on social media
+	let successMessage = assignmentToSend + " has been sent successfully"
+	let assignmentSent = document.getElementById('assignmentSentSuccess-Modal')
+	assignmentSent.addEventListener('show.bs.modal', function (event){
+		var modalMessage = assignmentSent.querySelector('.modal-body p');
+		modalMessage.innerHTML = successMessage;
+	})
+
+	// adding the script for the tweet button
+	document.getElementById('assignmentSentSuccess-Modal')
+	.addEventListener("show.bs.modal", async function () {
+		!(function (d, s, id) {
+			var js,
+			  fjs = d.getElementsByTagName(s)[0];
+			if (!d.getElementById(id)) {
+			  js = d.createElement(s);
+			  js.id = id;
+			  js.src = "https://platform.twitter.com/widgets.js";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}
+		  })(document, "script", "twitter-wjs");
+	});
+
+	// adding the script for the facebook button
+	document.getElementById('assignmentSentSuccess-Modal')
+	.addEventListener("show.bs.modal", async function () {
+		!(function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); 
+			js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	});
+
+	var assignmentSentSuccessModal = new bootstrap.Modal(document.getElementById('assignmentSentSuccess-Modal'), {});
+	assignmentSentSuccessModal.show();
 }
 
 
+// shows a modal to confirm if user wants to delete assignment
 function deleteRowNotification(rowNum){
 	let assignmentToDelete = document.getElementById(rowNum).innerHTML;
 	let notification = "Delete " + assignmentToDelete + "?";
@@ -96,11 +113,10 @@ function deleteRowNotification(rowNum){
 	deleteModal.show();
 }
 
+// link backend here to delete assignment, if successful -> delete row of elements on the page
 function deleteRow(){
 	const rowElements = document.querySelectorAll('.' + rowToDelete);
 	rowElements.forEach(element =>{
 		element.remove();
 	});
-
-	// link backend here to delete assignment
 }

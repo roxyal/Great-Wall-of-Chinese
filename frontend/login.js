@@ -31,7 +31,7 @@ function login(){
 	var passWord = password.value;
 
 	if(!userName || !passWord){
-        resp.innerHTML = "username or password is empty!";
+        resp.innerHTML = `<div class="alert alert-danger" role="alert">username or password is empty!</div>`;
 		return;
 	}
 
@@ -53,8 +53,8 @@ function login(){
             // The login script has the following possible outputs: ints 0, 1 or 2, so we'll translate that over to the frontend once the response code is received.
             // code 0: successful login
 			// a div to show message
-            if(this.responseText.includes(1)) resp.innerHTML = "Your login details were incorrect.";
-            if(this.responseText.includes(2)) resp.innerHTML = "A server error occurred.";
+            if(this.responseText.includes(1)) resp.innerHTML = `<div class="alert alert-danger" role="alert">Your login details are incorrect</div>`;
+            if(this.responseText.includes(2)) resp.innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
         }
     };
     // We can send GET or POST requests but it's better to send sensitive details like password with POST, so it won't be revealed on user's browsing history. 
