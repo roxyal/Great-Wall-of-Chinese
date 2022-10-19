@@ -34,7 +34,7 @@
     <div id="idiomWorld"></div>
 
     <!--Create custom level Modal starts here-->
-    <div class="modal fade" id="createCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal fade" id="createCustomLevel-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header justify-content-center">
@@ -77,34 +77,34 @@
                 </div>
                 <div class="col auto">
                   <select type="text" name="difficulty" class="form-control my-3" >
-                    <option value="" selected disabled>Difficulty</option>
+                    <option value="" selected disabled>Select difficulty</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
-                    <option value="Hard">Large</option>
+                    <option value="Difficult">Difficult</option>
                   </select>
                   <select type="text" name="difficulty" class="form-control my-3" >
-                    <option value="" selected disabled>Difficulty</option>
+                    <option value="" selected disabled>Select difficulty</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
-                    <option value="Hard">Large</option>
+                    <option value="Difficult">Difficult</option>
                   </select>
                   <select type="text" name="difficulty" class="form-control my-3" >
-                    <option value="" selected disabled>Difficulty</option>
+                    <option value="" selected disabled>Select difficulty</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
-                    <option value="Hard">Large</option>
+                    <option value="Difficult">Difficult</option>
                   </select>
                   <select type="text" name="difficulty" class="form-control my-3" >
-                    <option value="" selected disabled>Difficulty</option>
+                    <option value="" selected disabled>Select difficulty</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
-                    <option value="Hard">Large</option>
+                    <option value="Difficult">Difficult</option>
                   </select>
                   <select type="text" name="difficulty" class="form-control my-3" >
-                    <option value="" selected disabled>Difficulty</option>
+                    <option value="" selected disabled>Select difficulty</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
-                    <option value="Hard">Large</option>
+                    <option value="Difficult">Difficult</option>
                   </select>
                 </div>
               </div>
@@ -113,7 +113,7 @@
                   <input class="form-control" type="text" id="customLevelName" placeholder="Custom level name" aria-label="Search">
                 </div>
                 <div class="col-auto">
-                  <button class="btn btn-success" type="submit" id="saveCustomLevelBtn">Save Custom level</button>
+                  <button onclick="saveCustomLevel()" class="btn btn-success" type="submit" id="saveCustomLevelBtn">Save Custom level</button>
                 </div>
               </div>
             </div>
@@ -144,6 +144,30 @@
         </div>
       </div>
   </div>
-  <!--Logout Modal ends here-->
+  <!--Logout Modal ends here--> 
+
 </body>
+<script>
+  // save custom level here
+  function saveCustomLevel(){
+    let emptyFields = false;
+    let customLevelName = document.getElementById("customLevelName").value;
+    if(!customLevelName){
+      emptyFields = true;
+    }
+    let allQuestions = document.querySelectorAll("[name='questionType']");
+    let allDifficulty = document.querySelectorAll("[name='difficulty']");
+    for(let i=0; i<allQuestions.length; i++){
+      if(!allQuestions[i].value||!allDifficulty[i].value){
+        emptyFields=true;
+        break;
+      }
+    }
+    if(emptyFields){
+  		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
+    }else{
+      document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
+    }
+  }
+</script>
 </html>
