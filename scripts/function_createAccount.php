@@ -22,14 +22,16 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+
+
 // This is the create account function. It is called every time a user clicks submit on the registration form. 
 function createAccount(string $uname, string $name, string $email, string $pass, int $teacher_id, int $character) {
-    
-    require "config.php";
-    require "functions_utility.php";
+
+    require_once "functions_utility.php";
+    require_once "config.php";
 
     // Check valid email format
-    if(preg_match("/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\..+$/", $email) !== 1) return 6;
+    if(preg_match("/^[a-zA-Z0-9_]+@[a-zA-Z0-9]+\..+$/", $email) !== 1) return 6;
     // Check valid username format
     if(preg_match("/^[a-zA-Z0-9]{3,}$/", $uname) !== 1) return 7;
     // Check valid password format
