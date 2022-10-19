@@ -1,7 +1,7 @@
 <?php
 // Require the config.php file at the top of every function file. 
 //require "config.php";
-
+require "functions_utility.php";
 // A Student class that holds all the function needed for students
 class Student
 {
@@ -16,7 +16,10 @@ class Student
     // Opponent choose to accept/reject Pvp request
     public function acceptPvpRequest(int $requester_id, int $opponent_id, $status)
     {
-        // 0 status = accept; 1 status = reject, 2 status = Wating, 3 status = Expired
+        // Check to see if requester_id or opponent_id is valid
+        if (!checkAccountIdExists($requester_id) or !checkAccountIdExists($opponent_id)) return 4;
+        
+        // 0 status = accept; 1 status = reject, 2 status = Waiting, 3 status = Expired
         // Obtain the latest timestamp's pvp request
         $sql_1 = "SELECT * FROM pvp_session WHERE requester_id = ? AND opponent_id = ? ORDER BY timestamp DESC LIMIT 1";
         $stmt_1 = $this->conn->prepare($sql_1);
@@ -45,7 +48,7 @@ class Student
                 $stmt_2->bind_param('iiii', $status, $requester_id, $opponent_id, $row_1['timestamp']) &&
                 $stmt_2->execute()
             ){
-                return 0;
+                return $status;
             }
             else
             {
@@ -66,9 +69,15 @@ class Student
                                     int $pinyin_lower_count, int $pinyin_upper_count)
     {
         
+        // Check to see if account_id exists
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        // Check to see if user has choosen a total of 5 questions anot
+        if ($idiom_lower_count+$idiom_upper_count+$fill_lower_count+$fill_upper_count+$pinyin_lower_count+$pinyin_upper_count != 5) return 2;
+        
         // Everytime when a user successfully create a custom game.
         // generateQnBank will be called first to randomly generate the questions from the question table
-        // and store it under question_bank 
+        // and store it under question_bank tied with the account_id
         $this->generateQnBank($account_id, $idiom_lower_count, $idiom_upper_count, $fill_lower_count, $fill_upper_count, $pinyin_lower_count, $pinyin_upper_count);
         $timestamp = time();
         $sql_1 = "INSERT INTO custom_levels (account_id, idiom_lower_count, idiom_upper_count,"
@@ -88,12 +97,12 @@ class Student
         else
         {
             if($debug_mode) echo $this->conn->error;
-                return 2; // ERROR with database SQL
+                return 3; // ERROR with database SQL
         }
     }
     
     // A utility function to check if the student created before CustomGame
-    public function checkCustomGameExists($account_id)
+    public function checkCustomGameExists($account_id) : bool
     {
         $sql = "SELECT * FROM custom_levels WHERE account_id = ?";
         $stmt = $this->conn->prepare($sql);
@@ -112,8 +121,9 @@ class Student
                                         int $fill_lower_count, int $fill_upper_count,
                                         int $pinyin_lower_count, int $pinyin_upper_count)
     {
-        $qn_category = ['idiom_Lower pri', 'idiom_Upper pri','fill_Lower_pri',
-                        'fill_Upper_pri','pinyin_Lower pri', 'pinyin_Upper pri'];
+        
+        $qn_category = ['idiom_Lower pri', 'idiom_Upper pri','fill_Lower pri',
+                        'fill_Upper pri','pinyin_Lower pri', 'pinyin_Upper pri'];
         
         $qn_list = [$idiom_lower_count, $idiom_upper_count, $fill_lower_count,
             $fill_upper_count, $pinyin_lower_count, $pinyin_upper_count];
@@ -172,16 +182,17 @@ class Student
     // Send Pvp request to opponent
     public function sendPvpRequest(int $requester_id, int $opponent_id, int $pvp_room_type)
     {
+        // Check to see if requester_id or opponent_id is valid
+        if (!checkAccountIdExists($requester_id) or !checkAccountIdExists($opponent_id)) return 1;
         
         // pvp_room_type -> 0 denotes choose CustomGame for PVP; 1 denotes choose RandomizeGame for PVP;
         if ($pvp_room_type == 0){
             // Check to see if user has create a custom game before anot
             // No Custom Game created return 1; (Please go create ..)
             if (!$this->checkCustomGameExists($requester_id)){
-                return 1;
+                return 2;
             }
         }
-        
         // When you send a pvp request, it will create a row in the pvp_session table
         $status = 2; // when u send request the status default is 2 = Waiting 
         $timestamp = time();
@@ -198,14 +209,19 @@ class Student
         else
         {
             if($debug_mode) echo $this->conn->error;
-                return 2; // ERROR with database SQL
+                return 3; // ERROR with database SQL
         }
     }
     
     // Function for Student to view other Players profiles
     public function viewProfile(int $account_id)
     {
-        $sql = "SELECT * FROM students s LEFT JOIN accounts a ON a.account_id = s.student_id WHERE s.student_id = ?";
+        // Check to see if requester_id or opponent_id is valid
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        $sql = "SELECT student_id, character_type, idiom_lower_accuracy, idiom_upper_accuracy,
+        fill_lower_accuracy, fill_upper_accuracy, pinyin_lower_accuracy,
+        pinyin_upper_accuracy,name FROM students s LEFT JOIN accounts a ON a.account_id = s.student_id WHERE s.student_id = ?";
         
         $stmt = $this->conn->prepare($sql);
         
