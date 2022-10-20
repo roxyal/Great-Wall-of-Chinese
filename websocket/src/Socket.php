@@ -38,7 +38,17 @@ class Socket implements MessageComponentInterface {
             
             /** @var \Amp\Mysql\ResultSet $result */
             if(yield $statement->execute(['id' => $client->resourceId, 'token' => $queryParameters['token']])) {
-                echo "New connection ({$client->resourceId}) with token {$queryParameters['token']}!\n";
+
+                // Save the client's username
+                $statement2 = yield $pool->prepare("select accounts.username, accounts.account_id from accounts join socket_connections on accounts.account_id = socket_connections.account_id where token=:token and status='Connected' order by timestamp desc limit 1");
+
+                $result = yield $statement2->execute(['token' => $queryParameters['token']]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+                $client->userinfoUsername = $row["username"];
+                $client->userinfoID = $row["account_id"];
+
+                echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
             }
             else {
                 echo "Client ({$client->resourceId}) encountered error.\n";
@@ -69,47 +79,23 @@ class Socket implements MessageComponentInterface {
             echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
         }
 
-        // /message <player_id> <message>: sends a new message to player
-        if(preg_match_all("/^\/message ([0-9]+) (.+)$/", $msg, $matches)) {
-            // Do some database checks for existing id, permissions, etc
-            echo "Client $client->resourceId messaged account ID {$matches[1][0]}: {$matches[2][0]}\n";
-
-            // Get the recipient's resource ID
-            \Amp\Loop::run(function() {        
-                require "../../../secrets.php";
-                $config = \Amp\Mysql\ConnectionConfig::fromString(
-                    "host=127.0.0.1 user=$username password=$password db=$db"
-                );
-                
-                /** @var \Amp\Mysql\Pool $pool */
-                $pool = \Amp\Mysql\pool($config);
-                
-                /** @var \Amp\Mysql\Statement $statement */
-                $statement = yield $pool->prepare("select account_id from socket_connections where resource_id=:id");
-                
-                /** @var \Amp\Mysql\ResultSet $result */
-                if(yield $statement->execute(['id' => $matches[1][0]])) {
-                    
-                }
-                else {
-                    echo "Client ({$client->resourceId}) encountered error.\n";
-                }
-            });
+        // /message <player_username> <message>: sends a new message to player's username
+        if(preg_match_all("/^\/message (.+) (.+)$/", $msg, $matches)) {
+            $recipientUsername = $matches[1][0];
+            $message = $matches[2][0];
+            echo "Sending message to user $recipientUsername: $message\n";
 
             foreach ($this->clients as $player) {
-
-                if ($client->resourceId == $player->resourceId) {
-                    continue;
+                if ($player->userinfoUsername == $recipientUsername) {
+                    $player->send("[message] $client->userinfoUsername: $message\n");
                 }
-    
-                $player->send("[world] Client$client->resourceId: $msg\n");
-            }
+            }            
         }
 
         // /world <message>: sends a new message to player
         if(preg_match_all("/^\/world (.+)$/", $msg, $matches)) {
-            // Do some database checks for existing id, permissions, etc
-            echo "Client $client->resourceId messaged world: {$matches[1][0]}\n";
+            $message = $matches[1][0];
+            echo "Client $client->resourceId messaged world: $message\n";
 
             foreach ($this->clients as $player) {
 
@@ -118,7 +104,7 @@ class Socket implements MessageComponentInterface {
                     continue;
                 }
     
-                $player->send("[world] Client{$client->resourceId}: $msg\n");
+                $player->send("[world] $client->userinfoUsername: $message\n");
             }
         }
     }
