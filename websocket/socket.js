@@ -18,7 +18,7 @@ generateSocketAuth().then(result => {
     // console.log(token);
     
     // Create a new WebSocket.
-    socket = new WebSocket(`wss://${window.location.hostname}:8888?token=${token}`);
+    socket = new WebSocket(`wss://${window.location.hostname}/wss2/:8888?token=${token}`);
 
     function transmitMessage() {
         socket.send( message.value );
