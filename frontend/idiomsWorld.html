@@ -265,9 +265,11 @@
   <script type="module" src="src/idioms.js"></script>
 </body>
 <script type="module">
-  import {getLoggedInUsername} from "utility.js";
-  import {getLoggedInCharacter} from "utility.js";
+  import {getLoggedInUsername} from "/utility.js";
+  import {getLoggedInCharacter} from "/utility.js";
   var characterID = await getLoggedInCharacter();
+
+  console.log("character id " + characterID)
 
   function saveCustomLevel(){
     let emptyFields = false;
@@ -340,6 +342,7 @@
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
         break;
     case "4":
+        console.log("wizardddd")
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
         break;
     default:
