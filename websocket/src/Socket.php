@@ -47,6 +47,9 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
                 $client->userinfoUsername = $row["username"];
                 $client->userinfoID = $row["account_id"];
+                // $client->pvpStatus = "Available";
+                // $client->pvpOpponent = "";
+                
 
                 echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
             }
@@ -61,20 +64,57 @@ class Socket implements MessageComponentInterface {
         echo "Client $client->resourceId said $msg\n";
 
         // Message handler for slash commands
-        // /challenge <player_id>: create a new challenge record in db
-        if(preg_match_all("/^\/challenge ([0-9]+)$/", $msg, $matches)) {
-            // Do some database checks for existing account id
-            echo "Client $client->resourceId challenged account ID {$matches[1][0]}!\n";
+
+        // /challenge <player_username>: create a new challenge record in db
+        if(preg_match_all("/^\/challenge (.+)$/", $msg, $matches)) {
+            $recipientUsername = $matches[1][0];
+            if($client->userinfoUsername == $recipientUsername) {
+                $client->send("[error] 1: You cannot challenge yourself!");
+                return;
+            }
+            
+            // Loop through players in the socket to see if username matches
+            foreach ($this->clients as $player) {
+                if ($player->userinfoUsername == $recipientUsername) {
+                    // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
+                    
+                    // Save the 
+
+                    $player->send("[challenge] $client->userinfoUsername has challenged you to a match!\n");
+                    echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
+                    return;
+                }
+            }
+
+            // Player was not found
+            $client->send("[error] 2: The player cannot be found.");
         }
 
-        // /accept <challenge_id>: start the pvp match
-        if(preg_match_all("/^\/accept ([0-9]+)$/", $msg, $matches)) {
+        // /accept <player_username>: start the pvp match
+        if(preg_match_all("/^\/accept (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
+            $recipientUsername = $matches[1][0];
+            if($client->userinfoUsername == $recipientUsername) {
+                $client->send("[error] 1: You cannot challenge yourself!");
+                return;
+            }
+            
+            // Loop through players in the socket to see if username matches
+            foreach ($this->clients as $player) {
+                if ($player->userinfoUsername == $recipientUsername) {
+                    // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
+
+                    $player->send("[challenge] $client->userinfoUsername has challenged you to a match!\n");
+                    echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
+                    return;
+                }
+            }
+
             echo "Client $client->resourceId accepted challenge ID {$matches[1][0]}!\n";
         }
 
-        // /reject <challenge_id>: reject the challenge
-        if(preg_match_all("/^\/reject ([0-9]+)$/", $msg, $matches)) {
+        // /reject <player_username>: reject the challenge
+        if(preg_match_all("/^\/reject (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
             echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
         }
