@@ -2,6 +2,8 @@
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
 
+showAdventureModal(); // test the function
+
 var userName = await getLoggedInUsername();
 var characterID = await getLoggedInCharacter();
 
@@ -52,9 +54,6 @@ function preload() {
     this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
     this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
     this.load.atlas("heroKnight", "assets/characters/heroKnight_spritesheet.png", "assets/characters/heroKnight.json");
-
-    // Load Modals
-    this.load.html("adventureModal", "adventureModal.html"); // key, filename
 }
 
 function create() {
