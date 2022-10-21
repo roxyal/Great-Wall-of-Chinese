@@ -2,7 +2,7 @@
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
 
-showStartAdventureModal();
+//showStartAdventureModal();
 
 var userName = await getLoggedInUsername();
 var characterID = await getLoggedInCharacter();
