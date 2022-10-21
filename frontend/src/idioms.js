@@ -227,7 +227,8 @@ function create() {
 
     this.npc.setInteractive();
     this.npc.on("pointerdown", () => this.sound.play("yo"));
-    this.npc.events.onInputDown.add(showAdventureModal, this);
+    this.npc.on("pointerdown", () => showAdventureModal());
+    //this.npc.events.onInputDown.add(showAdventureModal, this);
 
     // Add speech bubble for NPC
     this.speech = this.add.image(this.npc.x - this.npc.width, this.npc.y - this.npc.displayHeight/2, "speech");
