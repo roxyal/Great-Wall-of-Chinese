@@ -203,7 +203,7 @@
   </div>
   <!--Leaderboard Modal ends here-->
 
-  <!--Start Adventure mode Modal starts here-->
+  <!--Confirm Adventure mode Modal starts here-->
   <div class="modal fade" id="startAdventureMode-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -217,13 +217,22 @@
         </div>
       </div>
   </div>
-  <!--Start Adventure mode Modal ends here--> 
+  <!--Confirm Adventure mode Modal ends here--> 
 
   <!--Adventure mode Modal starts here-->
   <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
           <div class="modal-body">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-2 mt-5" id="characterAvatar">
+                  
+                </div>
+                <div class="col-10">
+                </div>
+              </div>
+            </div>
           </div>
           <div class="modal-footer justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -255,7 +264,11 @@
 
   <script type="module" src="src/idioms.js"></script>
 </body>
-<script>
+<script type="module">
+  import {getLoggedInUsername} from "../utility.js";
+  import {getLoggedInCharacter} from "../utility.js";
+  var characterID = await getLoggedInCharacter();
+
   function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
@@ -310,6 +323,28 @@
     var pvpMode = viewCustomLevelModal.querySelector('#pvpModeLeaderBoard'); // Table body for pvp mode leaderboard
 
     //link backend here to get leaderboard details
+	})
+
+  let adventureModeModal = document.getElementById('adventureMode-modal');
+  adventureModeModal.addEventListener('show.bs.modal', function (event){
+		var character = adventureModeModal.querySelector('#characterAvatar'); 
+    // Add player character based on characterID
+    switch (characterID) {
+    case "1":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+        break;
+    case "2":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+        break;
+    case "3":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+        break;
+    case "4":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+        break;
+    default:
+        console.log("Something went wrong in player creation in create()");
+    }
 	})
 
 </script>
