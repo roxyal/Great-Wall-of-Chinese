@@ -26,10 +26,11 @@ generateSocketAuth().then(result => {
 
     socket.onmessage = function(e) {
         console.log(e.data);
+        var output = e.data;
 
         // message will come in the format:
         // [type] senderusername: message
-        var matches = e.data.match(/^\[(.+)\] (.+): (.+)$/);
+        var matches = output.match(/^\[(.+)\] (.+): (.+)$/);
         console.log(matches);
         var type = matches[1];
         var sender = matches[2];
