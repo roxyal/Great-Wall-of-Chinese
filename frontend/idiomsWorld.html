@@ -136,31 +136,14 @@
         </div>
         <div class="modal-body">
           <div class="container">
-            <!--
-            <div class="row text-center">
-              <div class="col auto" id="customLevelName">
-                <h5>Custom level</h5>
-              </div>
-              <div class="col auto" id="customLevelActions">
-                <h5>Actions</h5>
-              </div>
-            </div>
-            -->
-            <table class="table table-bordered table-dark">
+            <table class="table table-bordered table-light">
               <thead>
                 <tr>
-                  <th scope="col">Name</th>
+                  <th scope="col">Level name</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <!--Test row-->
-                <tr>
-                  <td>CUSTOM LEVEL 1</td>
-                  <td>
-                    <button><i class="fa fa-trash"></i></button>
-                  </td>
-                </tr>
+              <tbody id="viewCustomLevel">
               </tbody>
             </table>
           </div>
@@ -241,7 +224,6 @@
 
 </body>
 <script>
-  // save custom level here
   function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
@@ -259,17 +241,37 @@
     if(emptyFields){
   		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
     }else{
+      // link backend here to save custom level
       document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
     }
   }
 
   let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
 	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
-		//var customLevelNameCol = viewCustomLevelModal.querySelector('#customLevelName'); // column containing custom level names
-    //var customLevelActionCol = viewCustomLevelModal.querySelector('#customLevelActions'); // column containing delete buttons
+    var table = document.getElementById("viewCustomLevel");
+    var rowsHTML = ""; // initialise empty var to hold html of all the rows
 
-    //link backend here to get custom level names
+    var row = '<tr><td>TESTING ROW</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
+    table.innerHTML = row;
+
+    //link backend here to get custom level names --> customLevelName
+    // for(i=0;i<customLevelName.length;i++){
+    //   var row = '<tr><td>' + customLevelName[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
+    //   rowsHTML += row; // add in html code
+    // }
+
+    // table.innerHTML = rowsHTML; //set innerhtml code
 	})
+
+  function deleteCustomLevel(e){
+    let rowElements = e.srcElement.parentElement.parentElement.parentElement; // row elements refer to both level name and actions
+    let customLevelName = rowElements.firstChild.firstChild.innerHTML;
+    //console.log(rowElements.firstChild.firstChild.innerHTML);
+
+    // link delete custom level script here, send customLevelName
+    // if successful, remove elements
+	  rowElements.remove();
+  }
 
   let leaderBoardModal = document.getElementById('leaderboard-modal');
 	leaderBoardModal.addEventListener('show.bs.modal', function (event){
