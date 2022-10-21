@@ -36,11 +36,17 @@ export class IdiomsWorld extends Phaser.Scene {
         this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
         this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
         this.load.atlas("heroKnight", "assets/characters/heroKnight_spritesheet.png", "assets/characters/heroKnight.json");
+    
+        // Load Modals
+        this.load.html("adventureModal", "adventureModal.html"); // key, filename
     }
 
     create() {
         const {width, height} = this.scale;
         this.add.image(0, 0, "field").setOrigin(0, 0).setDisplaySize(width, height);
+
+        this.adventureModal = this.add.dom(game.config.width / 2, game.config.height / 2).createFromCache("dropdown");
+        this.adventureModal.visible = false; // set modal to be invisible
 
         // Create animations for player
         this.anims.create({
@@ -208,6 +214,8 @@ export class IdiomsWorld extends Phaser.Scene {
 
         this.npc.setInteractive();
         this.npc.on("pointerdown", () => this.sound.play("yo"));
+
+        this.npc.on("pointerdown", () => this.adventureModal.visible = false); // make modal visible when click
 
         // Add speech bubble for NPC
         this.speech = this.add.image(this.npc.x - this.npc.width, this.npc.y - this.npc.displayHeight/2, "speech");
