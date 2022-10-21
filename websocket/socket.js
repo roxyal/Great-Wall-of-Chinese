@@ -25,7 +25,7 @@ generateSocketAuth().then(result => {
     }
 
     socket.onmessage = function(e) {
-        console.log(e.data);
+        console.debug(e.data);
         var output = e.data;
 
         // message will come in the format:
