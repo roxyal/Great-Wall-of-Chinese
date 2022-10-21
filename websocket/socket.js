@@ -30,6 +30,7 @@ generateSocketAuth().then(result => {
         // message will come in the format:
         // [type] senderusername: message
         var matches = e.data.match(/^\[(.+)\] (.+): (.+)$/);
+        console.log(matches);
         var type = matches[1];
         var sender = matches[2];
         var message = matches[3];
