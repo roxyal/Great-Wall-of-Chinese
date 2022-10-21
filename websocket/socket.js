@@ -34,7 +34,23 @@ generateSocketAuth().then(result => {
         var sender = matches[2];
         var message = matches[3];
         
-        if(type == "message") {
+        if(type == "error") {
+            // error codes (so far) are: 
+            // 1: you cannot challenge yourself
+            // 2: the recipient was not found
+            switch(sender) {
+                case "1":
+                    console.log("You cannot challenge yourself.");
+                    break;
+                case "2":
+                    console.log("The player was not found.");
+                    break;
+                default: 
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+        }
+        else if(type == "message") {
             // message is a private message
             // do something like adding the chat message to chat div
         }

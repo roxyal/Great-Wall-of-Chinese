@@ -128,8 +128,12 @@ class Socket implements MessageComponentInterface {
             foreach ($this->clients as $player) {
                 if ($player->userinfoUsername == $recipientUsername) {
                     $player->send("[message] $client->userinfoUsername: $message\n");
+                    return;
                 }
-            }            
+            }
+
+            // Player doesn't exist or offline
+            $client->send("[error] 2: The player cannot be found.");
         }
 
         // /world <message>: sends a new message to player
