@@ -40,7 +40,6 @@ function saveAssignment(){
             if (i+1 != allQuestions.length)
                 qnSendToBackend = qnSendToBackend + '|';
     }
-
     if(emptyFields){
             document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`
     }else{
@@ -67,7 +66,7 @@ function saveAssignment(){
         xmlhttp.open("POST", "../scripts/teacher", true);
         // Request headers required for a POST request
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(`assignmentName=${assignmentName}&dateInput=${dateInput}&qnSendToBackend=${qnSendToBackend}&function_name=${createAssignment}`);
+        xmlhttp.send(`assignmentName=${assignmentName}&dateInput=${dateInput}&qnSendToBackend=${qnSendToBackend}&function_name=${function_name}`);
     }
 }
 // add question
