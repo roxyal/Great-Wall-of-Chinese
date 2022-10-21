@@ -30,22 +30,52 @@
       <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
     </nav>
     <div id="container">
-        <div class="content-window2">
+        <div class="content-window2 h-100">
           <h1 class= "text-center">Summary Report</h1>
+          <div class="container">
+            <table class="table table-bordered table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">Topics</th>
+                  <th scope="col">Number of Questions attempted</th>
+                  <th scope="col">Number of questions answered correctly</th>
+                  <th scope="col">Average accuracy</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Idoims</th>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">Hanyu Pinyin</th>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th scope="row">Fill in the blanks</th>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
     </div>
-    <!--Modal starts here-->
+
+    <!--Logout modal starts here-->
     <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modal-title">Log Out</h5>
-              <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
-              <p>
-                Are you sure you want to log out?
-              </p>
+              <p>Are you sure you want to log out?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -54,6 +84,7 @@
           </div>
         </div>
     </div>
-      <!--Modal ends here-->
+    <!--Logout modal ends here-->
+
 </body>
 </html>

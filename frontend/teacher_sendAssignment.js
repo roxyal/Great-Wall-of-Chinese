@@ -32,13 +32,18 @@ function addAssignmentButtons(rowNum){
 	document.getElementById('assignmentButtons').appendChild(assignmentButtonElement);
 }
 
+// link backend here to get a list of assignment names
+// assignmentName = ....
+
+// for(let i=0; i<assignmentName.length; i++){
+// 	let rowNum = "rownum" + (i+1);
+// 	addAssignmentName(assignmentName[i], rowNum);
+// 	addAssignmentButtons(rowNum);
+// }
+
 // test assignments
 addAssignmentName("IDOIMS 101", "rownum1")
 addAssignmentButtons("rownum1")
-addAssignmentName("IDOIMS 102", "rownum2")
-addAssignmentButtons("rownum2")
-addAssignmentName("IDOIMS 103", "rownum3")
-addAssignmentButtons("rownum3")
 
 // shows a modal to confirm if user wants to send assignment
 function sendAssignmentNotification(rowNum){
