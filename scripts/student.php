@@ -13,10 +13,15 @@ class Student
         $this->conn = $db;
     }
    
-    // Opponent choose to accept/reject Pvp request
+    // Function: Opponent choose to accept/reject Pvp request
+    // Inputs: int $requester_id, int $opponent_id, $status
+    // Outputs: Return the status(0/1/3) Update the Pvp_session with the status (Accept/Reject/Expired(If time exceeded)
+    //          int 4 on requeseter_id/opponent_id is not exists
+    //          int 2 on server error. 
+    
     public function acceptPvpRequest(int $requester_id, int $opponent_id, $status)
     {
-        // Check to see if requester_id or opponent_id is valid
+        // Check to see if requester_id or opponent_id is exists
         if (!checkAccountIdExists($requester_id) or !checkAccountIdExists($opponent_id)) return 4;
         
         // 0 status = accept; 1 status = reject, 2 status = Waiting, 3 status = Expired
@@ -31,6 +36,7 @@ class Student
             $result_1 = $stmt_1->get_result();
             $row_1 = $result_1->fetch_assoc();
             $timestamp = time();
+            // Accept/Reject Time - TimeOfPvpRequest send
             $time_diff = $timestamp-$row_1['timestamp'];
             
             $sql_2 = "UPDATE pvp_session SET status = ? WHERE requester_id = ? AND opponent_id = ? AND timestamp = ?";
@@ -63,8 +69,16 @@ class Student
         }
     }
     
-    // student can create their own custom game based on their input
-    public function createCustomGame(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
+    // Function: Student can create their own custom game based on their input
+    // Inputs: int $account_id, $custom_name, int $idiom_lower_count, int $idiom_upper_count,
+    //                                     int $fill_lower_count, int $fill_upper_count,
+    //                                    int $pinyin_lower_count, int $pinyin_upper_count
+    //                                    
+    // Outputs: Int 0 on success, successfully created CustomGame
+    //          int 1 on requeseter_id/opponent_id is not exists
+    //          int 2 on number of questions is not equal to 5
+    //          int 3 on server error. 
+    public function createCustomGame(int $account_id, $custom_name, int $idiom_lower_count, int $idiom_upper_count,
                                      int $fill_lower_count, int $fill_upper_count,
                                     int $pinyin_lower_count, int $pinyin_upper_count)
     {
@@ -75,19 +89,16 @@ class Student
         // Check to see if user has choosen a total of 5 questions anot
         if ($idiom_lower_count+$idiom_upper_count+$fill_lower_count+$fill_upper_count+$pinyin_lower_count+$pinyin_upper_count != 5) return 2;
         
-        // Everytime when a user successfully create a custom game.
-        // generateQnBank will be called first to randomly generate the questions from the question table
-        // and store it under question_bank tied with the account_id
-        $this->generateQnBank($account_id, $idiom_lower_count, $idiom_upper_count, $fill_lower_count, $fill_upper_count, $pinyin_lower_count, $pinyin_upper_count);
+        // Insert a row into custom_levels based on user's input
         $timestamp = time();
-        $sql_1 = "INSERT INTO custom_levels (account_id, idiom_lower_count, idiom_upper_count,"
+        $sql_1 = "INSERT INTO custom_levels (account_id, custom_name, idiom_lower_count, idiom_upper_count,"
                 . "fill_lower_count, fill_upper_count, pinyin_lower_count,"
-                . " pinyin_upper_count, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                . " pinyin_upper_count, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt_1 = $this->conn->prepare($sql_1);
         $timestamp = time();
         // After that, a custom game Id row will be created in the custom_levels table
         if( 
-            $stmt_1->bind_param('iiiiiiii', $account_id, $idiom_lower_count, $idiom_upper_count,
+            $stmt_1->bind_param('isiiiiiii', $account_id, $custom_name, $idiom_lower_count, $idiom_upper_count,
                                      $fill_lower_count, $fill_upper_count,
                                     $pinyin_lower_count, $pinyin_upper_count, $timestamp) &&
             $stmt_1->execute()
@@ -116,8 +127,8 @@ class Student
         return true;
     }
     
-    // A helper function for createCustomGame function.
-    public function generateQnBank(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
+    // A helper function for CustomGame question function.
+    public function generateQuestion(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
                                         int $fill_lower_count, int $fill_upper_count,
                                         int $pinyin_lower_count, int $pinyin_upper_count)
     {
@@ -179,7 +190,12 @@ class Student
         return 0;
     }
     
-    // Send Pvp request to opponent
+    // Functions: Send Pvp request to opponent
+    // Inputs: int $requester_id, int $opponent_id, int $pvp_room_type
+    // Outputs: Int 0 on success, successfully sendPvp request to opponent
+    //          int 1 on requeseter_id/opponent_id is not exists
+    //          int 2 on requester choose CustomGame, but has no customGame created. error
+    //          int 3 on server error. 
     public function sendPvpRequest(int $requester_id, int $opponent_id, int $pvp_room_type)
     {
         // Check to see if requester_id or opponent_id is valid
@@ -213,10 +229,15 @@ class Student
         }
     }
     
-    // Function for Student to view other Players profiles
+    // Functions: Student to view other Players profiles
+    // Inputs: int $account_id
+    // Outputs: Upon success, will return a list of information of the player that you want view
+    //          int 1 on player that you want to view does not exists
+    //          int 2 on database error
+    
     public function viewProfile(int $account_id)
     {
-        // Check to see if requester_id or opponent_id is valid
+        // Check to see if player that you want view is valid
         if (!checkAccountIdExists($account_id)) return 1;
         
         $sql = "SELECT student_id, character_type, idiom_lower_accuracy, idiom_upper_accuracy,
@@ -238,6 +259,39 @@ class Student
         {
             if($debug_mode) echo $this->conn->error;
                 return 2; // ERROR with database SQL
+        }
+    }
+    
+    function viewLeaderBoard($account_id)
+    {   
+    
+        // Check if user id exists
+        if (!checkAccountIdExists($account_id)) return 1;
+
+        $leaderboard_list = [];
+        // Obtain the whole leaderboards information PVP rank, rank_points as well as Adventure's mode accuracy
+        $sql = "SELECT a.name, s.student_id, s.idiom_lower_accuracy, s.idiom_upper_accuracy, s.fill_lower_accuracy,
+                                s.fill_upper_accuracy, s.pinyin_lower_accuracy, s.pinyin_upper_accuracy, l.rank,
+                                l.rank_points FROM students s INNER JOIN leaderboard l ON s.student_id = l.account_id
+                                INNER JOIN accounts a ON l.account_id = a.account_id";
+
+        $stmt = $this->conn->prepare($sql);
+        
+        if( 
+            $stmt->execute()
+
+        ){
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc())
+            {
+                array_push($leaderboard_list, $row);
+            }
+            return $leaderboard_list;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                    return 2; // ERROR with database SQL
         }
     }
 }
