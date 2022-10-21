@@ -265,8 +265,8 @@
   <script type="module" src="src/idioms.js"></script>
 </body>
 <script type="module">
-  import {getLoggedInUsername} from "/utility.js";
-  import {getLoggedInCharacter} from "/utility.js";
+  import {getLoggedInUsername} from "./utility.js";
+  import {getLoggedInCharacter} from "./utility.js";
   var characterID = await getLoggedInCharacter();
 
   console.log("character id " + characterID)
