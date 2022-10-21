@@ -46,7 +46,7 @@ export class IdiomsWorld extends Phaser.Scene {
         this.add.image(0, 0, "field").setOrigin(0, 0).setDisplaySize(width, height);
 
         this.adventureModal = this.add.dom(game.config.width / 2, game.config.height / 2).createFromCache("dropdown");
-        this.adventureModal.visible = false; // set modal to be invisible
+        //this.adventureModal.visible = false; // set modal to be invisible
 
         // Create animations for player
         this.anims.create({
