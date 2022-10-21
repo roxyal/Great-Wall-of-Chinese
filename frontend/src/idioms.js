@@ -2,8 +2,6 @@
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
 
-showAdventureModal(); // test the function
-
 var userName = await getLoggedInUsername();
 var characterID = await getLoggedInCharacter();
 
