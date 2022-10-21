@@ -225,11 +225,11 @@ function create() {
     this.npc.anims.play("npcIdle", true);
 
     this.npc.setInteractive();
-    //this.npc.on("pointerdown", () => this.sound.play("yo"));
-    //this.npc.on("pointerdown", () => showAdventureModal());
+    this.npc.on("pointerdown", () => this.sound.play("yo"));
+    this.npc.on("pointerdown", () => showAdventureModal());
 
-    this.npc.inputEnabled = true; //enable input on the sprite;
-    this.npc.events.onInputDown.add(showAdventureModal, this);
+    // this.npc.inputEnabled = true; //enable input on the sprite;
+    // this.npc.events.onInputDown.add(showAdventureModal, this);
 
     // Add speech bubble for NPC
     this.speech = this.add.image(this.npc.x - this.npc.width, this.npc.y - this.npc.displayHeight/2, "speech");
