@@ -1,16 +1,17 @@
 <?php
 include "config.php";
-include "teacher.php";
 include "functions_utility.php";
+
+// Retrieve the account_id(teacher_id) using session
+$account_id = getLoggedInAccountId();
+$created_timestamp = time();
 
 $teacher = new Teacher($conn);
 
-// if the isset variables is of the following conditions, it will trigger the respective functions
-// $_POS["function_name"] is a variable to check which function to echo, to prevent echoing the wrong function
-if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST["qnSendToBackend"]) && isset($_POS["function_name"]) && $_POS["function_name"] == 'createAssignment'){
-    echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
+if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST["qnSendToBackend"])
+        && isset($_POST["function_name"]) && $_POST["function_name"] == "createAssignment"){
+    echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, $teacher->convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
 }
-
 
 // A Teacher class that holds all the function needed for teacher
 class Teacher{
@@ -30,7 +31,6 @@ class Teacher{
     //          int 2 on database error
     function createAssignment(string $assignment_name, int $account_id, int $created_timestamp, int $due_timestamp, string $questions)
     {
-        require "config.php";
         // Check if account id exists
         if(!checkAccountIdExists($account_id)) return 1;
 
@@ -40,15 +40,16 @@ class Teacher{
         // $sql_var[5] - answer
         // $sql_var[6] - explanation
 
-        $arrayOfQuestion = stringToArray($questions, '|');
+        $arrayOfQuestion = $this->stringToArray($questions, '|');
 
         for ($x = 0; $x < count($arrayOfQuestion); $x++)
         {
             // First SQL statement is to insert the questions to the questions_bank table
+            
             $sql_1 = "INSERT INTO questions_bank(question, choice1, choice2, choice3, choice4, answer, explanation, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt_1 = $conn->prepare($sql_1);
+            $stmt_1 = $this->conn->prepare($sql_1);
 
-            $sql_var = stringToArray($arrayOfQuestion[$x], ',');
+            $sql_var = $this->stringToArray($arrayOfQuestion[$x], ',');
 
             if(
                 $stmt_1->bind_param('sssssssi', $sql_var[0], $sql_var[1], $sql_var[2], $sql_var[3],
@@ -65,7 +66,7 @@ class Teacher{
         }
         // Second SQL statement is to insert into the assignment_table
         $sql_2 = "INSERT INTO assignments(assignment_name, account_id, created_timestamp, due_timestamp, questions) VALUES (?, ?, ?, ?, ?)";
-        $stmt_2 = $conn->prepare($sql_2);
+        $stmt_2 = $this->conn->prepare($sql_2);
 
         if(
             $stmt_2->bind_param('siiis', $assignment_name, $account_id, $created_timestamp, $due_timestamp,
