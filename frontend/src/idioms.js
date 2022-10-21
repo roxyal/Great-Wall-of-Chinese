@@ -226,7 +226,7 @@ function create() {
     this.npc.anims.play("npcIdle", true);
 
     this.npc.setInteractive();
-    this.npc.on("pointerdown", () => this.sound.play("yo"));
+    //this.npc.on("pointerdown", () => this.sound.play("yo"));
     //this.npc.on("pointerdown", () => showAdventureModal());
 
     this.npc.inputEnabled = true; //enable input on the sprite;
