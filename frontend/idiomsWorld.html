@@ -448,10 +448,12 @@
 
     <script type="module" src="src/idioms.js"></script>
 </body>
-
-<!--Script for create custom level, viewing custom level, leaderboard, view assignments-->
 <script>
-  var characterID;
+  // global variables
+  var characterID; // character ID
+  var characterUserName; // character username
+  var assignmentToAttempt; // details of assignment to display on the modal
+
   function getLoggedInCharacter() {
     return new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
@@ -474,23 +476,29 @@
  
   }
 
-  // function getLoggedInUsername() {
-  //   return new Promise(function(resolve) {
-  //       var xmlhttp = new XMLHttpRequest();
-  //       xmlhttp.onreadystatechange = function() {
-  //           if (this.readyState == 4 && this.status == 200) {
-  //               resolve(this.responseText);
-  //           }
-  //       };
-  //       xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
-  //       xmlhttp.send();
-  //   })
-  // }
+  function getLoggedInUsername() {
+    return new Promise(function(resolve) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(this.responseText);
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
+        xmlhttp.send();
+    })
+  }
 
-  //var characterID = getCharacterID();
-  //console.log("character id " + characterID)
+  async function getCharacterName(){
+    console.log('calling backend script')
+    const getcharacterUsername = await getLoggedInUsername();
+    characterUserName = getcharacterUsername;
+    console.log(characterUserName);
+ 
+  }
 
-  getCharacterID();
+  getCharacterID(); // call function to get characterID
+  getCharacterName(); // call function to get character username
 
   function saveCustomLevel(){
     let emptyFields = false;
@@ -544,10 +552,11 @@
     //link backend here to get a list of custom level names
 	})
 
-  // get assignment based on assignment name, then open assignment modal
   function openAssignment(e){
-    let assignmentToAttempt = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
-    console.log("assignmentToAttempt");
+    let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
+    console.log(assignmentName);
+
+    // get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
 
     var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
 	  assignmentModal.show();
@@ -608,61 +617,5 @@
     }
 	})
 </script>
-
-<!--Script for adventure mode, assignment mode-->
-<!-- <script type="module">
-  import {getLoggedInUsername} from "./utility.js";
-  import {getLoggedInCharacter} from "./utility.js";
-  var characterID = await getLoggedInCharacter();
-
-  console.log("character id " + characterID)
-
-  let adventureModeModal = document.getElementById('adventureMode-modal');
-  // when modal opens, load the first question
-  adventureModeModal.addEventListener('show.bs.modal', function (event){
-		var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
-    // Add player character based on characterID
-    switch (characterID) {
-    case "1":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
-        break;
-    case "2":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
-        break;
-    case "3":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
-        break;
-    case "4":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
-        break;
-    default:
-        console.log("Something went wrong in player creation in create()");
-    }
-	})
-
-  let assignmentModeModal = document.getElementById('assignmentMode-modal')
-  // when modal opens, load the first question
-  assignmentModeModal.addEventListener('show.bs.modal', function (event){
-		var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
-    // Add player character based on characterID
-    switch (characterID) {
-    case "1":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
-        break;
-    case "2":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
-        break;
-    case "3":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
-        break;
-    case "4":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
-        break;
-    default:
-        console.log("Something went wrong in player creation in create()");
-    }
-	})
-</script> -->
-
 <script src="../websocket/socket.js"></script>
 </html>

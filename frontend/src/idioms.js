@@ -249,8 +249,8 @@ function create() {
     this.physics.add.collider(this.player, this.npc);
 
     // Create buttons
-    const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
-    this.add.text(assignmentButton.x - 50, assignmentButton.y + 40, "Assignments", {fill: "black", fontSize: "12px"}).setOrigin(0.5);
+    //const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
+    //this.add.text(assignmentButton.x - 50, assignmentButton.y + 40, "Assignments", {fill: "black", fontSize: "12px"}).setOrigin(0.5);
     
     // Play music
     this.sound.play("idioms_music", {loop: true, volume: 0.3});
