@@ -2,6 +2,9 @@
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
 
+var userName = await getLoggedInUsername();
+var characterID = await getLoggedInCharacter();
+
 let config = {
     width: 800,
     height: 600,
@@ -201,7 +204,7 @@ function create() {
     this.add.image(width * 0.5, height * 0.32, "box").setScale(2).setTint(0x3b2501);
 
     // Add player character based on characterID
-    switch (this.characterID) {
+    switch (characterID) {
         case "1":
             this.player = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
             this.idleKey = "martialIdle";
@@ -230,7 +233,7 @@ function create() {
     this.player.setCollideWorldBounds(true);
 
     // Add username below player character
-    this.playerName = this.add.text(this.player.x, this.player.y + this.player.height, this.userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+    this.playerName = this.add.text(this.player.x, this.player.y + this.player.height, userName, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
 
     // Add NPC
     this.npc = this.physics.add.sprite(width * 0.5, height * 0.22, "shadyGuy").setScale(3).setAlpha(0.7);
