@@ -451,6 +451,7 @@
 
 <!--Script for create custom level, viewing custom level, leaderboard, view assignments-->
 <script>
+  var characterID;
   function getLoggedInCharacter() {
     return new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
@@ -467,12 +468,13 @@
 
   async function getCharacterID(){
     console.log('calling backend script')
-    const characterID = await getLoggedInCharacter();
+    const getcharacterID = await getLoggedInCharacter();
+    characterID = getcharacterID;
     console.log(characterID);
-    return characterID;
+ 
   }
 
-  // async function getLoggedInUsername() {
+  // function getLoggedInUsername() {
   //   return new Promise(function(resolve) {
   //       var xmlhttp = new XMLHttpRequest();
   //       xmlhttp.onreadystatechange = function() {
@@ -485,8 +487,10 @@
   //   })
   // }
 
-  var characterID = getCharacterID();
-  console.log("character id " + characterID)
+  //var characterID = getCharacterID();
+  //console.log("character id " + characterID)
+
+  getCharacterID();
 
   function saveCustomLevel(){
     let emptyFields = false;
