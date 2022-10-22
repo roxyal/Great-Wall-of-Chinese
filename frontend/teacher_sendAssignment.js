@@ -5,49 +5,13 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 
-var rowToDelete; //global variable to store the row to be deleted
+var elementToDelete; //global variable to store the row to be deleted
 var assignmentToSend; //global variable to store the assignment name to be sent
 
-// adding assignment name to the Assignments column
-function addAssignmentName(assignmentName, rowNum){
-	const assignmentNameElement = document.createElement('h5');
-	assignmentNameElement.id = rowNum;
-	assignmentNameElement.innerHTML = assignmentName;
-	
-	const assignmentNameDiv = document.createElement('div');
-	assignmentNameDiv.className = rowNum;
-	assignmentNameDiv.appendChild(assignmentNameElement)
-
-	document.getElementById('assignmentName').appendChild(assignmentNameDiv);
-}
-
-// adding delete and send buttons for each assignment
-function addAssignmentButtons(rowNum){
-	const assignmentButtonElement = document.createElement('div');
-	var deleteButtonHTML = '<button onclick = deleteRowNotification("' + rowNum +  '") class="btn btn-secondary" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="fa fa-trash"></i></button>';
-	var sendAssignmentHTML = '	<button onclick = sendAssignmentNotification("' + rowNum +  '") class="btn btn-primary" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send"><span class="bi bi-send"></span></button>';
-	assignmentButtonElement.className = rowNum;
-	assignmentButtonElement.innerHTML = sendAssignmentHTML + deleteButtonHTML;
-
-	document.getElementById('assignmentButtons').appendChild(assignmentButtonElement);
-}
-
-// link backend here to get a list of assignment names
-// assignmentName = ....
-
-// for(let i=0; i<assignmentName.length; i++){
-// 	let rowNum = "rownum" + (i+1);
-// 	addAssignmentName(assignmentName[i], rowNum);
-// 	addAssignmentButtons(rowNum);
-// }
-
-// test assignments
-addAssignmentName("IDOIMS 101", "rownum1")
-addAssignmentButtons("rownum1")
-
 // shows a modal to confirm if user wants to send assignment
-function sendAssignmentNotification(rowNum){
-	assignmentToSend = document.getElementById(rowNum).innerHTML;
+function sendAssignmentNotification(e){
+	assignmentToSend = e.srcElement.parentElement.parentElement.children[0].innerHTML;
+	console.log(assignmentToSend);
 	let notification = "Send " + assignmentToSend + "?";
 
 	let sendAssignment = document.getElementById('sendAssignment-Modal')
@@ -60,7 +24,7 @@ function sendAssignmentNotification(rowNum){
 	assignmentModal.show();
 }
 
-// link backend script here to send assignment, then display a modal if successful
+// link backend script here to send assignment using assignmentToSend, then display modal if successful
 function sendAssignment(){
 	let successMessage = assignmentToSend + " has been sent successfully"
 	let assignmentSent = document.getElementById('assignmentSentSuccess-Modal')
@@ -103,10 +67,11 @@ function sendAssignment(){
 
 
 // shows a modal to confirm if user wants to delete assignment
-function deleteRowNotification(rowNum){
-	let assignmentToDelete = document.getElementById(rowNum).innerHTML;
+function deleteRowNotification(e){
+	let assignmentToDelete = e.srcElement.parentElement.parentElement.children[0].innerHTML;
 	let notification = "Delete " + assignmentToDelete + "?";
-	rowToDelete = rowNum;
+	elementToDelete = e.srcElement.parentElement.parentElement; //contains table row to delete
+	console.log(elementToDelete);
 
 	let deleteAssignment = document.getElementById('deleteAssignment-Modal')
 	deleteAssignment.addEventListener('show.bs.modal', function (event){
@@ -118,10 +83,22 @@ function deleteRowNotification(rowNum){
 	deleteModal.show();
 }
 
-// link backend here to delete assignment, if successful -> delete row of elements on the page
+// link backend here to delete assignment, if successful, delete row of elements on the page
 function deleteRow(){
-	const rowElements = document.querySelectorAll('.' + rowToDelete);
-	rowElements.forEach(element =>{
-		element.remove();
-	});
+	elementToDelete.remove();
 }
+
+let viewAssignmentTable = document.getElementById('viewAssignmentTable');
+var rowsHTML = ""; // initialise empty var to hold html of all the rows
+
+//link backend here to get list of assignment names, then loop through to display in the table
+
+var row = `<tr>
+				<td>TESTING ROW</td>
+				<td>
+					<button onclick = sendAssignmentNotification(event) class="btn btn-primary mx-1 text-nowrap" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send">Send</button>
+					<button onclick = deleteRowNotification(event) class="btn btn-secondary mx-1" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">Delete</button>
+				</td>
+		   </tr>
+		`; // for testing
+viewAssignmentTable.innerHTML = row;
