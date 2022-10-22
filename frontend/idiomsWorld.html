@@ -330,14 +330,10 @@
 
   <script type="module" src="src/idioms.js"></script>
 </body>
-<script type="module">
-  import {getLoggedInUsername} from "./utility.js";
-  import {getLoggedInCharacter} from "./utility.js";
-  var characterID = await getLoggedInCharacter();
 
-  console.log("character id " + characterID)
-
-  function saveCustomLevel(){
+<!--Script for create custom level, viewing custom level and leaderboard-->
+<script>
+    function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
     if(!customLevelName){
@@ -363,23 +359,17 @@
 	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
     var table = document.getElementById("viewCustomLevel");
     var rowsHTML = ""; // initialise empty var to hold html of all the rows
-
-    var row = '<tr><td>TESTING ROW</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
+    var row = '<tr><td>TESTING ROW</td><td><button class="btn btn-secondary" onclick="deleteCustomLevel(event)">Delete</button></td></tr>';
     table.innerHTML = row;
 
-    //link backend here to get custom level names --> customLevelName
-    // for(i=0;i<customLevelName.length;i++){
-    //   var row = '<tr><td>' + customLevelName[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
-    //   rowsHTML += row; // add in html code
-    // }
-
-    // table.innerHTML = rowsHTML; //set innerhtml code
+    //link backend here to get a list of custom level names
 	})
 
   function deleteCustomLevel(e){
-    let rowElements = e.srcElement.parentElement.parentElement.parentElement; // row elements refer to both level name and actions
-    let customLevelName = rowElements.firstChild.firstChild.innerHTML;
+    let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
+    let customLevelName = rowElements.firstChild.innerHTML;
 
+    //console.log(customLevelName)
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
 	  rowElements.remove();
@@ -392,6 +382,15 @@
 
     //link backend here to get leaderboard details
 	})
+</script>
+
+<!--Script for adventure modal-->
+<script type="module">
+  import {getLoggedInUsername} from "./utility.js";
+  import {getLoggedInCharacter} from "./utility.js";
+  var characterID = await getLoggedInCharacter();
+
+  console.log("character id " + characterID)
 
   let adventureModeModal = document.getElementById('adventureMode-modal');
   adventureModeModal.addEventListener('show.bs.modal', function (event){
@@ -408,14 +407,13 @@
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
         break;
     case "4":
-        //console.log("wizardddd")
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
         break;
     default:
         console.log("Something went wrong in player creation in create()");
     }
 	})
-
 </script>
+
 <script src="../websocket/socket.js"></script>
 </html>
