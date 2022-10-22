@@ -452,12 +452,13 @@
 <!--Script for create custom level, viewing custom level, leaderboard, view assignments-->
 <script>
   async function getLoggedInCharacter() {
-    return new Promise(function(resolve) {
+    await new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                // console.log(this.responseText);
-                resolve(this.responseText);
+                console.log(this.responseText);
+                //resolve(this.responseText);
+                return this.responseText;
             }
         };
         xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
@@ -465,20 +466,20 @@
     })
   }
 
-  async function getLoggedInUsername() {
-    return new Promise(function(resolve) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                resolve(this.responseText);
-            }
-        };
-        xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
-        xmlhttp.send();
-    })
-  }
+  // async function getLoggedInUsername() {
+  //   return new Promise(function(resolve) {
+  //       var xmlhttp = new XMLHttpRequest();
+  //       xmlhttp.onreadystatechange = function() {
+  //           if (this.readyState == 4 && this.status == 200) {
+  //               resolve(this.responseText);
+  //           }
+  //       };
+  //       xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
+  //       xmlhttp.send();
+  //   })
+  // }
 
-  var characterID = await getLoggedInCharacter();
+  var characterID = getLoggedInCharacter();
   console.log("character id " + characterID)
 
   function saveCustomLevel(){
