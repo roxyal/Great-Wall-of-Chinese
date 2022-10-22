@@ -451,19 +451,25 @@
 
 <!--Script for create custom level, viewing custom level, leaderboard, view assignments-->
 <script>
-  async function getLoggedInCharacter() {
-    await new Promise(function(resolve) {
+  function getLoggedInCharacter() {
+    return new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                //resolve(this.responseText);
-                return this.responseText;
+                console.log("response" + this.responseText);
+                resolve(this.responseText);
             }
         };
         xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
         xmlhttp.send();
     })
+  }
+
+  async function getCharacterID(){
+    console.log('calling backend script')
+    const characterID = await getLoggedInCharacter();
+    console.log(characterID);
+    return characterID;
   }
 
   // async function getLoggedInUsername() {
@@ -479,7 +485,7 @@
   //   })
   // }
 
-  var characterID = getLoggedInCharacter();
+  var characterID = getCharacterID();
   console.log("character id " + characterID)
 
   function saveCustomLevel(){
