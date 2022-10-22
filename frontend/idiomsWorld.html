@@ -225,10 +225,77 @@
         <div class="modal-content">
           <div class="modal-body">
             <div class="container">
+              <h1 class="text-center">Idioms' adventure</h1>
               <div class="row justify-content-center">
-                <div class="col-2" style="margin-top: 30%;" id="characterAvatar">
+                <div class="col-2" style="margin-top: 20%;" id="characterAvatar">
+                  <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
                 </div>
-                <div class="col-10">
+                <div class="col-10" style="margin-top: 5%;">
+                  <div class="row">
+                    <div class="col-2">
+                      <p class="fs-4 text-center">Progress:</p>
+                    </div>
+                    <div class="col-8" style="margin-top: 1%;" >
+                      <div class="progress">
+                        <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-2">
+                      <p class="fs-4 text-center">Score:</p>
+                    </div>
+                    <div class="col-8">
+                      <p class="fs-4 text-left">0/0</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="card">
+                        <h5 class="card-header text-center">Question 1</h5> <!--question number-->
+                        <div class="card-body">
+                          <p class="card-text">This is a sample question</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-5 text-center">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                      <button type="button" class="btn btn-primary">1) This is Option 1</button>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                      <button type="button" class="btn btn-primary">2) This is Option 2</button>
+                    </div>
+                  </div>
+                  <div class="row mt-3 text-center">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                      <button type="button" class="btn btn-primary">3) This is Option 3</button>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                      <button type="button" class="btn btn-primary">4) This is Option 4</button>
+                    </div>
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col">
+                      <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Correct!</h4>
+                        <p>The answer is 1</p>
+                        <hr>
+                        <p class="mb-0">This is the explanation for the question</p>
+                      </div>
+                      <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Wrong!</h4>
+                        <p>The answer is 3</p>
+                        <hr>
+                        <p class="mb-0">This is the explanation for the question</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                     <div class="col text-center">
+                       <button type="button" class="btn btn-success">next question</button>
+                     </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -341,7 +408,7 @@
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
         break;
     case "4":
-        console.log("wizardddd")
+        //console.log("wizardddd")
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
         break;
     default:
