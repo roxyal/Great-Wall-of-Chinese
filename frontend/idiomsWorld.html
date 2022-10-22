@@ -451,7 +451,7 @@
 
 <!--Script for create custom level, viewing custom level, leaderboard, view assignments-->
 <script>
-  function getLoggedInCharacter() {
+  async function getLoggedInCharacter() {
     return new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -465,7 +465,7 @@
     })
   }
 
-  function getLoggedInUsername() {
+  async function getLoggedInUsername() {
     return new Promise(function(resolve) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
