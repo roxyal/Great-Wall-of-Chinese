@@ -47,8 +47,8 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
                 $client->userinfoUsername = $row["username"];
                 $client->userinfoID = $row["account_id"];
-                // $client->pvpStatus = "Available";
-                // $client->pvpOpponent = "";
+                $client->pvpStatus = "Available";
+                $client->pvpOpponent = "";
                 
 
                 echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
@@ -144,9 +144,9 @@ class Socket implements MessageComponentInterface {
             foreach ($this->clients as $player) {
 
                 // Don't send the message back to the person who sent it
-                if ($client->resourceId == $player->resourceId) {
-                    continue;
-                }
+                // if ($client->resourceId == $player->resourceId) {
+                //     continue;
+                // }
     
                 $player->send("[world] $client->userinfoUsername: $message\n");
             }
