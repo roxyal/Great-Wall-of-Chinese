@@ -29,7 +29,7 @@ generateSocketAuth().then(result => {
 
         // message will come in the format:
         // [type] senderusername: message
-        var matches = e.data.match(/\[(.+)\] (.+): (.+)/);
+        var matches = e.data.match(/^\[(.+)\] (.+): (.+)/);
         var type = matches[1];
         var sender = matches[2];
         var message = matches[3];
@@ -51,7 +51,7 @@ generateSocketAuth().then(result => {
             //         break;
             // }
         }
-        else if(/^to (.+)$/.test(test)) {
+        else if(/^to (.+)$/.test(type)) {
             // private message sent from the client
             // do something like adding the chat message to chat div
         }
@@ -73,7 +73,7 @@ generateSocketAuth().then(result => {
 
         }
         else if(type == "challenge rejected") {
-            
+
         }
     }
 });
