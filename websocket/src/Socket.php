@@ -151,6 +151,39 @@ class Socket implements MessageComponentInterface {
         // /reject <player_username>: reject the challenge
         if(preg_match_all("/^\/reject (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
+            $recipientUsername = $matches[1][0];
+            if($client->userinfoUsername == $recipientUsername) {
+                $client->send("[error] 1: You cannot challenge yourself!");
+                return;
+            }
+            
+            // Check if client has existing invitation
+            if($client->pvpStatus[0] !== "Received" || $client->pvpStatus[1] !== $recipientUsername) {
+                $client->send("[error] 4: This challenge request does not exist.");
+                return;
+            }
+
+            // Loop through players in the socket to see if username matches
+            foreach ($this->clients as $player) {
+                if ($player->userinfoUsername == $recipientUsername) {
+                    if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
+                        $client->send("[error] 4: This challenge request does not exist.");
+                        return;
+                    }
+                    
+                    // Revert the pvpStatus to available
+                    $client->pvpStatus = ["Available", ""];
+                    $player->pvpStatus = ["Available", ""];
+                    $client->send("[challenge rejected] You have rejected $player->userinfoUsername's challenge!");
+                    $player->send("[challenge rejected] $client->userinfoUsername has rejected your challenge! sadface :'(\n");
+                    
+                    // Save the info in database
+                    // ...
+
+                    // echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
+                    return;
+                }
+            }
             // echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
         }
 

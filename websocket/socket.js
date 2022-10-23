@@ -51,8 +51,12 @@ generateSocketAuth().then(result => {
             //         break;
             // }
         }
+        else if(/^to (.+)$/.test(test)) {
+            // private message sent from the client
+            // do something like adding the chat message to chat div
+        }
         else if(type == "message") {
-            // message is a private message
+            // private message sent to the client
             // do something like adding the chat message to chat div
         }
         else if(type == "world") {
@@ -63,6 +67,12 @@ generateSocketAuth().then(result => {
 
         }
         else if(type == "challenge sent") {
+            
+        }
+        else if(type == "challenge accepted") {
+
+        }
+        else if(type == "challenge rejected") {
             
         }
     }
