@@ -160,6 +160,8 @@ class Socket implements MessageComponentInterface {
             $message = $matches[2][0];
             echo "Sending message to user $recipientUsername: $message\n";
 
+            $client->send("[to $player->userinfoUsername] $client->userinfoUsername: $message\n");
+
             foreach ($this->clients as $player) {
                 if ($player->userinfoUsername == $recipientUsername) {
                     $player->send("[message] $client->userinfoUsername: $message\n");
