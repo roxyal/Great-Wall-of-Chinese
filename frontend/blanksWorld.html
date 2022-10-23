@@ -203,13 +203,117 @@
       </div>
       <!--Leaderboard Modal ends here-->
 
+      <!--Confirm Adventure mode Modal starts here-->
+      <div class="modal fade" id="startAdventureMode-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <h5>Start adventure mode?</h5>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Confirm Adventure mode Modal ends here--> 
+
+      <!--Adventure mode Modal starts here-->
+      <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="container">
+                  <h1 class="text-center">Hanyu Pinyin adventure</h1>
+                  <div class="row justify-content-center">
+                    <div class="col-2" style="margin-top: 20%;" id="characterAvatar">
+                      <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
+                    </div>
+                    <div class="col-10" style="margin-top: 5%;">
+                      <div class="row">
+                        <div class="col-2">
+                          <p class="fs-4 text-center">Progress:</p>
+                        </div>
+                        <div class="col-8" style="margin-top: 1%;" >
+                          <div class="progress">
+                            <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-2">
+                          <p class="fs-4 text-center">Score:</p>
+                        </div>
+                        <div class="col-8">
+                          <p class="fs-4 text-left">0/0</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="card">
+                            <h5 class="card-header text-center">Question 1</h5> <!--question number-->
+                            <div class="card-body">
+                              <p class="card-text">This is a sample question</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mt-5 text-center">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                          <button type="button" class="btn btn-primary">1) This is Option 1</button>
+                        </div>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                          <button type="button" class="btn btn-primary">2) This is Option 2</button>
+                        </div>
+                      </div>
+                      <div class="row mt-3 text-center">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                          <button type="button" class="btn btn-primary">3) This is Option 3</button>
+                        </div>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                          <button type="button" class="btn btn-primary">4) This is Option 4</button>
+                        </div>
+                      </div>
+                      <div class="row mt-5">
+                        <div class="col">
+                          <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">Correct!</h4>
+                            <p>The answer is 1</p>
+                            <hr>
+                            <p class="mb-0">This is the explanation for the question</p>
+                          </div>
+                          <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Wrong!</h4>
+                            <p>The answer is 3</p>
+                            <hr>
+                            <p class="mb-0">This is the explanation for the question</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                         <div class="col text-center">
+                           <button type="button" class="btn btn-success">next question</button>
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!--Adventure mode Modal ends here-->
+
       <!--Logout Modal starts here-->
       <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">Log Out</h5>
-                <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
               </div>
               <div class="modal-body">
                 <p>
@@ -225,11 +329,16 @@
       </div>
       <!--Logout Modal ends here-->
 </body>
+
+<!--Script for create custom level, viewing custom level and leaderboard-->
 <script>
-  // save custom level here
   function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
+    
+    // A string variable use to concatenate each question type and difficulty
+    let question_type_difficulty = "";
+   
     if(!customLevelName){
       emptyFields = true;
     }
@@ -240,39 +349,116 @@
         emptyFields=true;
         break;
       }
+      question_type_difficulty = question_type_difficulty + allQuestions[i].value + ',' + allDifficulty[i].value
+      if (i+1 != allQuestions.length)
+            question_type_difficulty = question_type_difficulty + '|';
     }
     if(emptyFields){
   		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
     }else{
-      document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
+      // save custom level here
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                console.log(this.responseText);
+                // the saveCustomLevel has three possible output 0,1,2
+                // 0 represents success, 1 represents account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(0)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">CustomLevel Game created successfully!</div>`;
+                    // empty all inputs
+                    allQuestions.forEach(input => {
+                      input.value = '';
+                    });
+                    allDifficulty.forEach(input => {
+                      input.value = '';
+                    });
+                    // empty customName
+                    document.getElementById("customLevelName").value = '';
+                }
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already a Custom Game with this name, please use a different one!</div>`;
+                }
+                if(this.responseText.includes(3)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`customLevelName=${customLevelName}&question_type_difficulty=${question_type_difficulty}&function_name=${"createCustomGame"}`);
     }
-  }
+}
 
   let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
 	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
     var table = document.getElementById("viewCustomLevel");
     var rowsHTML = ""; // initialise empty var to hold html of all the rows
 
-    var row = '<tr><td>TESTING ROW</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
-    table.innerHTML = row;
-
-    //link backend here to get custom level names --> customLevelName
-    // for(i=0;i<customLevelName.length;i++){
-    //   var row = '<tr><td>' + customLevelName[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
-    //   rowsHTML += row; // add in html code
-    // }
-
-    // table.innerHTML = rowsHTML; //set innerhtml code
+    var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                //console.log(this.responseText);
+                
+                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
+                //1 represents account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+                if (typeof this.responseText === 'string' && this.responseText.length !== 0){
+                    // Split the string into an array
+                    customNameArray = this.responseText.split(",");
+                    for(i=0;i<customNameArray.length;i++){
+                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)">delete</button></td></tr>';
+                        rowsHTML += row; // add in html code
+                    }
+                    table.innerHTML = rowsHTML; //set innerhtml code
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`function_name=${"viewAllCustomGame"}`);
 	})
 
   function deleteCustomLevel(e){
-    let rowElements = e.srcElement.parentElement.parentElement.parentElement; // row elements refer to both level name and actions
-    let customLevelName = rowElements.firstChild.firstChild.innerHTML;
-    //console.log(rowElements.firstChild.firstChild.innerHTML);
+    let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
+    let customLevelName = rowElements.firstChild.innerHTML;
 
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
-	  rowElements.remove();
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                console.log(this.responseText);
+                
+                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
+                //1 represents account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(0)){
+                    rowElements.remove();
+                }
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`customLevelName=${customLevelName}&function_name=${"deleteCustomGame"}`);
   }
 
   let leaderBoardModal = document.getElementById('leaderboard-modal');
@@ -281,6 +467,37 @@
     var pvpMode = viewCustomLevelModal.querySelector('#pvpModeLeaderBoard'); // Table body for pvp mode leaderboard
 
     //link backend here to get leaderboard details
+	})
+</script>
+
+<!--Script for adventure modal-->
+<script type="module">
+  import {getLoggedInUsername} from "./utility.js";
+  import {getLoggedInCharacter} from "./utility.js";
+  var characterID = await getLoggedInCharacter();
+
+  console.log("character id " + characterID)
+
+  let adventureModeModal = document.getElementById('adventureMode-modal');
+  adventureModeModal.addEventListener('show.bs.modal', function (event){
+		var character = adventureModeModal.querySelector('#characterAvatar'); 
+    // Add player character based on characterID
+    switch (characterID) {
+    case "1":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+        break;
+    case "2":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+        break;
+    case "3":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+        break;
+    case "4":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+        break;
+    default:
+        console.log("Something went wrong in player creation in create()");
+    }
 	})
 </script>
 </html>

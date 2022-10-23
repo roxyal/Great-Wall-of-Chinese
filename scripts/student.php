@@ -1,7 +1,28 @@
 <?php
-// Require the config.php file at the top of every function file. 
-//require "config.php";
-require "functions_utility.php";
+include "config.php";
+include "functions_utility.php";
+
+// Retrieve account_id using SESSION
+$account_id = getLoggedInAccountId();
+
+$student = new Student($conn);
+
+// Trigger createCustomGame
+if(isset($_POST["customLevelName"]) && isset($_POST["question_type_difficulty"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "createCustomGame"){
+    echo $student->createCustomGame($account_id, $_POST["customLevelName"], $_POST["question_type_difficulty"]);
+}
+
+// Trigger viewAllCustomGame
+if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllCustomGame"){
+    echo $student->viewAllCustomGame($account_id);
+}
+
+// Trigger deleteCustomGame
+if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteCustomGame"){
+    echo $_POST["customLevelName"];
+    echo $student->deleteCustomGame($account_id, $_POST["customLevelName"]);
+}
+
 // A Student class that holds all the function needed for students
 class Student
 {
@@ -69,39 +90,48 @@ class Student
         }
     }
     
+    // Function: helper function to check if the customLevelName has been created before
+    //           To prevent having duplicates customGameName
+    // Inputs: int int $account_id, string $customLevelName
+    //                                    
+    // Outputs: TRUE: database already have this name which is created before by the user
+    //          False: database never find this custom
+    public function checkCustomGameNameExists(int $account_id, string $customLevelName): bool
+    {
+        // Check through the database to see if the user has a customLevelName which is created before
+        $sql = "SELECT * FROM custom_levels WHERE account_id = ? AND customLevelName = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("is", $account_id, $customLevelName);
+        $stmt->execute();
+        $stmt->store_result();
+        if($stmt->num_rows > 0) return true;
+        return false;
+    }
+    
     // Function: Student can create their own custom game based on their input
-    // Inputs: int $account_id, $custom_name, int $idiom_lower_count, int $idiom_upper_count,
-    //                                     int $fill_lower_count, int $fill_upper_count,
-    //                                    int $pinyin_lower_count, int $pinyin_upper_count
+    // Inputs: int int $account_id, string $customLevelName, string $question_type_difficulty
     //                                    
     // Outputs: Int 0 on success, successfully created CustomGame
-    //          int 1 on requeseter_id/opponent_id is not exists
-    //          int 2 on number of questions is not equal to 5
-    //          int 3 on server error. 
-    public function createCustomGame(int $account_id, $custom_name, int $idiom_lower_count, int $idiom_upper_count,
-                                     int $fill_lower_count, int $fill_upper_count,
-                                    int $pinyin_lower_count, int $pinyin_upper_count)
+    //          int 1 on account_id is not exists
+    //          int 2 on server error. 
+    public function createCustomGame(int $account_id, string $customLevelName, string $question_type_difficulty)
     {
-        
         // Check to see if account_id exists
         if (!checkAccountIdExists($account_id)) return 1;
         
-        // Check to see if user has choosen a total of 5 questions anot
-        if ($idiom_lower_count+$idiom_upper_count+$fill_lower_count+$fill_upper_count+$pinyin_lower_count+$pinyin_upper_count != 5) return 2;
+        // Check to see if the customLevelName exists
+        if ($this->checkCustomGameNameExists($account_id, $customLevelName)) return 2;
         
-        // Insert a row into custom_levels based on user's input
+        // Insert a row into custom_levels table based on user's input
+        // $question_type_difficulty is a string variable, example "Idioms, Medium|Pinyin, Hard"
+        $sql = "INSERT INTO custom_levels (account_id, customLevelName, question_type_difficulty, timestamp) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
         $timestamp = time();
-        $sql_1 = "INSERT INTO custom_levels (account_id, custom_name, idiom_lower_count, idiom_upper_count,"
-                . "fill_lower_count, fill_upper_count, pinyin_lower_count,"
-                . " pinyin_upper_count, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt_1 = $this->conn->prepare($sql_1);
-        $timestamp = time();
+        
         // After that, a custom game Id row will be created in the custom_levels table
         if( 
-            $stmt_1->bind_param('isiiiiiii', $account_id, $custom_name, $idiom_lower_count, $idiom_upper_count,
-                                     $fill_lower_count, $fill_upper_count,
-                                    $pinyin_lower_count, $pinyin_upper_count, $timestamp) &&
-            $stmt_1->execute()
+            $stmt->bind_param('issi', $account_id, $customLevelName, $question_type_difficulty, $timestamp) &&
+            $stmt->execute()
         ){
             return 0;
         }
@@ -112,21 +142,36 @@ class Student
         }
     }
     
-    // A utility function to check if the student created before CustomGame
-    public function checkCustomGameExists($account_id) : bool
+    // Function: Student can delete their own custom game
+    // Inputs: int int $account_id, string $customLevelName
+    //                                    
+    // Outputs: Int 0 on success, successfully created CustomGame
+    //          int 1 on account_id is not exists
+    //          int 2 on server error. 
+    function deleteCustomGame(int $account_id, string $customLevelName)
     {
-        $sql = "SELECT * FROM custom_levels WHERE account_id = ?";
+        // Check to see if account_id exists
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        // Delete the custom level from the table, based on account_id and customLevelName
+        $sql = "DELETE FROM custom_levels WHERE account_id = ? AND customLevelName = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $account_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $num_row = $result->num_rows;
-        if($num_row < 1){
-            return false;
-        } 
-        return true;
+        $timestamp = time();
+        
+        // After that, that specific customgame row will be deleted from the database
+        if( 
+            $stmt->bind_param('is', $account_id, $customLevelName) &&
+            $stmt->execute()
+        ){
+            return 0;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                return 2; // ERROR with database SQL
+        }
     }
-    
+        
     // A helper function for CustomGame question function.
     public function generateQuestion(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
                                         int $fill_lower_count, int $fill_upper_count,
@@ -234,7 +279,6 @@ class Student
     // Outputs: Upon success, will return a list of information of the player that you want view
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
-    
     public function viewProfile(int $account_id)
     {
         // Check to see if player that you want view is valid
@@ -262,6 +306,47 @@ class Student
         }
     }
     
+    // Functions: Student to view all its created Custom Game
+    // Inputs: int $account_id
+    // Outputs: Upon success, will return a string of CustomLevelName 
+    //          int 1 on player that you want to view does not exists
+    //          int 2 on database error
+    function viewAllCustomGame(int $account_id)
+    {
+        // Check if user id exists
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        $customLevelName_str = '';
+        
+        // sql statement to retrieve all the data of customGame created by the account_id
+        $sql = "SELECT customLevelName FROM custom_levels WHERE account_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        
+        if( 
+            $stmt->bind_param('i', $account_id) &&
+            $stmt->execute()
+
+        ){
+            $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
+            while ($row = $result->fetch_assoc())
+            {
+                //array_push($customLevelName_str, $row);
+                $customLevelName_str = $customLevelName_str.$row['customLevelName'];
+                if ($count+1 != $num_rows)
+                    $customLevelName_str = $customLevelName_str.',';
+                $count = $count + 1;
+            }
+            return $customLevelName_str;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                    return 2; // ERROR with database SQL
+        }
+    }
+ 
     function viewLeaderBoard($account_id)
     {   
     
