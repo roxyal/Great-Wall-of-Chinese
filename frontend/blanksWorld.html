@@ -338,10 +338,7 @@
     
     // A string variable use to concatenate each question type and difficulty
     let question_type_difficulty = "";
-    
-    // A variable to know what functions is this
-    let function_name = "createCustomGame";
-    
+   
     if(!customLevelName){
       emptyFields = true;
     }
@@ -381,7 +378,7 @@
         xmlhttp.open("POST", "../scripts/student", true);
         // Request headers required for a POST request
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(`customLevelName=${customLevelName}&question_type_difficulty=${question_type_difficulty}&function_name=${function_name}`);
+        xmlhttp.send(`customLevelName=${customLevelName}&question_type_difficulty=${question_type_difficulty}&function_name=${"createCustomGame"}`);
     }
 }
 
@@ -400,6 +397,35 @@
     // }
 
     // table.innerHTML = rowsHTML; //set innerhtml code
+    var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                console.log(this.responseText);
+                
+                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
+                //1 represents account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+                if (typeof this.responseText === 'string'){
+                    // Split the string into an array
+                    customNameArray = this.responseText.split(",");
+                    for(i=0;i<customNameArray.length;i++){
+                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
+                        rowsHTML += row; // add in html code
+                    }
+                    table.innerHTML = rowsHTML; //set innerhtml code
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`function_name=${"viewAllCustomGame"}`);
 	})
 
   function deleteCustomLevel(e){
@@ -408,7 +434,29 @@
 
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
-	  rowElements.remove();
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                console.log(this.responseText);
+                
+                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
+                //1 represents account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(0)){
+                    rowElements.remove();
+                }
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`customLevelName=${customLevelName}&function_name=${"deleteCustomGame"}`);
   }
 
   let leaderBoardModal = document.getElementById('leaderboard-modal');
