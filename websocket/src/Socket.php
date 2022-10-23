@@ -47,9 +47,13 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
                 $client->userinfoUsername = $row["username"];
                 $client->userinfoID = $row["account_id"];
-                $client->pvpStatus = "Available";
-                $client->pvpOpponent = "";
-                
+
+                // Hold the username of opponent and status in an array
+                // ["Available", <anything>]: the client is available for pvp
+                // ["Sent", "user1"]: the client has sent a challenge to user1
+                // ["Received", "user1"]: the client has received a challenge from user1
+                // ["Playing", "user1"]: the client is currently playing against user1
+                $client->pvpStatus = ["", ""]; 
 
                 echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
             }
@@ -72,15 +76,29 @@ class Socket implements MessageComponentInterface {
                 $client->send("[error] 1: You cannot challenge yourself!");
                 return;
             }
+
+            if($client->pvpStatus[0] !== "Available") {
+                $client->send("[error] 5: You currently have an ongoing challenge.");
+            }
             
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
                 if ($player->userinfoUsername == $recipientUsername) {
                     // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
+                    if($player->pvpStatus[0] !== "Available") {
+                        $client->send("[error] 3: Your opponent is currently engaged in a match.");
+                        return;
+                    }
                     
-                    // Save the 
-
+                    // Save the info in pvpStatus
+                    $client->pvpStatus = ["Sent", $player->userinfoUsername];
+                    $player->pvpStatus = ["Received", $client->userinfoUsername];
+                    $client->send("[challenge sent] Please wait for $player->userinfoUsername to accept or reject.");
                     $player->send("[challenge] $client->userinfoUsername has challenged you to a match!\n");
+                    
+                    // Save the info in database
+                    // ...
+
                     echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
                     return;
                 }
@@ -99,24 +117,41 @@ class Socket implements MessageComponentInterface {
                 return;
             }
             
+            // Check if client has existing invitation
+            if($client->pvpStatus[0] !== "Received" || $client->pvpStatus[1] !== $recipientUsername) {
+                $client->send("[error] 4: This challenge request does not exist.");
+                return;
+            }
+
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
                 if ($player->userinfoUsername == $recipientUsername) {
-                    // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
+                    if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
+                        $client->send("[error] 4: This challenge request does not exist.");
+                        return;
+                    }
+                    
+                    // Save the info in pvpStatus
+                    $client->pvpStatus = ["Playing", $player->userinfoUsername];
+                    $player->pvpStatus = ["Playing", $client->userinfoUsername];
+                    $client->send("[challenge accepted] You have accepted $player->userinfoUsername's challenge!");
+                    $player->send("[challenge accepted] $client->userinfoUsername has accepted your challenge!\n");
+                    
+                    // Save the info in database
+                    // ...
 
-                    $player->send("[challenge] $client->userinfoUsername has challenged you to a match!\n");
-                    echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
+                    // echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
                     return;
                 }
             }
 
-            echo "Client $client->resourceId accepted challenge ID {$matches[1][0]}!\n";
+            // echo "Client $client->resourceId accepted challenge ID {$matches[1][0]}!\n";
         }
 
         // /reject <player_username>: reject the challenge
         if(preg_match_all("/^\/reject (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
-            echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
+            // echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
         }
 
         // /message <player_username> <message>: sends a new message to player's username
