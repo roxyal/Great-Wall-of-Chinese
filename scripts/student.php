@@ -90,6 +90,24 @@ class Student
         }
     }
     
+    // Function: helper function to check if the customLevelName has been created before
+    //           To prevent having duplicates customGameName
+    // Inputs: int int $account_id, string $customLevelName
+    //                                    
+    // Outputs: TRUE: database already have this name which is created before by the user
+    //          False: database never find this custom
+    public function checkCustomGameNameExists(int $account_id, string $customLevelName): bool
+    {
+        // Check through the database to see if the user has a customLevelName which is created before
+        $sql = "SELECT * FROM custom_levels WHERE account_id = ? AND customLevelName = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("is", $account_id, $customLevelName);
+        $stmt->execute();
+        $stmt->store_result();
+        if($stmt->num_rows > 0) return true;
+        return false;
+    }
+    
     // Function: Student can create their own custom game based on their input
     // Inputs: int int $account_id, string $customLevelName, string $question_type_difficulty
     //                                    
@@ -98,9 +116,11 @@ class Student
     //          int 2 on server error. 
     public function createCustomGame(int $account_id, string $customLevelName, string $question_type_difficulty)
     {
-        
         // Check to see if account_id exists
         if (!checkAccountIdExists($account_id)) return 1;
+        
+        // Check to see if the customLevelName exists
+        if ($this->checkCustomGameNameExists($account_id, $customLevelName)) return 2;
         
         // Insert a row into custom_levels table based on user's input
         // $question_type_difficulty is a string variable, example "Idioms, Medium|Pinyin, Hard"
@@ -118,7 +138,7 @@ class Student
         else
         {
             if($debug_mode) echo $this->conn->error;
-                return 2; // ERROR with database SQL
+                return 3; // ERROR with database SQL
         }
     }
     
@@ -151,23 +171,7 @@ class Student
                 return 2; // ERROR with database SQL
         }
     }
-    
-    // A utility function to check if the student created before CustomGame
-    public function checkCustomGameExists($account_id) : bool
-    {
-        $sql = "SELECT * FROM custom_levels WHERE account_id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $account_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $num_row = $result->num_rows;
-        if($num_row < 1){
-            return false;
-        } 
-        return true;
-    }
-    
-    
+        
     // A helper function for CustomGame question function.
     public function generateQuestion(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
                                         int $fill_lower_count, int $fill_upper_count,

@@ -366,11 +366,23 @@
                 // 0 represents success, 1 represents account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">CustomLevel Game created successfully!</div>`;
+                    // empty all inputs
+                    allQuestions.forEach(input => {
+                      input.value = '';
+                    });
+                    allDifficulty.forEach(input => {
+                      input.value = '';
+                    });
+                    // empty customName
+                    document.getElementById("customLevelName").value = '';
                 }
                 if(this.responseText.includes(1)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already a Custom Game with this name, please use a different one!</div>`;
+                }
+                if(this.responseText.includes(3)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   

@@ -90,6 +90,9 @@ function saveAssignment(){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already an Assignment with this name, please use a different one!</div>`;
+                }
+                if(this.responseText.includes(3)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }
