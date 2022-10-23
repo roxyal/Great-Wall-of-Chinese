@@ -21,9 +21,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav" id="teacherNavBar">
+            <a class="nav-item nav-link my-0" href='world_selection.html'>Change World</a>
             <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#createCustomLevel-modal">Create custom level</a>
             <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#viewCustomLevel-modal">View custom level</a>
-            <a class="nav-item nav-link my-0" href='world_selection.html'>Change World</a>
+            <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#viewAssignment-modal">Assignments</a>
             <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#leaderboard-modal">Leaderboard</a>
           </div>
         </div>
@@ -124,180 +125,58 @@
           </div>
         </div>
       </div>
-  </div>
-  <!--Create custom level Modal ends here-->
-
-  <!--View custom level Modal starts here-->
-  <div class="modal fade" id="viewCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header justify-content-center">
-          <h4 class="modal-title" id="modal-title">View custom levels</h4>
-        </div>
-        <div class="modal-body">
-          <div class="container">
-            <table class="table table-bordered table-light">
-              <thead>
-                <tr>
-                  <th scope="col">Level name</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="viewCustomLevel">
-              </tbody>
-            </table>
-          </div>
-          <div id="response"></div>
-        </div>
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!--View custom level Modal ends here-->
+    <!--Create custom level Modal ends here-->
 
-  <!--Leaderboard Modal starts here-->
-  <div class="modal fade" id="leaderboard-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header justify-content-center">
-        <h3 class="modal-title" id="modal-title">Leaderboard</h3>
-      </div>
-      <div class="modal-body">
-        <div class="container text-left">
-          <h4>Adventure mode</h4>
-          <table class="table table-bordered table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Position</th>
-                <th scope="col">Name</th>
-                <th scope="col">Accuracy</th>
-              </tr>
-            </thead>
-            <tbody id="adventureModeLeaderBoard">
-            </tbody>
-          </table>
-        </div>
-        <div class="container mt-5 text-left">
-          <h4>PVP mode</h4>
-          <table class="table table-bordered table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Position</th>
-                <th scope="col">Name</th>
-                <th scope="col">Rank</th>
-                <th scope="col">Accuracy</th>
-              </tr>
-            </thead>
-            <tbody id="pvpModeLeaderBoard">
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-  </div>
-  <!--Leaderboard Modal ends here-->
-
-  <!--Confirm Adventure mode Modal starts here-->
-  <div class="modal fade" id="startAdventureMode-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+    <!--View custom level Modal starts here-->
+    <div class="modal fade" id="viewCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-          <div class="modal-body text-center">
-            <h5>Start adventure mode?</h5>
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="modal-title">View custom levels</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <table class="table table-bordered table-light">
+                <thead>
+                  <tr>
+                    <th scope="col">Level name</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="viewCustomLevel">
+                </tbody>
+              </table>
+            </div>
+            <div id="response"></div>
           </div>
           <div class="modal-footer justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Confirm</button>
           </div>
         </div>
       </div>
-  </div>
-  <!--Confirm Adventure mode Modal ends here--> 
+    </div>
+    <!--View custom level Modal ends here-->
 
-  <!--Adventure mode Modal starts here-->
-  <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
+    <!--View assignment Modal starts here-->
+    <div class="modal fade" id="viewAssignment-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="modal-title">Assignments</h4>
+          </div>
           <div class="modal-body">
             <div class="container">
-              <h1 class="text-center">Idioms' adventure</h1>
-              <div class="row justify-content-center">
-                <div class="col-2" style="margin-top: 20%;" id="characterAvatar">
-                  <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
-                </div>
-                <div class="col-10" style="margin-top: 5%;">
-                  <div class="row">
-                    <div class="col-2">
-                      <p class="fs-4 text-center">Progress:</p>
-                    </div>
-                    <div class="col-8" style="margin-top: 1%;" >
-                      <div class="progress">
-                        <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-2">
-                      <p class="fs-4 text-center">Score:</p>
-                    </div>
-                    <div class="col-8">
-                      <p class="fs-4 text-left">0/0</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="card">
-                        <h5 class="card-header text-center">Question 1</h5> <!--question number-->
-                        <div class="card-body">
-                          <p class="card-text">This is a sample question</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mt-5 text-center">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">1) This is Option 1</button>
-                    </div>
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">2) This is Option 2</button>
-                    </div>
-                  </div>
-                  <div class="row mt-3 text-center">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">3) This is Option 3</button>
-                    </div>
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">4) This is Option 4</button>
-                    </div>
-                  </div>
-                  <div class="row mt-5">
-                    <div class="col">
-                      <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Correct!</h4>
-                        <p>The answer is 1</p>
-                        <hr>
-                        <p class="mb-0">This is the explanation for the question</p>
-                      </div>
-                      <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Wrong!</h4>
-                        <p>The answer is 3</p>
-                        <hr>
-                        <p class="mb-0">This is the explanation for the question</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row mt-3">
-                     <div class="col text-center">
-                       <button type="button" class="btn btn-success">next question</button>
-                     </div>
-                  </div>
-                </div>
-              </div>
+              <table class="table table-bordered table-light">
+                <thead>
+                  <tr>
+                    <th scope="col">Assignments</th>
+                    <th scope="col">Due date</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="viewAssignments"></tbody>
+              </table>
             </div>
           </div>
           <div class="modal-footer justify-content-center">
@@ -305,35 +184,325 @@
           </div>
         </div>
       </div>
-  </div>
-  <!--Adventure mode Modal ends here-->
+    </div>
+    <!--View assignment Modal ends here-->
 
-
-  <!--Logout Modal starts here-->
-  <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modal-title">Log Out</h5>
-          </div>
-          <div class="modal-body">
-            <p>Are you sure you want to log out?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
+    <!--Assignment mode Modal starts here-->
+    <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="container">
+                <h1 class="text-center">Assignment</h1>
+                <div class="row justify-content-center">
+                  <div class="col-2" style="margin-top: 20%;" id="characterAvatarAssignment">
+                    <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
+                  </div>
+                  <div class="col-10" style="margin-top: 5%;">
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Progress:</p>
+                      </div>
+                      <div class="col-8" style="margin-top: 1%;" >
+                        <div class="progress">
+                          <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Score:</p>
+                      </div>
+                      <div class="col-8">
+                        <p class="fs-4 text-left">0/0</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="card">
+                          <h5 class="card-header text-center">Question 1</h5> <!--question number-->
+                          <div class="card-body">
+                            <p class="card-text">This is a sample question</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-5 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">1) This is Option 1</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">2) This is Option 2</button>
+                      </div>
+                    </div>
+                    <div class="row mt-3 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">3) This is Option 3</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">4) This is Option 4</button>
+                      </div>
+                    </div>
+                    <div class="row mt-5">
+                      <div class="col">
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">Correct!</h4>
+                          <p>The answer is 1</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                          <h4 class="alert-heading">Wrong!</h4>
+                          <p>The answer is 3</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                       <div class="col text-center">
+                         <button type="button" class="btn btn-success">next question</button>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
+    </div>
+    <!--Assignment mode Modal ends here-->
+
+    <!--Leaderboard Modal starts here-->
+    <div class="modal fade" id="leaderboard-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <h3 class="modal-title" id="modal-title">Leaderboard</h3>
+        </div>
+        <div class="modal-body">
+          <div class="container text-left">
+            <h4>Adventure mode</h4>
+            <table class="table table-bordered table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">Position</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Accuracy</th>
+                </tr>
+              </thead>
+              <tbody id="adventureModeLeaderBoard">
+              </tbody>
+            </table>
+          </div>
+          <div class="container mt-5 text-left">
+            <h4>PVP mode</h4>
+            <table class="table table-bordered table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">Position</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Accuracy</th>
+                </tr>
+              </thead>
+              <tbody id="pvpModeLeaderBoard">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
-  </div>
-  <!--Logout Modal ends here--> 
+    </div>
+    </div>
+    <!--Leaderboard Modal ends here-->
 
-  <script type="module" src="src/idioms.js"></script>
+    <!--Confirm Adventure mode Modal starts here-->
+    <div class="modal fade" id="startAdventureMode-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <h5>Start adventure mode?</h5>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Confirm</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--Confirm Adventure mode Modal ends here--> 
+
+    <!--Adventure mode Modal starts here-->
+    <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="container">
+                <h1 class="text-center">Idioms' adventure</h1>
+                <div class="row justify-content-center">
+                  <div class="col-2" style="margin-top: 20%;" id="characterAvatarAdventure">
+                    <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
+                  </div>
+                  <div class="col-10" style="margin-top: 5%;">
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Progress:</p>
+                      </div>
+                      <div class="col-8" style="margin-top: 1%;" >
+                        <div class="progress">
+                          <div id="adventureModeProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label, start at 0% -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Score:</p>
+                      </div>
+                      <div class="col-8">
+                        <p id="adventureModeScore" class="fs-4 text-left">0/0</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="card">
+                          <h5 id="adventureModeQuestionNo" class="card-header text-center">Question 1</h5> <!--question number-->
+                          <div class="card-body">
+                            <p id="adventureModeQuestion" class="card-text text-center">This is a sample question</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-5 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button id="adventureModeOption1" type="button" class="btn btn-primary">1) This is Option 1</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button id="adventureModeOption2" type="button" class="btn btn-primary">2) This is Option 2</button>
+                      </div>
+                    </div>
+                    <div class="row mt-3 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button id="adventureModeOption3" type="button" class="btn btn-primary">3) This is Option 3</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button id="adventureModeOption4" type="button" class="btn btn-primary">4) This is Option 4</button>
+                      </div>
+                    </div>
+                    <div class="row mt-5">
+                      <div id="adventureModeExplanation" class="col">
+                        <!--
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">Correct!</h4>
+                          <p>The answer is 1</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                          <h4 class="alert-heading">Wrong!</h4>
+                          <p>The answer is 3</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                        -->
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                       <div class="col text-center">
+                         <button type="button" class="btn btn-success invisible">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit adventure mode</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--Adventure mode Modal ends here-->
+
+    <!--Logout Modal starts here-->
+    <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title">Log Out</h5>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <a href="../scripts/function_logout" type="button" class="btn btn-danger" id="logout">Log out</a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--Logout Modal ends here--> 
+
+    <script type="module" src="src/idioms.js"></script>
 </body>
-
-<!--Script for create custom level, viewing custom level and leaderboard-->
 <script>
-    function saveCustomLevel(){
+  // global variables
+  var characterID; // character ID
+  var characterUserName; // character username
+  var assignmentToAttempt; // details of assignment to display on the modal
+
+  function getLoggedInCharacter() {
+    return new Promise(function(resolve) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("response" + this.responseText);
+                resolve(this.responseText);
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=Character");
+        xmlhttp.send();
+    })
+  }
+
+  async function getCharacterID(){
+    console.log('calling backend script')
+    const getcharacterID = await getLoggedInCharacter();
+    characterID = getcharacterID;
+    console.log(characterID);
+ 
+  }
+
+  function getLoggedInUsername() {
+    return new Promise(function(resolve) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(this.responseText);
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=Username");
+        xmlhttp.send();
+    })
+  }
+
+  async function getCharacterName(){
+    console.log('calling backend script')
+    const getcharacterUsername = await getLoggedInUsername();
+    characterUserName = getcharacterUsername;
+    console.log(characterUserName);
+ 
+  }
+
+  getCharacterID(); // call function to get characterID
+  getCharacterName(); // call function to get character username
+
+  function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
     if(!customLevelName){
@@ -375,6 +544,26 @@
 	  rowElements.remove();
   }
 
+  let viewAssignmentModal = document.getElementById('viewAssignment-modal');
+	viewAssignmentModal.addEventListener('show.bs.modal', function (event){
+    var table = document.getElementById("viewAssignments");
+    var rowsHTML = ""; // initialise empty var to hold html of all the rows
+    var row = '<tr><td>TEST ASSIGNMENT NAME</td><td>15/11/2022</td><td><button onclick="openAssignment(event)" class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
+    table.innerHTML = row;
+
+    //link backend here to get a list of custom level names
+	})
+
+  function openAssignment(e){
+    let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
+    console.log(assignmentName);
+
+    // get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
+
+    var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
+	  assignmentModal.show();
+  }
+
   let leaderBoardModal = document.getElementById('leaderboard-modal');
 	leaderBoardModal.addEventListener('show.bs.modal', function (event){
 		var adventureMode = viewCustomLevelModal.querySelector('#adventureModeLeaderBoard'); // Table body for adventure mode leaderboard
@@ -382,19 +571,35 @@
 
     //link backend here to get leaderboard details
 	})
-</script>
 
-<!--Script for adventure modal-->
-<script type="module">
-  import {getLoggedInUsername} from "./utility.js";
-  import {getLoggedInCharacter} from "./utility.js";
-  var characterID = await getLoggedInCharacter();
-
-  console.log("character id " + characterID)
-
+  
   let adventureModeModal = document.getElementById('adventureMode-modal');
+  // when modal opens, load the first question
   adventureModeModal.addEventListener('show.bs.modal', function (event){
-		var character = adventureModeModal.querySelector('#characterAvatar'); 
+		var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
+    // Add player character based on characterID
+    switch (characterID) {
+    case "1":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+        break;
+    case "2":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+        break;
+    case "3":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+        break;
+    case "4":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+        break;
+    default:
+        console.log("Something went wrong in player creation in create()");
+    }
+	})
+
+  let assignmentModeModal = document.getElementById('assignmentMode-modal')
+  // when modal opens, load the first question
+  assignmentModeModal.addEventListener('show.bs.modal', function (event){
+		var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
     // Add player character based on characterID
     switch (characterID) {
     case "1":
@@ -414,6 +619,5 @@
     }
 	})
 </script>
-
 <script src="../websocket/socket.js"></script>
 </html>

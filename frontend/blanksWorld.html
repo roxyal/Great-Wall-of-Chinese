@@ -314,7 +314,6 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="modal-title">Log Out</h5>
-                <!-- <button type="button" class="btn-close" data-bs-dimiss="modal" aria-label="Close"></button> -->
               </div>
               <div class="modal-body">
                 <p>
@@ -333,7 +332,6 @@
 
 <!--Script for create custom level, viewing custom level and leaderboard-->
 <script>
-  // save custom level here
   function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
@@ -351,6 +349,7 @@
     if(emptyFields){
   		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
     }else{
+      // save custom level here
       document.getElementById('response').innerHTML = `<div class="alert alert-success my-2" role="alert">Assignment created successfully!</div>`
     }
   }
@@ -360,10 +359,10 @@
     var table = document.getElementById("viewCustomLevel");
     var rowsHTML = ""; // initialise empty var to hold html of all the rows
 
-    var row = '<tr><td>TESTING ROW</td><td><button onclick="deleteCustomLevel(event)">Delete</button></td></tr>';
+    var row = '<tr><td>TESTING ROW</td><td><button class="btn btn-secondary" onclick="deleteCustomLevel(event)">Delete</button></td></tr>';
     table.innerHTML = row;
 
-    //link backend here to get custom level names --> customLevelName
+    //link backend here to get a list of custom level names
     // for(i=0;i<customLevelName.length;i++){
     //   var row = '<tr><td>' + customLevelName[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
     //   rowsHTML += row; // add in html code
@@ -375,7 +374,6 @@
   function deleteCustomLevel(e){
     let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
     let customLevelName = rowElements.firstChild.innerHTML;
-    //console.log(rowElements.firstChild.firstChild.innerHTML);
 
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
