@@ -19,8 +19,11 @@ function saveAssignment(){
     let allOption3 = document.querySelectorAll("[name='option_3[]']");
     let allOption4 = document.querySelectorAll("[name='option_4[]']");
 
-    let allAnswer = document.querySelectorAll("[name='answer[]");
-    let allExplanation = document.querySelectorAll("[name='explanation[]");
+    let allAnswer = document.querySelectorAll("[name='answer[]']");
+    let allExplanation = document.querySelectorAll("[name='explanation[]']");
+
+    // get all the inputs
+    const inputs = document.querySelectorAll("[name='question[]'], [name='option_1[]'], [name='option_2[]'], [name='option_3[]'], [name='option_4[]'], [name='answer[]'], [name='explanation[]'], [name='dueDate']");
     
     // A string variable use to concatenate all questions/choice/answer/explanation
     let qnSendToBackend = "";
@@ -43,7 +46,7 @@ function saveAssignment(){
     if(emptyFields){
             document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`
     }else{
-            //link backend here to save assignment
+        //link backend here to save assignment
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200) {
@@ -54,6 +57,11 @@ function saveAssignment(){
                 // 0 represents success, 1 represents account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Assignment created successfully!</div>`;
+                    // empty all inputs
+                    inputs.forEach(input => {
+                      input.value = '';
+                    });
+
                 }
                 if(this.responseText.includes(1)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
