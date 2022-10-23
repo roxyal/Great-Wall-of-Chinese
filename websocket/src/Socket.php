@@ -53,7 +53,7 @@ class Socket implements MessageComponentInterface {
                 // ["Sent", "user1"]: the client has sent a challenge to user1
                 // ["Received", "user1"]: the client has received a challenge from user1
                 // ["Playing", "user1"]: the client is currently playing against user1
-                $client->pvpStatus = ["", ""]; 
+                $client->pvpStatus = ["Available", ""]; 
 
                 echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
             }
