@@ -6,7 +6,7 @@ var userName = await getLoggedInUsername();
 var characterID = await getLoggedInCharacter();
 
 let config = {
-    width: 800,
+    width: 1200,
     height: 600,
     parent: 'hanyuPinyinWorld',
     physics: {
@@ -52,11 +52,81 @@ function preload(){
     this.load.atlas("martialRun", "assets/characters/martial-run.png", "assets/characters/martial-run.json");
     this.load.atlas("wizard", "assets/characters/wizard_spritesheet.png", "assets/characters/wizard.json");
     this.load.atlas("heroKnight", "assets/characters/heroKnight_spritesheet.png", "assets/characters/heroKnight.json");
+
+    // Load HTML
+    this.load.html("chat", "src/chat.html");
 }
 
 function create() {
-    const {width, height} = this.scale;
+    const width = 800;
+    const height = 600;    
     this.add.image(0, 0, "darkForest").setOrigin(0).setDisplaySize(width, height).setAlpha(0.5);
+
+    // Add chat box onto game canvas
+    this.chatWindow = this.add.dom(1000, 300).createFromCache("chat").setOrigin(0.5);
+        
+    let chatSetting = "World";  // default chat setting is World
+
+    const chatInput = document.getElementById("inputMessage");
+    const chatList = document.getElementById("messages");
+    const chatTypeSelect = document.getElementById("chat-type");
+
+    chatTypeSelect.addEventListener('change', () => {
+        chatSetting = chatTypeSelect.value;
+    });
+    
+    window.addEventListener('keydown', event => {
+        if (event.key === 'y' && document.activeElement !== chatInput) {
+            event.preventDefault();
+            chatInput.focus();
+        }
+    });
+
+    // Disable player movement when typing in chat
+    chatInput.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    chatInput.addEventListener('focusout', () => this.input.keyboard.enabled = true);
+
+    // Press enter in chat to trigger event
+    chatInput.addEventListener('keydown', event => {
+        if (event.key === "Enter") {
+            sendMessage();
+            chatInput.blur();
+        } else if (event.key === 'w' || event.key === 'a' || event.key === 's' || event.key === 'd') {
+            chatInput.value += event.key;
+        };
+    });
+
+    function sendMessage() {
+        let message = chatInput.value;
+        if (message) {
+            chatInput.value = '';
+            addMessageElement(message);
+        }
+    }
+
+    // Add new message to chat box
+    function addMessageElement(message) {
+        const chatType = document.createElement('span');
+        chatType.textContent = chatSetting === "World" ? "[World] " : `To [${chatSetting}]: `;
+        chatType.style.color = chatSetting === "World" ? "blue" : "purple";
+
+        const usernameSpan = document.createElement('span');
+        usernameSpan.textContent = chatSetting === "World" ? `${userName}: ` : "";
+        usernameSpan.style.color = "green";
+        
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        
+        const messageLi = document.createElement("li");
+        messageLi.append(chatType);
+        messageLi.append(usernameSpan);
+        messageLi.append(messageSpan);
+        
+        chatList.append(messageLi);
+        chatList.lastChild.scrollIntoView();
+    }
 
     // Create animations for characters
     this.anims.create({
@@ -264,10 +334,6 @@ function create() {
     // Add colliders between characters and world objects
     this.physics.add.collider(this.sign, this.player);
     this.physics.add.collider(this.npc, this.player);
-
-    // Create buttons
-    const assignmentButton = this.add.image(width, 0, "scroll").setDisplaySize(100, 80).setOrigin(1, 0);
-    this.add.text(assignmentButton.x - 50, assignmentButton.y + 40, "Assignments", {fill: "black", fontSize: "12px"}).setOrigin(0.5);
 
     // Play music
     this.sound.play("hanyu_music", {loop: true, volume: 0.3});
