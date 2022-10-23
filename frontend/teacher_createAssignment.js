@@ -18,9 +18,11 @@ function saveAssignment(){
     let allOption2 = document.querySelectorAll("[name='option_2[]']");
     let allOption3 = document.querySelectorAll("[name='option_3[]']");
     let allOption4 = document.querySelectorAll("[name='option_4[]']");
+    let allAnswer = document.querySelectorAll("[name='answer[]']");
+    let allExplanation = document.querySelectorAll("[name='explanation[]']");
 
-    let allAnswer = document.querySelectorAll("[name='answer[]");
-    let allExplanation = document.querySelectorAll("[name='explanation[]");
+    // get all the inputs
+    //const inputs = document.querySelectorAll("[name='question[]'], [name='option_1[]'], [name='option_2[]'], [name='option_3[]'], [name='option_4[]'], [name='answer[]'], [name='explanation[]']");
     
     // A string variable use to concatenate all questions/choice/answer/explanation
     let qnSendToBackend = "";
@@ -43,7 +45,7 @@ function saveAssignment(){
     if(emptyFields){
             document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`
     }else{
-            //link backend here to save assignment
+        //link backend here to save assignment
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200) {
@@ -51,9 +53,38 @@ function saveAssignment(){
                 console.log(this.responseText);
                 
                 // the createAssignment has three possible output 0,1,2
-                // 0 represents success, 1 represents account_id cannot be found, 2 represents server error
+                // 0 represents success, 1 represents account_id gitcannot be fsound, 2 represents server error
                 if(this.responseText.includes(0)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Assignment created successfully!</div>`;
+                    // empty all inputs
+                    allQuestions.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption1.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption2.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption3.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption4.forEach(input => {
+                      input.value = '';
+                    });
+                    allAnswer.forEach(input => {
+                      input.value = '';
+                    });
+                    allExplanation.forEach(input => {
+                      input.value = '';
+                    });
+
+                    // empty due date
+                    document.getElementById("assignmentDate").value = '';
+
+                    // empty assignment name
+                    document.getElementById("assignmentName").value = '';
+
                 }
                 if(this.responseText.includes(1)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
