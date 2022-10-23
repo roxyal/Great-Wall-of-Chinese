@@ -8,9 +8,10 @@ $created_timestamp = time();
 
 $teacher = new Teacher($conn);
 
+// triggerCreateAssignment
 if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST["qnSendToBackend"])
         && isset($_POST["function_name"]) && $_POST["function_name"] == "createAssignment"){
-    echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, $teacher->convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
+    echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
 }
 
 // A Teacher class that holds all the function needed for teacher
@@ -40,7 +41,7 @@ class Teacher{
         // $sql_var[5] - answer
         // $sql_var[6] - explanation
 
-        $arrayOfQuestion = $this->stringToArray($questions, '|');
+        $arrayOfQuestion =  stringToArray($questions, '|');
 
         for ($x = 0; $x < count($arrayOfQuestion); $x++)
         {
@@ -48,8 +49,8 @@ class Teacher{
             
             $sql_1 = "INSERT INTO questions_bank(question, choice1, choice2, choice3, choice4, answer, explanation, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt_1 = $this->conn->prepare($sql_1);
-
-            $sql_var = $this->stringToArray($arrayOfQuestion[$x], ',');
+            
+            $sql_var = stringToArray($arrayOfQuestion[$x], ',');
 
             if(
                 $stmt_1->bind_param('sssssssi', $sql_var[0], $sql_var[1], $sql_var[2], $sql_var[3],
@@ -131,26 +132,6 @@ class Teacher{
             if($debug_mode) echo $this->conn->error;
                 return 3; // ERROR with database SQL
         }       
-    }
-    
-    // Helper function to convert the questions stringToArray format
-    function stringToArray($questions, $delimiter)
-    {
-        $delimiter = $delimiter;
-        $word = explode($delimiter, $questions); 
-        return $word;
-    }
-
-    // Helper function to convert the date format send from frontend to UNIX time
-    function convertDateToInt($date)
-    {
-        $delimiter = '-';
-        $word = explode($delimiter, $date); 
-        $str_date = array($word[2], $word[1], $word[0]);
-        $str_date = join("-", $str_date);
-        $int_date = strtotime($str_date);
-
-        return $int_date; 
     }
 }
 
