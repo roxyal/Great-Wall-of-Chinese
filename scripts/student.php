@@ -12,6 +12,16 @@ if(isset($_POST["customLevelName"]) && isset($_POST["question_type_difficulty"])
     echo $student->createCustomGame($account_id, $_POST["customLevelName"], $_POST["question_type_difficulty"]);
 }
 
+// Trigger viewAllCustomGame
+if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllCustomGame"){
+    echo $student->viewAllCustomGame($account_id);
+}
+
+// Trigger deleteCustomGame
+if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteCustomGame"){
+    echo $_POST["customLevelName"];
+    echo $student->deleteCustomGame($account_id, $_POST["customLevelName"]);
+}
 
 // A Student class that holds all the function needed for students
 class Student
@@ -294,7 +304,7 @@ class Student
     
     // Functions: Student to view all its created Custom Game
     // Inputs: int $account_id
-    // Outputs: Upon success, will return a list of CustomLevelName 
+    // Outputs: Upon success, will return a string of CustomLevelName 
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
     function viewAllCustomGame(int $account_id)
@@ -302,7 +312,7 @@ class Student
         // Check if user id exists
         if (!checkAccountIdExists($account_id)) return 1;
         
-        $customLevelName_list = [];
+        $customLevelName_str = '';
         
         // sql statement to retrieve all the data of customGame created by the account_id
         $sql = "SELECT customLevelName FROM custom_levels WHERE account_id = ?";
@@ -314,11 +324,17 @@ class Student
 
         ){
             $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
             while ($row = $result->fetch_assoc())
             {
-                array_push($customLevelName_list, $row);
+                //array_push($customLevelName_str, $row);
+                $customLevelName_str = $customLevelName_str.$row['customLevelName'];
+                if ($count+1 != $num_rows)
+                    $customLevelName_str = $customLevelName_str.',';
+                $count = $count + 1;
             }
-            return $customLevelName_list;
+            return $customLevelName_str;
         }
         else
         {
