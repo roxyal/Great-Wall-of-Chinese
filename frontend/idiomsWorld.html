@@ -555,15 +555,13 @@
 	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
     var table = document.getElementById("viewCustomLevel");
     var rowsHTML = ""; // initialise empty var to hold html of all the rows
-    var row = '<tr><td>TESTING ROW</td><td><button class="btn btn-secondary" onclick="deleteCustomLevel(event)">Delete</button></td></tr>';
-    table.innerHTML = row;
 
     //link backend here to get a list of custom level names
     var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
                 // Do something with the response
-                console.log(this.responseText);
+                //console.log(this.responseText);
                 
                 // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
                 //1 represents account_id cannot be found, 2 represents server error
@@ -573,11 +571,11 @@
                 if(this.responseText.includes(2)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
-                if (typeof this.responseText === 'string'){
+                if (typeof this.responseText === 'string' && this.responseText.length !== 0){
                     // Split the string into an array
                     customNameArray = this.responseText.split(",");
                     for(i=0;i<customNameArray.length;i++){
-                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"><i class="fa fa-trash"></i></button></td></tr>';
+                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)">delete</button></td></tr>';
                         rowsHTML += row; // add in html code
                     }
                     table.innerHTML = rowsHTML; //set innerhtml code
