@@ -34,6 +34,7 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+var spawn; 
 
 function preload() {
     // Load world assets
@@ -320,6 +321,31 @@ function create() {
     
     // Play music
     this.sound.play("idioms_music", {loop: true, volume: 0.3});
+
+    // Spawn handlers
+    this.otherPlayers = {};
+    spawn = (username, characterType) => {
+        this.otherPlayers[username] = [];
+        switch (characterType) {
+            case "1":
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                break;
+            case "2":
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
+                break;
+            case "3":
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
+                break;
+            case "4":
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
+                break;
+            default:
+                console.log("Something went wrong in player creation in create()");
+        }
+
+        // Add username below player character
+        this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+    }
 }
 
 function update() {
@@ -351,6 +377,13 @@ function update() {
     // Set text to follow character
     this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
+    // Update the positions of all other players
+    for(let [key, value] of Object.entries(this.otherPlayers)) {
+        let spriteKey = value["sprite"].texture.key == "martialIdle" ? value["sprite"].texture.key : `${value["sprite"].texture.key}Idle`;
+        value["sprite"].anims.play(spriteKey, true);
+        value["name"].setPosition(value["sprite"].x, value["sprite"].y + value["sprite"].height);
+    }
+
     // Display NPC dialogue only when character is close
     if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
         this.dialogue.setVisible(true);
@@ -364,4 +397,9 @@ function update() {
 function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
+}
+
+// Spawn new players that log in
+export function spawnPlayer(username, characterType) {
+    spawn(username, characterType);
 }

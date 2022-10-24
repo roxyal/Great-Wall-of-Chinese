@@ -40,13 +40,17 @@ class Socket implements MessageComponentInterface {
             if(yield $statement->execute(['id' => $client->resourceId, 'token' => $queryParameters['token']])) {
 
                 // Save the client's username
-                $statement2 = yield $pool->prepare("select accounts.username, accounts.account_id from accounts join socket_connections on accounts.account_id = socket_connections.account_id where token=:token and status='Connected' order by timestamp desc limit 1");
+                $statement2 = yield $pool->prepare("select accounts.username, accounts.account_id, students.character_type from accounts join socket_connections on accounts.account_id = socket_connections.account_id join students on accounts.account_id = students.student_id where token=:token and status='Connected' order by timestamp desc limit 1");
 
                 $result = yield $statement2->execute(['token' => $queryParameters['token']]);
                 yield $result->advance();
                 $row = $result->getCurrent();
                 $client->userinfoUsername = $row["username"];
                 $client->userinfoID = $row["account_id"];
+                $client->userinfoCharacter = $row["character_type"];
+                $client->userinfoWorld = $queryParameters["world"];
+                $client->posX = 200;
+                $client->posY = 400;
 
                 // Hold the username of opponent and status in an array
                 // ["Available", <anything>]: the client is available for pvp
@@ -55,6 +59,17 @@ class Socket implements MessageComponentInterface {
                 // ["Playing", "user1"]: the client is currently playing against user1
                 $client->pvpStatus = ["Available", ""]; 
 
+                // Pass the coordinates and character id to all logged in players in the game world
+                $allPlayers = [];
+                foreach ($this->clients as $player) {
+                    if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+                        $player->send("[connect] $client->userinfoUsername: $client->userinfoCharacter");
+                        $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
+                    }
+                }
+                // Send the client the data of all logged in users
+                $client->send(json_encode($allPlayers));
+                
                 echo "$client->userinfoUsername#$client->userinfoID just connected as Client$client->resourceId with token {$queryParameters['token']}!\n";
             }
             else {
@@ -84,7 +99,7 @@ class Socket implements MessageComponentInterface {
             
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
                     // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
                     if($player->pvpStatus[0] !== "Available") {
                         $client->send("[error] 3: Your opponent is currently engaged in a match.");
@@ -126,7 +141,7 @@ class Socket implements MessageComponentInterface {
 
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
                     if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
                         $client->send("[error] 4: This challenge request does not exist.");
                         return;
@@ -146,6 +161,8 @@ class Socket implements MessageComponentInterface {
                 }
             }
 
+            // Player was not found
+            $client->send("[error] 2: The player cannot be found.");
             // echo "Client $client->resourceId accepted challenge ID {$matches[1][0]}!\n";
         }
 
@@ -166,7 +183,7 @@ class Socket implements MessageComponentInterface {
 
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
                     if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
                         $client->send("[error] 4: This challenge request does not exist.");
                         return;
@@ -185,6 +202,9 @@ class Socket implements MessageComponentInterface {
                     return;
                 }
             }
+
+            // Player was not found
+            $client->send("[error] 2: The player cannot be found.");
             // echo "Client $client->resourceId rejected challenge ID {$matches[1][0]}!\n";
         }
 
@@ -197,7 +217,7 @@ class Socket implements MessageComponentInterface {
             $client->send("[to $recipientUsername] $client->userinfoUsername: $message");
 
             foreach ($this->clients as $player) {
-                if ($player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
                     $player->send("[message] $client->userinfoUsername: $message");
                     return;
                 }
@@ -213,13 +233,13 @@ class Socket implements MessageComponentInterface {
             echo "Client $client->resourceId messaged world: $message\n";
 
             foreach ($this->clients as $player) {
-
-                // Don't send the message back to the person who sent it
-                // if ($client->resourceId == $player->resourceId) {
-                //     continue;
-                // }
-    
-                $player->send("[world] $client->userinfoUsername: $message");
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
+                    // Don't send the message back to the person who sent it
+                    // if ($client->resourceId == $player->resourceId) {
+                    //     continue;
+                    // }
+                    $player->send("[world] $client->userinfoUsername: $message");
+                }
             }
         }
 
@@ -229,7 +249,7 @@ class Socket implements MessageComponentInterface {
             echo "Client $client->resourceId checked the pvpStatus of $recipientUsername\n";
 
             foreach ($this->clients as $player) {
-                if ($player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
                     $client->send("[status] $player->userinfoUsername: {$player->pvpStatus[0]} {$player->pvpStatus[1]}");
                     return;
                 }
@@ -262,6 +282,13 @@ class Socket implements MessageComponentInterface {
             /** @var \Amp\Mysql\ResultSet $result */
             if(yield $statement->execute(['id' => $client->resourceId])) {
                 echo "Disconnected client ({$client->resourceId}).\n";
+
+                // Update all other players
+                foreach ($this->clients as $player) {
+                    if($player->userinfoWorld == $client->userinfoWorld) {
+                        $player->send("[disconnect] $client->userinfoUsername: $client->userinfoCharacter");
+                    }
+                }
             }
             else {
                 echo "Client ({$client->resourceId}) encountered error.\n";
