@@ -496,6 +496,15 @@
   getCharacterID(); // call function to get characterID
   getCharacterName(); // call function to get character username
 
+  // leaderboard
+  let leaderBoardModal = document.getElementById('leaderboard-modal');
+	leaderBoardModal.addEventListener('show.bs.modal', function (event){
+		var adventureMode = viewCustomLevelModal.querySelector('#adventureModeLeaderBoard'); // Table body for adventure mode leaderboard
+    var pvpMode = viewCustomLevelModal.querySelector('#pvpModeLeaderBoard'); // Table body for pvp mode leaderboard
+
+    //link backend here to get leaderboard details
+	})
+
   // Saving custom level
   function saveCustomLevel(){
     let emptyFields = false;
@@ -630,9 +639,7 @@
   }
 
 
-
-
-
+  // ASSIGNMENT MODE STUFF
   // viewing assignments
   let viewAssignmentModal = document.getElementById('viewAssignment-modal');
 	viewAssignmentModal.addEventListener('show.bs.modal', function (event){
@@ -655,26 +662,33 @@
 	  assignmentModal.show();
   }
 
-
-
-
-
-
-  // leaderboard
-  let leaderBoardModal = document.getElementById('leaderboard-modal');
-	leaderBoardModal.addEventListener('show.bs.modal', function (event){
-		var adventureMode = viewCustomLevelModal.querySelector('#adventureModeLeaderBoard'); // Table body for adventure mode leaderboard
-    var pvpMode = viewCustomLevelModal.querySelector('#pvpModeLeaderBoard'); // Table body for pvp mode leaderboard
-
-    //link backend here to get leaderboard details
+  let assignmentModeModal = document.getElementById('assignmentMode-modal')
+  // when modal opens, load the first question
+  assignmentModeModal.addEventListener('show.bs.modal', function (event){
+		var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
+    // Add player character based on characterID
+    switch (characterID) {
+    case "1":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+        break;
+    case "2":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+        break;
+    case "3":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+        break;
+    case "4":
+        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+        break;
+    default:
+        console.log("Something went wrong in player creation in create()");
+    }
 	})
 
 
 
 
-
-  //ADVENTURE MODE
-
+  //ADVENTURE MODE STUFF
   // function to assign section to attempt adventure in, then open adventure mode modal
   function selectAdventureSection(e){
     selectedAdventureSection = e.srcElement.innerHTML;
@@ -699,13 +713,30 @@
 
   // function for option buttons to submit answer
   function adventureModeSubmit(e){
-       // check if submitted answer is correct/wrong
-       // then update progressBar, score, explanation accordingly
-       // if the current question is not the last question, make nextQuestionBtn visible
+      // check if submitted answer is correct/wrong
+      // then update progressBar, score, explanation accordingly
+      // if the current question is not the last question, make nextQuestionBtn visible
+      // disable all option buttons after submitting
 
-       var selectedAnswer = e.srcElement.innerHTML; //selected answer
-       console.log(selectedAnswer);
+      var selectedAnswer = e.srcElement.innerHTML; //selected answer
+      console.log(selectedAnswer);
 
+      adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible
+      //disabling all option buttons
+      adventureModeOption1.disabled = true;
+      adventureModeOption2.disabled = true;
+      adventureModeOption3.disabled = true;
+      adventureModeOption4.disabled = true;
+
+      adventureModeProgress += 10;
+      adventureModeProgressBar.innerHTML = adventureModeProgress + "%"; // update label of progress bar
+      adventureModeProgressBar.style.width = adventureModeProgress + "%"; // update width of progress bar
+
+      adventureModeQnAttempted += 1
+      adventureModeQnCorrect += 1
+      adventureModeScore.innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
+
+      // template for explanation
       // <div class="alert alert-success" role="alert">
       //   <h4 class="alert-heading">Correct!</h4>
       //   <p>The answer is 1</p>
@@ -718,19 +749,16 @@
       //   <hr>
       //   <p class="mb-0">This is the explanation for the question</p>
       // </div>
-      adventureModeExplanation.innerHTML = `<div class="alert alert-success" role="alert">
-                                              <h4 class="alert-heading">Correct!</h4>
-                                              <p>The answer is 1</p>
-                                              <hr>
-                                              <p class="mb-0">This is the explanation for the question</p>
-                                            </div>
-                                           `;
-      adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible
 
-      adventureModeProgress += 10;
-      adventureModeProgressBar.innerHTML = adventureModeProgress + "%"; // update label of progress bar
-      adventureModeProgressBar.style.width = adventureModeProgress + "%"; // update width of progress bar
-      
+
+
+      adventureModeExplanation.innerHTML = `<div class="alert alert-success" role="alert">
+                                            <h4 class="alert-heading">Correct!</h4>
+                                            <p>The answer is 1</p>
+                                            <hr>
+                                            <p class="mb-0">This is the explanation for the question</p>
+                                          </div>
+                                         `;      
   }
 
   // function to update modal upon clicking on next button
@@ -738,6 +766,15 @@
       // update questionNo, question, option1, option2, option3, option4
       // make explanation empty
       // make nextQuestionBtn invisible
+      // reenable all option buttons so they can answer new question
+
+      adventureModeNextQuestionBtn.className = "btn btn-success invisible"; // make next question btn invisible
+
+      // reenabling all option buttons
+      adventureModeOption1.disabled = false;
+      adventureModeOption2.disabled = false;
+      adventureModeOption3.disabled = false;
+      adventureModeOption4.disabled = false;
 
       console.log("loading next question")
   }
@@ -749,6 +786,13 @@
     adventureModeQnCorrect = 0; // num of questions correct, starts at 0
     adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
     adventureModeCurrentQn = 1; // current question number, starts at 1
+
+    adventureModeNextQuestionBtn.className = "btn btn-success invisible"; // make next question btn invisible
+    adventureModeExplanation.innerHTML = ""; // make explanation blank
+    adventureModeProgressBar.innerHTML = "0%"; // set label of progress bar to 0%
+    adventureModeProgressBar.style.width = "0%"; // set width of progress bar to 0%
+    adventureModeScore.innerHTML = "0/0" // set score to 0
+    adventureModeQuestionNo.innerHTML = "Question 1" // set question number to 1
 
     // when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
     console.log(selectedAdventureSection);
@@ -773,29 +817,6 @@
     }
 
     // load first question here
-	})
-
-  let assignmentModeModal = document.getElementById('assignmentMode-modal')
-  // when modal opens, load the first question
-  assignmentModeModal.addEventListener('show.bs.modal', function (event){
-		var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
-    // Add player character based on characterID
-    switch (characterID) {
-    case "1":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
-        break;
-    case "2":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
-        break;
-    case "3":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
-        break;
-    case "4":
-        character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
-        break;
-    default:
-        console.log("Something went wrong in player creation in create()");
-    }
 	})
 </script>
 <script src="../websocket/socket.js"></script>
