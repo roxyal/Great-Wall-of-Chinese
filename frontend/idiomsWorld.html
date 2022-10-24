@@ -327,11 +327,12 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-body text-center">
-              <h5>Start adventure mode?</h5>
+              <h5>Select adventure section</h5>
+              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Lower primary</button>
+              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Upper primary</button>
             </div>
             <div class="modal-footer justify-content-center">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Confirm</button>
             </div>
           </div>
         </div>
@@ -380,18 +381,18 @@
                     </div>
                     <div class="row mt-5 text-center">
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="adventureModeOption1" type="button" class="btn btn-primary">1) This is Option 1</button>
+                        <button id="adventureModeOption1" onclick="adventureModeSubmit(event)" type="button" class="btn btn-primary">This is Option 1</button>
                       </div>
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="adventureModeOption2" type="button" class="btn btn-primary">2) This is Option 2</button>
+                        <button id="adventureModeOption2" onclick="adventureModeSubmit(event)" type="button" class="btn btn-primary">This is Option 2</button>
                       </div>
                     </div>
                     <div class="row mt-3 text-center">
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="adventureModeOption3" type="button" class="btn btn-primary">3) This is Option 3</button>
+                        <button id="adventureModeOption3" onclick="adventureModeSubmit(event)" type="button" class="btn btn-primary">This is Option 3</button>
                       </div>
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="adventureModeOption4" type="button" class="btn btn-primary">4) This is Option 4</button>
+                        <button id="adventureModeOption4" onclick="adventureModeSubmit(event)" type="button" class="btn btn-primary">This is Option 4</button>
                       </div>
                     </div>
                     <div class="row mt-5">
@@ -414,7 +415,7 @@
                     </div>
                     <div class="row mt-3">
                        <div class="col text-center">
-                         <button type="button" class="btn btn-success invisible">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
+                         <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
                        </div>
                     </div>
                   </div>
@@ -454,6 +455,7 @@
   // global variables
   var characterID; // character ID
   var characterUserName; // character username
+  var selectedAdventureSection; // the section selected by user to attempt adventure mode in: lower pri/upper pri
   var assignmentToAttempt; // details of assignment to display on the modal
 
   function getLoggedInCharacter() {
@@ -660,10 +662,17 @@
     //link backend here to get leaderboard details
 	})
 
+  // function to assign section to attempt adventure in
+  function selectAdventureSection(e){
+    selectedAdventureSection = e.srcElement.innerHTML;
+    console.log(selectedAdventureSection);
+  }
+
   
   let adventureModeModal = document.getElementById('adventureMode-modal');
-  // when modal opens, load the first question
   adventureModeModal.addEventListener('show.bs.modal', function (event){
+    // when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
+    console.log(selectedAdventureSection);
 		var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
     // Add player character based on characterID
     switch (characterID) {
@@ -681,6 +690,35 @@
         break;
     default:
         console.log("Something went wrong in player creation in create()");
+    }
+
+    // get all the components in the adventure mode modal
+    var progressBar = document.getElementById('adventureModeProgressBar');
+    var score = document.getElementById('adventureModeScore');
+    var questionNo = document.getElementById('adventureModeQuestionNo');
+    var question = document.getElementById('adventureModeQuestion');
+    var option1 = document.getElementById('adventureModeOption1');
+    var option2 = document.getElementById('adventureModeOption2');
+    var option3 = document.getElementById('adventureModeOption3');
+    var option4 = document.getElementById('adventureModeOption4');
+    var explanation = document.getElementById('adventureModeExplanation');
+    var nextQuestionBtn = document.getElementById('adventureModeNextQuestion');
+
+    // function for option buttons to submit answer
+    function adventureModeSubmit(e){
+       // check if submitted answer is correct/wrong
+       // then update progressBar, score, explanation accordingly
+       // if the current question is not the last question, make nextQuestionBtn visible
+
+       var selectedAnswer = e.srcElement.innerHTML;
+       console.log(selectedAnswer);
+    }
+
+    // function to update modal upon clicking on next button
+    function adventureModeLoadNextQuestion(){
+      // update questionNo, question, option1, option2, option3, option4
+      // make explanation empty
+      // make nextQuestionBtn invisible
     }
 	})
 
