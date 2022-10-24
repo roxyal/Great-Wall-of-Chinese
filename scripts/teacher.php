@@ -14,6 +14,11 @@ if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST
     echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
 }
 
+// triggerViewSummaryReport
+if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewSummaryReport"){
+    echo $teacher->viewSummaryReport($account_id);
+}
+
 // A Teacher class that holds all the function needed for teacher
 class Teacher{
     
@@ -121,7 +126,8 @@ class Teacher{
     
     // Functions: A function for teachers to view students' summary report
     // Inputs: int $teacher_account_id
-    // Outputs: Upon success, will return an ArrayOfList of information of the students under him/her
+    // Outputs: Upon success, will return a string of information of all its students
+    // Example: Kelvin,5,10,0,0,0,0,0,0,15,20,0,0 | Kelly,10,10,0,0,0,0,0,0,20,20,0,0
     //          int 1 on the teacher is not exists
     //          int 2 on teacher want to viewSummaryReport but has no students under him/her
     //          int 3 database error
@@ -133,20 +139,38 @@ class Teacher{
         // Check to see if teacher has students
         if (!$this->checkTeacherHasStudentExists($teacher_account_id)) return 2;
         
-        $sql = "SELECT student_id, character_type, idiom_lower_accuracy, idiom_upper_accuracy, fill_lower_accuracy, fill_upper_accuracy, pinyin_lower_accuracy, pinyin_upper_accuracy FROM students WHERE teacher_account_id = ?";
+        $sql = "SELECT a.name, s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
+                 s.fill_lower_correct, s.fill_lower_attempted, s.fill_upper_correct, s.fill_upper_attempted,
+                 s.pinyin_lower_correct, s.pinyin_lower_attempted, s.pinyin_upper_correct, s.pinyin_upper_attempted
+                 FROM students s INNER JOIN accounts a ON s.student_id = a.account_id WHERE s.teacher_account_id = ?";
+        
         $stmt = $this->conn->prepare($sql);
-        $students_summary = [];
+        $students_summary_str = "";
         
         if (
                 $stmt->bind_param('i', $teacher_account_id) &&
                 $stmt->execute()
         ){
             $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
+            $comma = ',';
             while ($row = $result->fetch_assoc())
             {
-                array_push($students_summary, $row);
+                // Concatenate all the customName created by the user into a string format
+                $students_summary_str = $students_summary_str.$row['name'].$comma.
+                        $row['idiom_lower_correct'].$comma.$row['idiom_lower_attempted'].
+                        $comma.$row['idiom_upper_correct'].$comma.$row['idiom_upper_attempted'].$comma.$row['fill_lower_correct'].
+                        $comma.$row['fill_lower_attempted'].$comma.$row['fill_upper_correct'].
+                        $comma.$row['fill_upper_attempted'].$comma.$row['pinyin_lower_correct'].
+                        $comma.$row['pinyin_lower_attempted'].$comma.$row['pinyin_upper_correct'].
+                        $comma.$row['pinyin_upper_attempted'];
+
+                if ($count+1 != $num_rows)
+                    $students_summary_str = $students_summary_str.'|';
+                $count = $count + 1;
             }
-            return $students_summary;
+            return $students_summary_str;
         }
         else
         {
