@@ -397,20 +397,6 @@
                     </div>
                     <div class="row mt-5">
                       <div id="adventureModeExplanation" class="col">
-                        <!--
-                        <div class="alert alert-success" role="alert">
-                          <h4 class="alert-heading">Correct!</h4>
-                          <p>The answer is 1</p>
-                          <hr>
-                          <p class="mb-0">This is the explanation for the question</p>
-                        </div>
-                        <div class="alert alert-danger" role="alert">
-                          <h4 class="alert-heading">Wrong!</h4>
-                          <p>The answer is 3</p>
-                          <hr>
-                          <p class="mb-0">This is the explanation for the question</p>
-                        </div>
-                        -->
                       </div>
                     </div>
                     <div class="row mt-3">
@@ -455,7 +441,13 @@
   // global variables
   var characterID; // character ID
   var characterUserName; // character username
+
   var selectedAdventureSection; // the section selected by user to attempt adventure mode in: lower pri/upper pri
+  var adventureModeProgress; // progress in terms of percentage, starts at 0%
+  var adventureModeQnCorrect; // num of questions correct, starts at 0
+  var adventureModeQnAttempted; // num of questions attempted, starts at 0
+  var adventureModeCurrentQn; // current question number, starts at 1
+
   var assignmentToAttempt; // details of assignment to display on the modal
 
   function getLoggedInCharacter() {
@@ -504,6 +496,7 @@
   getCharacterID(); // call function to get characterID
   getCharacterName(); // call function to get character username
 
+  // Saving custom level
   function saveCustomLevel(){
     let emptyFields = false;
     let customLevelName = document.getElementById("customLevelName").value;
@@ -565,6 +558,7 @@
     }
   }
 
+  // viewing custom level
   let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
 	viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
     var table = document.getElementById("viewCustomLevel");
@@ -602,6 +596,7 @@
         xmlhttp.send(`function_name=${"viewAllCustomGame"}`);
 	})
 
+  // deleting custom levels
   function deleteCustomLevel(e){
     let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
     let customLevelName = rowElements.firstChild.innerHTML;
@@ -634,6 +629,11 @@
         xmlhttp.send(`customLevelName=${customLevelName}&function_name=${"deleteCustomGame"}`);
   }
 
+
+
+
+
+  // viewing assignments
   let viewAssignmentModal = document.getElementById('viewAssignment-modal');
 	viewAssignmentModal.addEventListener('show.bs.modal', function (event){
     var table = document.getElementById("viewAssignments");
@@ -644,6 +644,7 @@
     //link backend here to get a list of custom level names
 	})
 
+  // opening assignment modal
   function openAssignment(e){
     let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
     console.log(assignmentName);
@@ -654,6 +655,12 @@
 	  assignmentModal.show();
   }
 
+
+
+
+
+
+  // leaderboard
   let leaderBoardModal = document.getElementById('leaderboard-modal');
 	leaderBoardModal.addEventListener('show.bs.modal', function (event){
 		var adventureMode = viewCustomLevelModal.querySelector('#adventureModeLeaderBoard'); // Table body for adventure mode leaderboard
@@ -661,6 +668,12 @@
 
     //link backend here to get leaderboard details
 	})
+
+
+
+
+
+  //ADVENTURE MODE
 
   // function to assign section to attempt adventure in, then open adventure mode modal
   function selectAdventureSection(e){
@@ -673,16 +686,16 @@
   }
 
   // get all the components in the adventure mode modal
-  var progressBar = document.getElementById('adventureModeProgressBar');
-  var score = document.getElementById('adventureModeScore');
-  var questionNo = document.getElementById('adventureModeQuestionNo');
-  var question = document.getElementById('adventureModeQuestion');
-  var option1 = document.getElementById('adventureModeOption1');
-  var option2 = document.getElementById('adventureModeOption2');
-  var option3 = document.getElementById('adventureModeOption3');
-  var option4 = document.getElementById('adventureModeOption4');
-  var explanation = document.getElementById('adventureModeExplanation');
-  var nextQuestionBtn = document.getElementById('adventureModeNextQuestion');
+  var adventureModeProgressBar = document.getElementById('adventureModeProgressBar');
+  var adventureModeScore = document.getElementById('adventureModeScore');
+  var adventureModeQuestionNo = document.getElementById('adventureModeQuestionNo');
+  var adventureModeQuestion = document.getElementById('adventureModeQuestion');
+  var adventureModeOption1 = document.getElementById('adventureModeOption1');
+  var adventureModeOption2 = document.getElementById('adventureModeOption2');
+  var adventureModeOption3 = document.getElementById('adventureModeOption3');
+  var adventureModeOption4 = document.getElementById('adventureModeOption4');
+  var adventureModeExplanation = document.getElementById('adventureModeExplanation');
+  var adventureModeNextQuestionBtn = document.getElementById('adventureModeNextQuestion');
 
   // function for option buttons to submit answer
   function adventureModeSubmit(e){
@@ -690,8 +703,34 @@
        // then update progressBar, score, explanation accordingly
        // if the current question is not the last question, make nextQuestionBtn visible
 
-       var selectedAnswer = e.srcElement.innerHTML;
+       var selectedAnswer = e.srcElement.innerHTML; //selected answer
        console.log(selectedAnswer);
+
+      // <div class="alert alert-success" role="alert">
+      //   <h4 class="alert-heading">Correct!</h4>
+      //   <p>The answer is 1</p>
+      //   <hr>
+      //   <p class="mb-0">This is the explanation for the question</p>
+      // </div>
+      // <div class="alert alert-danger" role="alert">
+      //   <h4 class="alert-heading">Wrong!</h4>
+      //   <p>The answer is 3</p>
+      //   <hr>
+      //   <p class="mb-0">This is the explanation for the question</p>
+      // </div>
+      adventureModeExplanation.innerHTML = `<div class="alert alert-success" role="alert">
+                                              <h4 class="alert-heading">Correct!</h4>
+                                              <p>The answer is 1</p>
+                                              <hr>
+                                              <p class="mb-0">This is the explanation for the question</p>
+                                            </div>
+                                           `;
+      adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible
+
+      adventureModeProgress += 10;
+      adventureModeProgressBar.innerHTML = adventureModeProgress + "%"; // update label of progress bar
+      adventureModeProgressBar.style.width = adventureModeProgress + "%"; // update width of progress bar
+      
   }
 
   // function to update modal upon clicking on next button
@@ -699,10 +738,18 @@
       // update questionNo, question, option1, option2, option3, option4
       // make explanation empty
       // make nextQuestionBtn invisible
+
+      console.log("loading next question")
   }
   
   let adventureModeModal = document.getElementById('adventureMode-modal');
   adventureModeModal.addEventListener('show.bs.modal', function (event){
+    // set starting values
+    adventureModeProgress = 0; // progress in terms of percentage, starts at 0
+    adventureModeQnCorrect = 0; // num of questions correct, starts at 0
+    adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
+    adventureModeCurrentQn = 1; // current question number, starts at 1
+
     // when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
     console.log(selectedAdventureSection);
 
