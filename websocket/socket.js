@@ -12,8 +12,8 @@ function generateSocketAuth() {
     })
 }
 import { spawnPlayer } from "../frontend/src/idioms.js";
+// export var socket;
 var token;
-var socket;
 var world;
 generateSocketAuth().then(result => {
     token = result;
@@ -33,7 +33,9 @@ generateSocketAuth().then(result => {
         console.log(e.data);
 
         // Spawn the players that are already logged in
-        
+        if(JSON.parse(e.data)) {
+            console.log("succes");
+        }
 
         // message will come in the format:
         // [type] senderusername: message
