@@ -11,14 +11,19 @@ function generateSocketAuth() {
         xmlhttp.send();
     })
 }
+import { spawnPlayer } from "../frontend/src/idioms.js";
 var token;
 var socket;
+var world;
 generateSocketAuth().then(result => {
     token = result;
+    if(window.location.pathname.includes("idioms")) world = "Idioms";
+    else if(window.location.pathname.includes("hanyu")) world = "Hanyu";
+    else if (window.location.pathname.includes("blanks")) world = "Blanks";
     // console.log(token);
     
     // Create a new WebSocket.
-    socket = window.location.hostname == "localhost" ? new WebSocket(`ws://${window.location.hostname}:8888?token=${token}`) : new WebSocket(`wss://${window.location.hostname}/wss2/:8888?token=${token}`);
+    socket = window.location.hostname == "localhost" ? new WebSocket(`ws://${window.location.hostname}:8888?token=${token}&world=${world}`) : new WebSocket(`wss://${window.location.hostname}/wss2/:8888?token=${token}&world=${world}`);
 
     function transmitMessage() {
         socket.send( message.value );
@@ -26,6 +31,9 @@ generateSocketAuth().then(result => {
 
     socket.onmessage = function(e) {
         console.log(e.data);
+
+        // Spawn the players that are already logged in
+        
 
         // message will come in the format:
         // [type] senderusername: message
@@ -50,6 +58,13 @@ generateSocketAuth().then(result => {
             //         console.log("An unknown error occurred.");
             //         break;
             // }
+        }
+        else if(type == "connect") {
+            // [connect] username: characterType
+            spawnPlayer(matches[2], matches[3]);
+        }
+        else if(type == "disconnect") {
+            // spawnPlayer(matches[1], matches[2], matches[3]);
         }
         else if(/^to (.+)$/.test(type)) {
             // private message sent from the client
