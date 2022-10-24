@@ -328,8 +328,8 @@
           <div class="modal-content">
             <div class="modal-body text-center">
               <h5>Select adventure section</h5>
-              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Lower primary</button>
-              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-target="#adventureMode-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Upper primary</button>
+              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Lower primary</button>
+              <button onclick="selectAdventureSection(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Upper primary</button>
             </div>
             <div class="modal-footer justify-content-center">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -662,19 +662,23 @@
     //link backend here to get leaderboard details
 	})
 
-  // function to assign section to attempt adventure in
+  // function to assign section to attempt adventure in, then open adventure mode modal
   function selectAdventureSection(e){
     selectedAdventureSection = e.srcElement.innerHTML;
     console.log(selectedAdventureSection);
-  }
 
+    // show adventure mode modal
+    var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
+	  adventureModal.show();
+  }
   
   let adventureModeModal = document.getElementById('adventureMode-modal');
   adventureModeModal.addEventListener('show.bs.modal', function (event){
     // when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
     console.log(selectedAdventureSection);
-		var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
+
     // Add player character based on characterID
+		var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
     switch (characterID) {
     case "1":
         character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
