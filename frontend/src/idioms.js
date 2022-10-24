@@ -324,20 +324,21 @@ function create() {
 
     // Spawn handlers
     this.otherPlayers = {};
-    spawn = (username, characterType) => {
+    spawn = (username, characterType, posX, posY) => {
+        console.log("spawning player "+username);
         this.otherPlayers[username] = [];
         switch (characterType) {
             case "1":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "martialIdle").setScale(2);
                 break;
             case "2":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "huntress").setScale(2.2);
                 break;
             case "3":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "heroKnight").setScale(1.7);
                 break;
             case "4":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "wizard").setScale(1.3);
                 break;
             default:
                 console.log("Something went wrong in player creation in create()");
@@ -387,7 +388,7 @@ function update() {
     // Display NPC dialogue only when character is close
     if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
         this.dialogue.setVisible(true);
-        this.speech.setVisible(false);   
+        this.speech.setVisible(false);
     } else {
         this.dialogue.setVisible(false);
         this.speech.setVisible(true);
@@ -400,6 +401,7 @@ function showStartAdventureModal(){
 }
 
 // Spawn new players that log in
-export function spawnPlayer(username, characterType) {
-    spawn(username, characterType);
+export function spawnPlayer(username, characterType, posX, posy) {
+    console.log("spawnPlayer player "+username);
+    spawn(username, characterType, posX, posy);
 }

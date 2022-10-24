@@ -13,6 +13,10 @@ class Socket implements MessageComponentInterface {
         $this->clients = new \SplObjectStorage;
     }
 
+    public function move(ConnectionInterface $client) {
+        
+    }
+
     public function onOpen(ConnectionInterface $client) {
 
         echo "Connecting new client...\n";
@@ -62,6 +66,7 @@ class Socket implements MessageComponentInterface {
                 // Pass the coordinates and character id to all logged in players in the game world
                 $allPlayers = [];
                 foreach ($this->clients as $player) {
+                    if($client->userinfoUsername == $player->userinfoUsername) continue;
                     if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
                         $player->send("[connect] $client->userinfoUsername: $client->userinfoCharacter");
                         $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
