@@ -332,7 +332,7 @@ class Student
             $count = 0;
             while ($row = $result->fetch_assoc())
             {
-                //array_push($customLevelName_str, $row);
+                // Concatenate all the customName created by the user into a string format
                 $customLevelName_str = $customLevelName_str.$row['customLevelName'];
                 if ($count+1 != $num_rows)
                     $customLevelName_str = $customLevelName_str.',';
