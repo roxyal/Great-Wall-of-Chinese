@@ -769,13 +769,20 @@
       // make nextQuestionBtn invisible
       // reenable all option buttons so they can answer new question
 
-      adventureModeNextQuestionBtn.className = "btn btn-success invisible"; // make next question btn invisible
+      // update current question label
+      adventureModeCurrentQn += 1;
+      adventureModeQuestionNo.innerHTML = "Question " + adventureModeCurrentQn;
+
+      // make next question btn invisible
+      adventureModeNextQuestionBtn.className = "btn btn-success invisible";
 
       // reenabling all option buttons
       adventureModeOption1.disabled = false;
       adventureModeOption2.disabled = false;
       adventureModeOption3.disabled = false;
       adventureModeOption4.disabled = false;
+
+      adventureModeExplanation.innerHTML = ""; // empty the explanation
 
       console.log("loading next question")
   }
