@@ -671,6 +671,35 @@
     var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
 	  adventureModal.show();
   }
+
+  // get all the components in the adventure mode modal
+  var progressBar = document.getElementById('adventureModeProgressBar');
+  var score = document.getElementById('adventureModeScore');
+  var questionNo = document.getElementById('adventureModeQuestionNo');
+  var question = document.getElementById('adventureModeQuestion');
+  var option1 = document.getElementById('adventureModeOption1');
+  var option2 = document.getElementById('adventureModeOption2');
+  var option3 = document.getElementById('adventureModeOption3');
+  var option4 = document.getElementById('adventureModeOption4');
+  var explanation = document.getElementById('adventureModeExplanation');
+  var nextQuestionBtn = document.getElementById('adventureModeNextQuestion');
+
+  // function for option buttons to submit answer
+  function adventureModeSubmit(e){
+       // check if submitted answer is correct/wrong
+       // then update progressBar, score, explanation accordingly
+       // if the current question is not the last question, make nextQuestionBtn visible
+
+       var selectedAnswer = e.srcElement.innerHTML;
+       console.log(selectedAnswer);
+  }
+
+  // function to update modal upon clicking on next button
+  function adventureModeLoadNextQuestion(){
+      // update questionNo, question, option1, option2, option3, option4
+      // make explanation empty
+      // make nextQuestionBtn invisible
+  }
   
   let adventureModeModal = document.getElementById('adventureMode-modal');
   adventureModeModal.addEventListener('show.bs.modal', function (event){
@@ -696,34 +725,7 @@
         console.log("Something went wrong in player creation in create()");
     }
 
-    // get all the components in the adventure mode modal
-    var progressBar = document.getElementById('adventureModeProgressBar');
-    var score = document.getElementById('adventureModeScore');
-    var questionNo = document.getElementById('adventureModeQuestionNo');
-    var question = document.getElementById('adventureModeQuestion');
-    var option1 = document.getElementById('adventureModeOption1');
-    var option2 = document.getElementById('adventureModeOption2');
-    var option3 = document.getElementById('adventureModeOption3');
-    var option4 = document.getElementById('adventureModeOption4');
-    var explanation = document.getElementById('adventureModeExplanation');
-    var nextQuestionBtn = document.getElementById('adventureModeNextQuestion');
-
-    // function for option buttons to submit answer
-    function adventureModeSubmit(e){
-       // check if submitted answer is correct/wrong
-       // then update progressBar, score, explanation accordingly
-       // if the current question is not the last question, make nextQuestionBtn visible
-
-       var selectedAnswer = e.srcElement.innerHTML;
-       console.log(selectedAnswer);
-    }
-
-    // function to update modal upon clicking on next button
-    function adventureModeLoadNextQuestion(){
-      // update questionNo, question, option1, option2, option3, option4
-      // make explanation empty
-      // make nextQuestionBtn invisible
-    }
+    // load first question here
 	})
 
   let assignmentModeModal = document.getElementById('assignmentMode-modal')
