@@ -350,20 +350,25 @@ function create() {
 }
 
 function update() {
+    var move = false;
     if (this.cursors.right.isDown) {
         this.player.setVelocityX(150);
         this.player.flipX = false;
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.left.isDown) {
         this.player.setVelocityX(-150);
         this.player.flipX = true;
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.up.isDown) {
         this.player.setVelocityY(-150);
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.down.isDown) {
         this.player.setVelocityY(150);
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else {
         this.player.setVelocity(0);
         this.player.anims.play(this.idleKey, true);
@@ -377,6 +382,11 @@ function update() {
 
     // Set text to follow character
     this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
+
+    // Update player's sprite and position on the socket
+    if(move) {
+        updateMovement(userName, this.player.x, this.player.y, this.runningKey, this.player.flipX);
+    }
 
     // Update the positions of all other players
     for(let [key, value] of Object.entries(this.otherPlayers)) {
@@ -398,6 +408,10 @@ function update() {
 function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
+}
+
+function updateMovement(username, posX, posY, sprite, flipX) {
+    socket.send(`/move x${posX} y${posY} sprite${sprite} flip${flipX}`);
 }
 
 // Spawn new players that log in

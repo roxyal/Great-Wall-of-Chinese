@@ -99,6 +99,10 @@ generateSocketAuth().then(result => {
             else if(type == "disconnect") {
                 // spawnPlayer(matches[1], matches[2], matches[3]);
             }
+            else if(type == "move") {
+                // [move] username: x200 y400
+                // movePlayer()
+            }
             else if(/^to (.+)$/.test(type)) {
                 // private message sent from the client
                 // do something like adding the chat message to chat div

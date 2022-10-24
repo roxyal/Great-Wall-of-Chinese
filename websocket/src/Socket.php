@@ -13,10 +13,6 @@ class Socket implements MessageComponentInterface {
         $this->clients = new \SplObjectStorage;
     }
 
-    public function move(ConnectionInterface $client) {
-        
-    }
-
     public function onOpen(ConnectionInterface $client) {
 
         echo "Connecting new client...\n";
@@ -66,6 +62,8 @@ class Socket implements MessageComponentInterface {
                 // Pass the coordinates and character id to all logged in players in the game world
                 $allPlayers = [];
                 foreach ($this->clients as $player) {
+                    // var_dump($player->posX);
+                    // var_dump($player->posY);
                     if($client->userinfoUsername == $player->userinfoUsername) continue;
                     if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
                         $player->send("[connect] $client->userinfoUsername: $client->userinfoCharacter");
@@ -86,6 +84,24 @@ class Socket implements MessageComponentInterface {
     public function onMessage(ConnectionInterface $client, $msg) {
 
         echo "Client $client->resourceId said $msg\n";
+
+        // Character moving
+        if(preg_match_all("/^\/move x(\d+) y(\d+) sprite(.+) flip(.+)$/", $msg, $matches)) {
+            $posX = $matches[1][0];
+            $posY = $matches[2][0];
+            // Save the player's updated location
+            $client->posX = $posX;
+            $client->posY = $posY;
+            // echo $client->posX." ".client->posY;
+
+            // Broadcast new location to all other players
+            // foreach ($this->clients as $player) {
+            //     // if($client->userinfoUsername == $player->userinfoUsername) continue;
+            //     if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+            //         $player->send("[move] $client->userinfoUsername: x$player->posX y$player->posY");
+            //     }
+            // }
+        }
 
         // Message handler for slash commands
 
