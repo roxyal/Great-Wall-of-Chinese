@@ -721,7 +721,6 @@
       var selectedAnswer = e.srcElement.innerHTML; //selected answer
       console.log(selectedAnswer);
 
-      adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible
       //disabling all option buttons
       adventureModeOption1.disabled = true;
       adventureModeOption2.disabled = true;
@@ -731,6 +730,10 @@
       adventureModeProgress += 10;
       adventureModeProgressBar.innerHTML = adventureModeProgress + "%"; // update label of progress bar
       adventureModeProgressBar.style.width = adventureModeProgress + "%"; // update width of progress bar
+
+      if(adventureModeProgress < 100){
+        adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
+      }
 
       adventureModeQnAttempted += 1
       adventureModeQnCorrect += 1
@@ -749,8 +752,6 @@
       //   <hr>
       //   <p class="mb-0">This is the explanation for the question</p>
       // </div>
-
-
 
       adventureModeExplanation.innerHTML = `<div class="alert alert-success" role="alert">
                                             <h4 class="alert-heading">Correct!</h4>
