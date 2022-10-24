@@ -379,7 +379,8 @@ function update() {
 
     // Update the positions of all other players
     for(let [key, value] of Object.entries(this.otherPlayers)) {
-        value["sprite"].anims.play(value["sprite"].texture.key, true);
+        let spriteKey = value["sprite"].texture.key == "martialIdle" ? value["sprite"].texture.key : `${value["sprite"].texture.key}Idle`;
+        value["sprite"].anims.play(spriteKey, true);
         value["name"].setPosition(value["sprite"].x, value["sprite"].y + value["sprite"].height);
     }
 
