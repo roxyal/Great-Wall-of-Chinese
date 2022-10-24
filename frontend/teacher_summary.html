@@ -30,40 +30,55 @@
       <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
     </nav>
     <div id="container">
-        <div class="content-window2 h-100">
-          <h1 class= "text-center">Summary Report</h1>
-          <div class="container">
-            <table class="table table-bordered table-dark">
-              <thead>
-                <tr>
-                  <th scope="col">Topics</th>
-                  <th scope="col">Number of Questions attempted</th>
-                  <th scope="col">Number of questions answered correctly</th>
-                  <th scope="col">Average accuracy</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Idoims</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th scope="row">Hanyu Pinyin</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th scope="row">Fill in the blanks</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="content-window2 container-fluid">
+        <h1 class= "text-center">Summary Report</h1>
+          <h2 class= "text-left">Individual Statistics</h2>
+          <table class="table table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Student name</th>
+                <th scope="col">Idioms lower primary</th>
+                <th scope="col">Idioms upper primary</th>
+                <th scope="col">Fill in the blanks lower primary</th>
+                <th scope="col">Fill in the blanks upper primary</th>
+                <th scope="col">Hanyu pinyin lower primary</th>
+                <th scope="col">Hanyu pinyin upper primary</th>
+              </tr>
+            </thead>
+            <tbody class="table-light" id="individualStats">
+            </tbody>
+          </table>
+          <h2 class= "text-left mt-5">Average Statistics</h2>
+          <table class="table table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Topics</th>
+                <th scope="col">Average number of Questions attempted</th>
+                <th scope="col">Average number of Questions answered correctly</th>
+                <th scope="col">Average accuracy</th>
+              </tr>
+            </thead>
+            <tbody class="table-light">
+              <tr>
+                <th scope="row">Idioms</th>
+                <td id="idiomsAttempted"></td>
+                <td id="idiomsCorrect"></td>
+                <td id="idiomsAccuracy"></td>
+              </tr>
+              <tr>
+                <th scope="row">Hanyu Pinyin</th>
+                <td id="hanyuPinyinAttempted"></td>
+                <td id="hanyuPinyinCorrect"></td>
+                <td id="hanyuPinyinAccuracy"></td>
+              </tr>
+              <tr>
+                <th scope="row">Fill in the blanks</th>
+                <td id="fillInTheBlanksAttempted"></td>
+                <td id="fillInTheBlanksCorrect"></td>
+                <td id="fillInTheBlanksAccuracy"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
     </div>
 
@@ -85,6 +100,6 @@
         </div>
     </div>
     <!--Logout modal ends here-->
-
+    <script src="teacher_summary.js"></script>
 </body>
 </html>
