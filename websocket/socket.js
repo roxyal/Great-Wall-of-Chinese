@@ -11,6 +11,28 @@ function generateSocketAuth() {
         xmlhttp.send();
     })
 }
+// Holds the players to be spawned until phaser has loaded.
+// var spawnPlayerHolder = players => document.addEventListener("DOMLoaded", function() {
+//     console.log('DOM has loaded');
+//     for(let player in players) {
+//         let matches = players[player].match(/^(\d+)-(\d+)-(\d+)$/);
+//         let characterType = parseInt(matches[1]);
+//         let posX = parseInt(matches[2]);
+//         let posY = parseInt(matches[3]);
+//         spawnPlayerHolder(player, characterType, posX, posY);
+//     }
+// });
+function loadPlayers(players) {
+    console.log("loading players");
+    console.log(players);
+    for(let player in players) {
+        let matches = players[player].match(/^(\d+)-(\d+)-(\d+)$/);
+        let characterType = matches[1];
+        let posX = parseInt(matches[2]);
+        let posY = parseInt(matches[3]);
+        spawnPlayer(player, characterType, posX, posY);
+    }
+}
 import { spawnPlayer } from "../frontend/src/idioms.js";
 // export var socket;
 var token;
@@ -33,8 +55,16 @@ generateSocketAuth().then(result => {
         console.log(e.data);
 
         // Spawn the players that are already logged in
-        if(JSON.parse(e.data)) {
-            console.log("succes");
+        try {
+            let players = JSON.parse(e.data);
+            console.log(players);
+            // Setting it to 3s to wait before loading players, can try changing to on phaser load
+            window.setTimeout(function() {
+                loadPlayers(players);
+            }, 3000); 
+        } catch (e) {
+            console.log("spawnPlayer failed");
+            console.log(e);
         }
 
         // message will come in the format:
@@ -64,10 +94,14 @@ generateSocketAuth().then(result => {
             }
             else if(type == "connect") {
                 // [connect] username: characterType
-                spawnPlayer(matches[2], matches[3]);
+                spawnPlayer(matches[2], matches[3], 200, 400);
             }
             else if(type == "disconnect") {
                 // spawnPlayer(matches[1], matches[2], matches[3]);
+            }
+            else if(type == "move") {
+                // [move] username: x200 y400
+                // movePlayer()
             }
             else if(/^to (.+)$/.test(type)) {
                 // private message sent from the client

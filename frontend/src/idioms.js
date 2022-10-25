@@ -324,20 +324,21 @@ function create() {
 
     // Spawn handlers
     this.otherPlayers = {};
-    spawn = (username, characterType) => {
+    spawn = (username, characterType, posX, posY) => {
+        console.log("spawning player "+username);
         this.otherPlayers[username] = [];
         switch (characterType) {
             case "1":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "martialIdle").setScale(2);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "martialIdle").setScale(2);
                 break;
             case "2":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "huntress").setScale(2.2);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "huntress").setScale(2.2);
                 break;
             case "3":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "heroKnight").setScale(1.7);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "heroKnight").setScale(1.7);
                 break;
             case "4":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(200, 400, "wizard").setScale(1.3);
+                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "wizard").setScale(1.3);
                 break;
             default:
                 console.log("Something went wrong in player creation in create()");
@@ -349,20 +350,25 @@ function create() {
 }
 
 function update() {
+    var move = false;
     if (this.cursors.right.isDown) {
         this.player.setVelocityX(150);
         this.player.flipX = false;
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.left.isDown) {
         this.player.setVelocityX(-150);
         this.player.flipX = true;
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.up.isDown) {
         this.player.setVelocityY(-150);
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else if (this.cursors.down.isDown) {
         this.player.setVelocityY(150);
         this.player.anims.play(this.runningKey, true);
+        move = true;
     } else {
         this.player.setVelocity(0);
         this.player.anims.play(this.idleKey, true);
@@ -377,6 +383,11 @@ function update() {
     // Set text to follow character
     this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
+    // Update player's sprite and position on the socket
+    if(move) {
+        updateMovement(userName, this.player.x, this.player.y, this.runningKey, this.player.flipX);
+    }
+
     // Update the positions of all other players
     for(let [key, value] of Object.entries(this.otherPlayers)) {
         let spriteKey = value["sprite"].texture.key == "martialIdle" ? value["sprite"].texture.key : `${value["sprite"].texture.key}Idle`;
@@ -387,7 +398,7 @@ function update() {
     // Display NPC dialogue only when character is close
     if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
         this.dialogue.setVisible(true);
-        this.speech.setVisible(false);   
+        this.speech.setVisible(false);
     } else {
         this.dialogue.setVisible(false);
         this.speech.setVisible(true);
@@ -399,7 +410,12 @@ function showStartAdventureModal(){
 	startAdventureModal.show();
 }
 
+function updateMovement(username, posX, posY, sprite, flipX) {
+    socket.send(`/move x${posX} y${posY} sprite${sprite} flip${flipX}`);
+}
+
 // Spawn new players that log in
-export function spawnPlayer(username, characterType) {
-    spawn(username, characterType);
+export function spawnPlayer(username, characterType, posX, posy) {
+    console.log("spawnPlayer player "+username);
+    spawn(username, characterType, posX, posy);
 }
