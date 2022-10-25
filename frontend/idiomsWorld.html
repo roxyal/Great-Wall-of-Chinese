@@ -535,8 +535,10 @@
             if (this.readyState == 4 && this.status == 200){
                 // Do something with the response
                 console.log(this.responseText);
-                // the saveCustomLevel has three possible output 0,1,2
+                // the saveCustomLevel has four possible output 0,1,2,3,4
                 // 0 represents success, 1 represents account_id cannot be found, 2 represents server error
+                // 3 represents the length of customGameName is less than 2 letters.
+                // 4 represente server error
                 if(this.responseText.includes(0)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">CustomLevel Game created successfully!</div>`;
                     // empty all inputs
@@ -553,9 +555,12 @@
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText.includes(2)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already a Custom Game with this name, please use a different one!</div>`;
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already an CustomGame with this name, please use a different one!</div>`;
                 }
                 if(this.responseText.includes(3)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please enter the CustomGame name with at least TWO letter</div>`;
+                }
+                if(this.responseText.includes(4)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   
@@ -582,12 +587,7 @@
                 
                 // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
                 //1 represents account_id cannot be found, 2 represents server error
-                if(this.responseText.includes(1)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
-                }
-                if(this.responseText.includes(2)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
-                }
+                
                 if (typeof this.responseText === 'string' && this.responseText.length !== 0){
                     // Split the string into an array
                     customNameArray = this.responseText.split(",");
@@ -596,6 +596,12 @@
                         rowsHTML += row; // add in html code
                     }
                     table.innerHTML = rowsHTML; //set innerhtml code
+                }
+                if(this.responseText === 1 && this.responseText === "1"){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText === 1 && this.responseText === "2"){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   
         };
@@ -609,7 +615,7 @@
   function deleteCustomLevel(e){
     let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
     let customLevelName = rowElements.firstChild.innerHTML;
-
+    
     //console.log(customLevelName)
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
@@ -619,8 +625,9 @@
                 // Do something with the response
                 console.log(this.responseText);
                 
-                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
-                //1 represents account_id cannot be found, 2 represents server error
+                // the deleteCustomGame has three possible output 0,1,2
+                // 0 represents customGame delete success
+                // 1 Account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     rowElements.remove();
                 }

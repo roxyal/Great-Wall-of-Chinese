@@ -122,6 +122,9 @@ class Student
         // Check to see if the customLevelName exists
         if ($this->checkCustomGameNameExists($account_id, $customLevelName)) return 2;
         
+        // customGameName must be at least be 2 letters
+        if (strlen($customLevelName) < 2) return 3;
+        
         // Insert a row into custom_levels table based on user's input
         // $question_type_difficulty is a string variable, example "Idioms, Medium|Pinyin, Hard"
         $sql = "INSERT INTO custom_levels (account_id, customLevelName, question_type_difficulty, timestamp) VALUES (?, ?, ?, ?)";
@@ -138,14 +141,14 @@ class Student
         else
         {
             if($debug_mode) echo $this->conn->error;
-                return 3; // ERROR with database SQL
+                return 4; // ERROR with database SQL
         }
     }
     
     // Function: Student can delete their own custom game
     // Inputs: int int $account_id, string $customLevelName
     //                                    
-    // Outputs: Int 0 on success, successfully created CustomGame
+    // Outputs: Int 0 on success, successfully deleted CustomGame
     //          int 1 on account_id is not exists
     //          int 2 on server error. 
     function deleteCustomGame(int $account_id, string $customLevelName)
@@ -156,7 +159,6 @@ class Student
         // Delete the custom level from the table, based on account_id and customLevelName
         $sql = "DELETE FROM custom_levels WHERE account_id = ? AND customLevelName = ?";
         $stmt = $this->conn->prepare($sql);
-        $timestamp = time();
         
         // After that, that specific customgame row will be deleted from the database
         if( 
@@ -238,7 +240,7 @@ class Student
     // Functions: Send Pvp request to opponent
     // Inputs: int $requester_id, int $opponent_id, int $pvp_room_type
     // Outputs: Int 0 on success, successfully sendPvp request to opponent
-    //          int 1 on requeseter_id/opponent_id is not exists
+    //          int 1 on requester/opponent_id is not exists
     //          int 2 on requester choose CustomGame, but has no customGame created. error
     //          int 3 on server error. 
     public function sendPvpRequest(int $requester_id, int $opponent_id, int $pvp_room_type)

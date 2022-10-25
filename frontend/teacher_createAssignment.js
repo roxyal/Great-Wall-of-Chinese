@@ -93,6 +93,9 @@ function saveAssignment(){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already an Assignment with this name, please use a different one!</div>`;
                 }
                 if(this.responseText.includes(3)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please enter the Assignment name with at least TWO letter</div>`;
+                }
+                if(this.responseText.includes(4)){
                     document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }
