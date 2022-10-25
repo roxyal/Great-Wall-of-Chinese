@@ -30,7 +30,15 @@ function loadPlayers(players) {
         let characterType = matches[1];
         let posX = parseInt(matches[2]);
         let posY = parseInt(matches[3]);
-        spawnPlayer(player, characterType, posX, posY);
+        try {
+            spawnPlayer(player, characterType, posX, posY);
+        }
+        catch (e) {
+            // Wait a bit, then try to respawn player
+            window.setTimeout(function() {
+                spawnPlayer(player, characterType, posX, posY);
+            }, 3000);
+        }
     }
 }
 import { spawnPlayer, movePlayer, destroyPlayer } from "../frontend/src/idioms.js";
@@ -164,7 +172,7 @@ generateSocketAuth().then(result => {
                     // To make smoother animations, find the number of Phaser updates() that have passed since last location data
                     let dt = coords[4]-moves[sender][moves[sender].length-1][3];
                     // Only send location data newer than x updates from the previous data
-                    if(dt > 10) {
+                    if(dt > 5) {
                         // To prevent sending every single movement to Phaser, wait until there are >2 movements in the same player's queue
                         // if(moves[sender].length > 2) {
                             movePlayer(sender, coords[1], coords[2], coords[3], dt);
