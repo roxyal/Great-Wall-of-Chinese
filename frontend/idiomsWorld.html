@@ -615,7 +615,7 @@
   function deleteCustomLevel(e){
     let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
     let customLevelName = rowElements.firstChild.innerHTML;
-
+    
     //console.log(customLevelName)
     // link delete custom level script here, send customLevelName
     // if successful, remove elements
@@ -625,8 +625,9 @@
                 // Do something with the response
                 console.log(this.responseText);
                 
-                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
-                //1 represents account_id cannot be found, 2 represents server error
+                // the deleteCustomGame has three possible output 0,1,2
+                // 0 represents assignment delete success
+                // 1 Account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     rowElements.remove();
                 }
