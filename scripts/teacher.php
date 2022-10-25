@@ -15,8 +15,8 @@ if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST
 }
 
 // triggerDeleteAssignment
-if(isset($_POST["assignmentName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteAssignment"){
-    echo $teacher->viewAllAssignment($account_id);
+if(isset($_POST["assignmentToDelete"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteAssignment"){
+    echo $teacher->deleteAssignment($account_id, $_POST["assignmentToDelete"]);
 }
 
 // triggerViewSummaryReport
@@ -78,7 +78,7 @@ class Teacher{
         
         // Iterate through the questions, as questions is an arrayList
         // $sql_var[0] - question
-        // $sql_var[1] - choice1, questions[x][2]-choice2, questions[x][3]-choice3, questions[x][4]-choice4
+        // $sql_var[1]-[4] = choice1 - choice4
         // $sql_var[5] - answer
         // $sql_var[6] - explanation
 
@@ -88,14 +88,14 @@ class Teacher{
         {
             // First SQL statement is to insert the questions to the questions_bank table
             
-            $sql_1 = "INSERT INTO questions_bank(question, choice1, choice2, choice3, choice4, answer, explanation, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql_1 = "INSERT INTO questions_bank(assignment_name, question, choice1, choice2, choice3, choice4, answer, explanation, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt_1 = $this->conn->prepare($sql_1);
             
             $sql_var = stringToArray($arrayOfQuestion[$x], ',');
 
             if(
-                $stmt_1->bind_param('sssssssi', $sql_var[0], $sql_var[1], $sql_var[2], $sql_var[3],
-                                                $sql_var[4], $sql_var[5], $sql_var[6], $account_id) &&
+                $stmt_1->bind_param('ssssssssi', $assignment_name, $sql_var[0], $sql_var[1], $sql_var[2],
+                                                $sql_var[3], $sql_var[4], $sql_var[5], $sql_var[6], $account_id) &&
                 $stmt_1->execute()
             ){
                 continue;
@@ -120,7 +120,7 @@ class Teacher{
         else
         {
             if($debug_mode) echo $this->conn->error;
-                return 3; // ERROR with database SQL
+                return 4; // ERROR with database SQL
         }
     }
     
@@ -148,18 +148,32 @@ class Teacher{
     function deleteAssignment(int $teacher_account_id, string $assignmentName)
     {
         // Check to see if account_id exists
-        if (!checkAccountIdExists($account_id)) return 1;
+        if (!checkAccountIdExists($teacher_account_id)) return 1;
         
         // Delete the Assignment from the table, based on account_id and assignmentName
-        $sql = "DELETE FROM assignments WHERE account_id = ? AND assignment_name = ?";
-        $stmt = $this->conn->prepare($sql);
+        $sql_1 = "DELETE FROM assignments WHERE account_id = ? AND assignment_name = ?";
+        $stmt_1 = $this->conn->prepare($sql_1);
         
         // After that, that specific assignment_id row will be deleted from the database
         if( 
-            $stmt->bind_param('is', $teacher_account_id, $assignmentName) &&
-            $stmt->execute()
+            $stmt_1->bind_param('is', $teacher_account_id, $assignmentName) &&
+            $stmt_1->execute()
         ){
-            return 0;
+            // When the assignment is deleted from the assignment table, the questions_bank question also must be deleted
+            // Delete the Assignment question from the question_bank based on account_id and assignmentName
+            $sql_2 = "DELETE FROM questions_bank WHERE account_id = ? AND assignment_name = ?";
+            $stmt_2 = $this->conn->prepare($sql_2);
+            if( 
+                $stmt_2->bind_param('is', $teacher_account_id, $assignmentName) &&
+                $stmt_2->execute()
+            ){
+                return 0;
+            }
+            else
+            {
+                if($debug_mode) echo $this->conn->error;
+                    return 2; // ERROR with database SQL
+            }
         }
         else
         {

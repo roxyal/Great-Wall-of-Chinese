@@ -450,8 +450,9 @@
                 // Do something with the response
                 console.log(this.responseText);
                 
-                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
-                //1 represents account_id cannot be found, 2 represents server error
+                // the deleteCustomGame has three possible output 0,1,2
+                // 0 represents customGame delete success
+                // 1 Account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     rowElements.remove();
                 }
