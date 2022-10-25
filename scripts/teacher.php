@@ -14,10 +14,22 @@ if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST
     echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
 }
 
+// triggerDeleteAssignment
+if(isset($_POST["assignmentName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteAssignment"){
+    echo $teacher->viewAllAssignment($account_id);
+}
+
 // triggerViewSummaryReport
 if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewSummaryReport"){
     echo $teacher->viewSummaryReport($account_id);
 }
+
+// triggerViewAllAssignment
+if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllAssignment"){
+    echo $teacher->viewAllAssignment($account_id);
+}
+
+
 
 // A Teacher class that holds all the function needed for teacher
 class Teacher{
@@ -61,6 +73,9 @@ class Teacher{
         // Check if AssignmentName exists
         if($this->checkAssignmentNameExists($account_id, $assignment_name)) return 2;
         
+        // AssignmentName must at least be 2 letters
+        if (strlen($assignment_name) < 2) return 3;
+        
         // Iterate through the questions, as questions is an arrayList
         // $sql_var[0] - question
         // $sql_var[1] - choice1, questions[x][2]-choice2, questions[x][3]-choice3, questions[x][4]-choice4
@@ -88,7 +103,7 @@ class Teacher{
             else
             {
                 if($debug_mode) echo $this->conn->error;
-                        return 3; // ERROR with database SQL
+                        return 4; // ERROR with database SQL
             }
         }
         // Second SQL statement is to insert into the assignment_table
@@ -122,6 +137,76 @@ class Teacher{
             return false;
         } 
         return true;
+    }
+    
+    // Function: Teacher can delete assignment which is created by them
+    // Inputs: int int $teacher_account_id, string $assignmentName
+    //                                    
+    // Outputs: Int 0 on success, successfully deleted Assignment
+    //          int 1 on account_id is not exists
+    //          int 2 on server error. 
+    function deleteAssignment(int $teacher_account_id, string $assignmentName)
+    {
+        // Check to see if account_id exists
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        // Delete the Assignment from the table, based on account_id and assignmentName
+        $sql = "DELETE FROM assignments WHERE account_id = ? AND assignment_name = ?";
+        $stmt = $this->conn->prepare($sql);
+        
+        // After that, that specific assignment_id row will be deleted from the database
+        if( 
+            $stmt->bind_param('is', $teacher_account_id, $assignmentName) &&
+            $stmt->execute()
+        ){
+            return 0;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                return 2; // ERROR with database SQL
+        }
+    }
+    
+    // Functions: Teacher can view all their created Assignments
+    // Inputs: int $teacher_account_id
+    // Outputs: Upon success, will return a string of AssignmentNames 
+    //          int 1 on player that you want to view does not exists
+    //          int 2 on database error
+    function viewAllAssignment(int $teacher_account_id)
+    {
+        // Check if user id exists
+        if (!checkAccountIdExists($teacher_account_id)) return 1;
+        
+        $assignmentName_str = '';
+        
+        // sql statement to retrieve all the Assignment's name created by the $teacher_account_id
+        $sql = "SELECT assignment_name FROM assignments WHERE account_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        
+        if( 
+            $stmt->bind_param('i', $teacher_account_id) &&
+            $stmt->execute()
+
+        ){
+            $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
+            while ($row = $result->fetch_assoc())
+            {
+                // Concatenate all the AssignmentName created by the user into a string format
+                $assignmentName_str = $assignmentName_str.$row['assignment_name'];
+                if ($count+1 != $num_rows)
+                    $assignmentName_str = $assignmentName_str.',';
+                $count = $count + 1;
+            }
+            return $assignmentName_str;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                    return 2; // ERROR with database SQL
+        }
     }
     
     // Functions: A function for teachers to view students' summary report
