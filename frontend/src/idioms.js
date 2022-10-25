@@ -1,6 +1,7 @@
 //import {IdiomsWorld} from "./scenes/IdiomsWorld.js";
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
+import "./exports.js";
 
 //showStartAdventureModal();
 
@@ -34,9 +35,6 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
-var spawn; 
-var moving;
-var destroy;
 
 function preload() {
     // Load world assets
@@ -107,32 +105,23 @@ function create() {
         let message = chatInput.value;
         if (message) {
             chatInput.value = '';
-            addMessageElement(message);
+
+            // Check for slash commands
+            if(/^\/(.+)/.test(message)) {
+                socket.send(message);
+                return;
+            }
+
+            if(chatSetting == "World") {
+                socket.send(`/world ${message}`);
+            }
+            else {
+                socket.send(`/message ${chatSetting} ${message}`);
+            }
+            // addMessageElement(message);
         }
     }
-
-    // Add new message to chat box
-    function addMessageElement(message) {
-        const chatType = document.createElement('span');
-        chatType.textContent = chatSetting === "World" ? "[World] " : `To [${chatSetting}]: `;
-        chatType.style.color = chatSetting === "World" ? "blue" : "purple";
-
-        const usernameSpan = document.createElement('span');
-        usernameSpan.textContent = chatSetting === "World" ? `${userName}: ` : "";
-        usernameSpan.style.color = "green";
-        
-        const messageSpan = document.createElement('span');
-        messageSpan.textContent = message;
-        
-        const messageLi = document.createElement("li");
-        messageLi.append(chatType);
-        messageLi.append(usernameSpan);
-        messageLi.append(messageSpan);
-        
-        chatList.append(messageLi);
-        chatList.lastChild.scrollIntoView();
-    }
-
+    
     // Create animations for player
     this.anims.create({
         key: "huntressIdle",
@@ -498,18 +487,4 @@ function showStartAdventureModal(){
 
 function updateMovement(posX, posY, timer) {
     socket.send(`/move x${posX} y${posY} t${timer}`);
-}
-
-export function movePlayer(username, characterType, posX, posY, dt) {
-    moving(username, characterType, posX, posY, dt);
-}
-
-// Spawn new players that log in
-export function spawnPlayer(username, characterType, posX, posy) {
-    // console.log("spawnPlayer player "+username);
-    spawn(username, characterType, posX, posy);
-}
-
-export function destroyPlayer(username) {
-    destroy(username);
 }
