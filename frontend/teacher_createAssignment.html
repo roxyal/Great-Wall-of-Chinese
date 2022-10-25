@@ -30,7 +30,7 @@
       <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
     </nav>
     <div id="container">
-        <div class="content-window2 w-80 h-100">
+        <div class="content-window2 container-fluid">
           <h1 class= "text-center">Create Assignment</h1>
           <div id="response"></div>
           <form>
@@ -89,7 +89,7 @@
               <label class="col-form-label">Due Date:</label>
             </div>
             <div class="col-auto">
-              <input class="form-control" type="date" id="assignmentDate">
+              <input class="form-control" name="dueDate" type="date" id="assignmentDate">
             </div>
           </div>
           <div class="row text-center fw-bold justify-content-left mt-3">
@@ -97,7 +97,7 @@
               <input class="form-control" type="text" id="assignmentName" placeholder="Assignment name" aria-label="Search">
             </div>
             <div class="col-auto">
-              <button onclick=saveAssignment() class="btn btn-success" type="submit">Save Assignment</button>
+              <button class="btn btn-success" id="createAssignment">Save Assignment</button>
             </div>
           </div>
         </div>

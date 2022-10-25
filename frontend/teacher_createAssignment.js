@@ -1,3 +1,111 @@
+// createAssignment button
+const createAssignmentButton = document.getElementById('createAssignment');
+createAssignmentButton.addEventListener('click', saveAssignment);
+
+// save assignment to backend
+function saveAssignment(){
+    let emptyFields = false;
+
+    let assignmentName = document.getElementById("assignmentName").value;
+    let dateInput = document.getElementById("assignmentDate").value;
+
+    if(!assignmentName||!dateInput){
+            emptyFields = true;
+    }
+
+    let allQuestions = document.querySelectorAll("[name='question[]']");
+    let allOption1 = document.querySelectorAll("[name='option_1[]']");
+    let allOption2 = document.querySelectorAll("[name='option_2[]']");
+    let allOption3 = document.querySelectorAll("[name='option_3[]']");
+    let allOption4 = document.querySelectorAll("[name='option_4[]']");
+    let allAnswer = document.querySelectorAll("[name='answer[]']");
+    let allExplanation = document.querySelectorAll("[name='explanation[]']");
+
+    // get all the inputs
+    //const inputs = document.querySelectorAll("[name='question[]'], [name='option_1[]'], [name='option_2[]'], [name='option_3[]'], [name='option_4[]'], [name='answer[]'], [name='explanation[]']");
+    
+    // A string variable use to concatenate all questions/choice/answer/explanation
+    let qnSendToBackend = "";
+    
+    // A variable to know what functions is this
+    let function_name = "createAssignment";
+    
+    for (let i = 0; i < allQuestions.length; i++){
+            if(!allQuestions[i].value||!allOption1[i].value||!allOption2[i].value||!allOption3[i].value
+                    ||!allOption4[i].value||!allAnswer[i].value||!allExplanation[i].value){
+                            emptyFields = true;
+                            break;
+            }
+            qnSendToBackend = qnSendToBackend + allQuestions[i].value + ',' + allOption1[i].value + ',' +
+                              allOption2[i].value + ',' + allOption3[i].value + ',' + allOption4[i].value + ',' +
+                              allAnswer[i].value + ',' + allExplanation[i].value;
+            if (i+1 != allQuestions.length)
+                qnSendToBackend = qnSendToBackend + '|';
+    }
+    if(emptyFields){
+            document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`
+    }else{
+        //link backend here to save assignment
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200) {
+                // Do something with the response
+                console.log(this.responseText);
+                
+                // the createAssignment has three possible output 0,1,2
+                // 0 represents success, 1 represents account_id gitcannot be fsound, 2 represents server error
+                if(this.responseText.includes(0)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Assignment created successfully!</div>`;
+                    // empty all inputs
+                    allQuestions.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption1.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption2.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption3.forEach(input => {
+                      input.value = '';
+                    });
+                    allOption4.forEach(input => {
+                      input.value = '';
+                    });
+                    allAnswer.forEach(input => {
+                      input.value = '';
+                    });
+                    allExplanation.forEach(input => {
+                      input.value = '';
+                    });
+
+                    // empty due date
+                    document.getElementById("assignmentDate").value = '';
+
+                    // empty assignment name
+                    document.getElementById("assignmentName").value = '';
+
+                }
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already an Assignment with this name, please use a different one!</div>`;
+                }
+                if(this.responseText.includes(3)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please enter the Assignment name with at least TWO letter</div>`;
+                }
+                if(this.responseText.includes(4)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }
+        };
+        xmlhttp.open("POST", "../scripts/teacher", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`assignmentName=${assignmentName}&dateInput=${dateInput}&qnSendToBackend=${qnSendToBackend}&function_name=${function_name}`);
+    }
+}
 // add question
 function addQuestion(){
 	let questionElement = document.getElementById("questions");
@@ -55,40 +163,4 @@ function addQuestion(){
 function removeQuestion(e){
 	let rowElements = e.srcElement.parentElement.parentElement;
 	rowElements.remove();
-}
-
-// save assignment to backend
-function saveAssignment(){
-	let emptyFields = false;
-
-	let assignmentName = document.getElementById("assignmentName").value;
-	let dateInput = document.getElementById("assignmentDate").value;
-	//console.log(dateInput);
-
-	if(!assignmentName||!dateInput){
-		emptyFields = true;
-	}
-
-	let allQuestions = document.querySelectorAll("[name='question[]']");
-	let allOption1 = document.querySelectorAll("[name='option_1[]']");
-	let allOption2 = document.querySelectorAll("[name='option_2[]']");
-	let allOption3 = document.querySelectorAll("[name='option_3[]']");
-	let allOption4 = document.querySelectorAll("[name='option_4[]']");
-
-	let allAnswer = document.querySelectorAll("[name='answer[]");
-	let allExplanation = document.querySelectorAll("[name='explanation[]");
-	for (let i = 0; i < allQuestions.length; i++){
-		if(!allQuestions[i].value||!allOption1[i].value||!allOption2[i].value||!allOption3[i].value
-			||!allOption4[i].value||!allAnswer[i].value||!allExplanation[i].value){
-				emptyFields = true;
-				break;
-		}
-	}
-
-	if(emptyFields){
-		document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all the fields!</div>`
-	}else{
-		//link backend here to save assignment
-		document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Assignment created successfully!</div>`
-	}
 }

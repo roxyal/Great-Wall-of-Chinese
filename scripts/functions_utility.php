@@ -82,6 +82,24 @@ function getLoggedInAccountType(): string {
     else return "undefined"; 
 }
 
+// Helper function to convert the questions stringToArray format
+function stringToArray($questions, $delimiter){
+    $delimiter = $delimiter;
+    $word = explode($delimiter, $questions); 
+    return $word;
+}
+
+// Helper function to convert the date format send from frontend to UNIX time
+function convertDateToInt($date){
+    $delimiter = '-';
+    $word = explode($delimiter, $date); 
+    $str_date = array($word[2], $word[1], $word[0]);
+    $str_date = join("-", $str_date);
+    $int_date = strtotime($str_date);
+
+    return $int_date; 
+}
+
 if(isset($_GET["func"])) {
     try {
         echo call_user_func("getLoggedIn{$_GET["func"]}");
