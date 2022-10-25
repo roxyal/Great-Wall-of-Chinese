@@ -24,7 +24,7 @@ function generateSocketAuth() {
 // });
 function loadPlayers(players) {
     // console.log("loading players");
-    console.log(players);
+    // console.log(players);
     for(let player in players) {
         let matches = players[player].match(/^(\d)-(.+)-(.+)$/);
         let characterType = matches[1];
@@ -34,10 +34,11 @@ function loadPlayers(players) {
             spawnPlayer(player, characterType, posX, posY);
         }
         catch (e) {
+            console.log("respawning...");
             // Wait a bit, then try to respawn player
             window.setTimeout(function() {
                 spawnPlayer(player, characterType, posX, posY);
-            }, 3000);
+            }, 5000);
         }
     }
 }
@@ -89,7 +90,7 @@ generateSocketAuth().then(result => {
                 }, 3000); 
                 delete players["firstload"];
             }
-            console.log(players);
+            // console.log(players);
 
             try {
                 let playersToUpdate = {};
@@ -112,7 +113,7 @@ generateSocketAuth().then(result => {
                     moves[key].push(concat.split("-"));
 
                     if(value == concat) {
-                        console.log("skipping "+key);
+                        // console.log("skipping "+key);
                         continue;
                     }
                     playersToUpdate[key] = players[key];
