@@ -60,7 +60,7 @@ class Socket implements MessageComponentInterface {
                 $client->pvpStatus = ["Available", ""]; 
 
                 // Pass the coordinates and character id to all logged in players in the game world
-                $allPlayers = [];
+                $allPlayers["firstload"] = 0;
                 foreach ($this->clients as $player) {
                     // var_dump($player->posX);
                     // var_dump($player->posY);
@@ -70,6 +70,7 @@ class Socket implements MessageComponentInterface {
                         $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
                     }
                 }
+
                 // Send the client the data of all logged in users
                 $client->send(json_encode($allPlayers));
                 
@@ -83,27 +84,43 @@ class Socket implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $client, $msg) {
 
-        echo "Client $client->resourceId said $msg\n";
-
         // Character moving
-        if(preg_match_all("/^\/move x(\d+) y(\d+) sprite(.+) flip(.+)$/", $msg, $matches)) {
+        if(preg_match_all("/^\/move x(.+) y(.+) t(.+)$/", $msg, $matches)) {
             $posX = $matches[1][0];
             $posY = $matches[2][0];
+            $time = $matches[3][0];
             // Save the player's updated location
             $client->posX = $posX;
             $client->posY = $posY;
-            // echo $client->posX." ".client->posY;
+            echo "$client->userinfoUsername moved to x$client->posX y$client->posY t$time\n";
 
-            // Broadcast new location to all other players
-            // foreach ($this->clients as $player) {
-            //     // if($client->userinfoUsername == $player->userinfoUsername) continue;
-            //     if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
-            //         $player->send("[move] $client->userinfoUsername: x$player->posX y$player->posY");
-            //     }
-            // }
+            // Broadcast the update to all other players
+            foreach ($this->clients as $player) {
+                // if($client->userinfoUsername == $player->userinfoUsername) continue;
+                if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+                    $player->send("[move] $client->userinfoUsername: c$client->userinfoCharacter x$client->posX y$client->posY t$time");
+                }
+            }
+        }
+
+        // Update the client
+        if(preg_match("/^\/update$/", $msg)) {
+            $allPlayers = [];
+            foreach ($this->clients as $player) {
+                // if($client->userinfoUsername == $player->userinfoUsername) continue;
+                if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+                    $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
+                }
+            }
+
+            // Send the client the data of all logged in users
+            $client->send(json_encode($allPlayers));
+            return;
         }
 
         // Message handler for slash commands
+
+        echo "Client $client->resourceId said $msg\n";
 
         // /challenge <player_username>: create a new challenge record in db
         if(preg_match_all("/^\/challenge (.+)$/", $msg, $matches)) {
@@ -284,10 +301,13 @@ class Socket implements MessageComponentInterface {
     public function onClose(ConnectionInterface $client) {
         echo "Client $client->resourceId left\n";
 
+        // Disconnect the resource
+        $this->clients->detach($client);
+
         // Change the token in db to disconnected
         \Amp\Loop::run(function() use ($client) {
             // Get the auth token
-            parse_str($client->httpRequest->getUri()->getQuery(), $queryParameters);
+            // parse_str($client->httpRequest->getUri()->getQuery(), $queryParameters);
     
             require "../../../secrets.php";
             $config = \Amp\Mysql\ConnectionConfig::fromString(
