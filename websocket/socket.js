@@ -43,7 +43,7 @@ function loadPlayers(players) {
     }
 }
 import { spawnPlayer, movePlayer, destroyPlayer } from "../frontend/src/exports.js";
-import { addMessageElement } from "../frontend/src/exports.js";
+import { addMessageElement, recipients } from "../frontend/src/exports.js";
 // export var socket;
 var token;
 var world;
@@ -202,7 +202,7 @@ generateSocketAuth().then(result => {
                 addMessageElement("World", sender, message);
             }
             else if(type == "challenge") {
-    
+                
             }
             else if(type == "challenge sent") {
                 

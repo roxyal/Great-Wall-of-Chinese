@@ -15,11 +15,24 @@ export function destroyPlayer(username) {
     destroy(username);
 }
 
+import {getLoggedInUsername} from "../utility.js";
+var userName = await getLoggedInUsername();
+export var recipients = [];
+
 // Add new message to chat box
 export function addMessageElement(chatSetting, sender, message) {
     const chatInput = document.getElementById("inputMessage");
     const chatList = document.getElementById("messages");
     const chatTypeSelect = document.getElementById("chat-type");
+
+    // Add sender to PM recipient list
+    if(userName !== sender && recipients.indexOf(sender) === -1) {
+        recipients.push(sender);
+        const newRecipient = document.createElement('option');
+        newRecipient.innerHTML = `Say to ${sender}`;
+        newRecipient.value = sender;
+        chatTypeSelect.append(newRecipient);
+    }
 
     const chatType = document.createElement('span');
     chatType.textContent = chatSetting === "World" ? "[World] " : `[${chatSetting}] `;
