@@ -59,6 +59,9 @@ class Socket implements MessageComponentInterface {
                 // ["Playing", "user1"]: the client is currently playing against user1
                 $client->pvpStatus = ["Available", ""]; 
 
+                // Hold the client's current room that they are doing adventure or assignment in
+                // $client->currentRoom = [];
+
                 // Pass the coordinates and character id to all logged in players in the game world
                 $allPlayers["firstload"] = 0;
                 foreach ($this->clients as $player) {
@@ -116,6 +119,156 @@ class Socket implements MessageComponentInterface {
             // Send the client the data of all logged in users
             $client->send(json_encode($allPlayers));
             return;
+        }
+
+        // Start adventure mode
+        if(preg_match_all("/^\/adventure (.+)/", $msg, $matches)) {
+            $section = strtolower($matches[1][0]); // lower or upper
+
+            // Make the player unavailable for pvp
+            $client->pvpStatus = ["Playing", ""];
+
+            \Amp\Loop::run(function() use ($client, $section) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+                
+                // Get the client's accuracy data
+                $statement = yield $pool->prepare("select * from students where student_id = :id");
+
+                $result = yield $statement->execute(['id' => $client->userinfoID]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $resetdate = $row["{$client->userinfoWorld}_{$section}_reset_date"];
+
+                // The reset date saved in db is the date at which the scores will be reset. Attempting adventure before this reset date will change the reset date to 2 days from the attempt. 
+                if(time() > $resetdate) {
+                    // Reset the scores
+                    $correct = 0;
+                    $attempted = 0;
+                    $accuracy = 0;
+                }
+                else {
+                    $correct = $row["{$client->userinfoWorld}_{$section}_correct"];
+                    $attempted = $row["{$client->userinfoWorld}_{$section}_attempted"];
+                    $accuracy = $correct / $attempted;
+                }
+
+                // Assign player to a new room
+                $client->currentRoom = array("type" => "adv", "section" => $section, "totalCorrect" => $correct, "totalAttempted" => $attempted, "sessionCorrect" => [], "sessionAttempted" => []);
+                // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
+                
+                if($accuracy < 0.5) {
+                    // Give easy question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' order by rand() limit 1";
+                }
+                elseif($accuracy < 0.75) {
+                    // Give medium question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' order by rand() limit 1";
+                }
+                else {
+                    // Give hard question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                }
+
+                $statement = yield $pool->prepare($sql);
+                $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "$section Pri"]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $client->currentQuestion = $row;
+                $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+            });
+        }
+
+        // Mark client's answer
+        if(preg_match_all("/^\/answer (\d)/", $msg, $matches)) {
+            // Check game mode 
+            if(isset($client->currentRoom["type"]) && $client->currentRoom["type"] == "adv") {
+                $max_qns = 10;                
+            }
+            elseif(isset($client->currentRoom["type"]) && $client->currentRoom["type"] == "adv") {
+
+            }
+            elseif($client->pvpStatus[0] == "Playing") {
+                $max_qns = 5;
+            }
+            else {
+                echo "$client->userinfoUsername is not allowed to answer\n";
+                return;
+            }
+            $answer = $matches[1][0]; 
+            
+            \Amp\Loop::run(function() use ($client, $answer, $max_qns) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+
+                $roomObject = $client->currentRoom;
+                $roomObject["totalAttempted"]++;
+                $roomObject["sessionAttempted"][] = [$client->currentQuestion["question_id"], $answer];
+                $correct = false;
+
+                // Check against client's current question info
+                if($client->currentQuestion["answer"] == $answer) {
+                    // Correct
+                    $roomObject["totalCorrect"]++;
+                    $roomObject["sessionCorrect"][] = [$client->currentQuestion["question_id"], $answer];
+                    $correct = true;
+                }
+                $client->currentRoom = $roomObject;
+                unset($roomObject);
+                
+                // Send the result and explanation
+                $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
+
+                // Send the next question if any
+                if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
+                    // Send result
+                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"]));
+                    unset($client->currentQuestion);
+                    unset($client->currentRoom);
+                    // Make the player available for pvp
+                    $client->pvpStatus = ["Available", ""];
+                }
+                else {
+                    $accuracy = $client->currentRoom["totalCorrect"] / $client->currentRoom["totalAttempted"];
+                    // Get array of attempted questions within this session
+                    $attempted = $client->currentRoom["sessionAttempted"][0][0];
+                    for($i = 1; $i<count($client->currentRoom["sessionAttempted"]); $i++) {
+                        $attempted .= ", {$client->currentRoom["sessionAttempted"][$i][0]}";
+                    }
+
+                    // Send next question
+                    if($accuracy < 0.5) {
+                        // Give easy question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+                    elseif($accuracy < 0.75) {
+                        // Give medium question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+                    else {
+                        // Give hard question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+
+                    $statement = yield $pool->prepare($sql);
+                    $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "{$client->currentRoom["section"]} Pri"]);
+                    yield $result->advance();
+                    $row = $result->getCurrent();
+
+                    $client->currentQuestion = $row;
+                    $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                }
+            });
         }
 
         // Message handler for slash commands
