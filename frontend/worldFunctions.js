@@ -99,8 +99,10 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 				// Therefore, you can see that each element of the array is a player's info
 				// Example of adventureLeaderBoardArray
 				// ['1,Kelvin,85.0000', '2,Kelly,67.5000', '3,kyrin,55.7143']
-				adventureLeaderBoardArray = adventureLeaderBoard.split("|");
-				for(i=0;i<adventureLeaderBoardArray.length;i++){
+				// Check to see if the adventureLeaderBoard is an empty list
+                                if (adventureLeaderBoard.length !== 0){
+                                    adventureLeaderBoardArray = adventureLeaderBoard.split("|");
+                                    for(i=0;i<adventureLeaderBoardArray.length;i++){
 					// rowAdventure = '<tr>';
 					
 					// We use (,) to split again, to obtain respestive columns player's information
@@ -126,8 +128,9 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 					// 	}
 					// }
 					// rowAdventure += '</tr>';
-				}
-				adventureMode.innerHTML  = rowAdventure; //set innerhtml code
+                                    }
+                                    adventureMode.innerHTML  = rowAdventure; //set innerhtml code
+                                }
 				
 				// Printing PVP on the HTML
 				// Example of pvpLeaderBoard string
@@ -138,8 +141,10 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 				// Therefore, you can see that each element of the array is a player's info
 				// Example of pvpLeaderBoardArray
 				// ['1,kyrin,Bling Bling,1000', '2,Kelvin,Bronze,50', '3,Kelly,Bronze,50\n']
-				pvpLeaderBoardArray = pvpLeaderBoard.split("|");
-				for(i=0;i<pvpLeaderBoardArray.length;i++){
+				// Check to see if the pvpLeaderBoard is an empty list
+                                if (pvpLeaderBoard.length !== 0){
+                                    pvpLeaderBoardArray = pvpLeaderBoard.split("|");
+                                    for(i=0;i<pvpLeaderBoardArray.length;i++){
 					rowPvp = rowPvp + '<tr>';
 					
 					// We use (,) to split again, to obtain respestive columns player's information
@@ -150,9 +155,10 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 						rowPvp += '<td>' + student_info[j] + '</td>';
 					}
 					rowPvp += '</tr>';
-				}
-				pvpMode.innerHTML  = rowPvp; //set innerhtml code
-			}
+                                    }
+                                    pvpMode.innerHTML  = rowPvp; //set innerhtml code
+                                }
+                        }
 			if(this.responseText === 1 && this.responseText === "1"){
 				console.log("Account_id cannot be detected!");
 			}
