@@ -78,7 +78,7 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 			// the viewLeaderBoard has three possible output 1,2 and string (Adventure&PVP)
 			//1 represents account_id cannot be found, 2 represents server error
 			
-			if (this.responseText.length > 1){
+			if (this.responseText.length > 2){
 				
 				// This is an example of the string of information for Adventure/PVP leaderboard
 				// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143*1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
