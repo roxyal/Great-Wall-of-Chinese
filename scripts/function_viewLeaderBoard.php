@@ -28,7 +28,6 @@ function viewLeaderBoard()
     
     // SQL statement that sort and calculates the accuracy for ADVENTURE MODE
     $sql_1 = "SELECT a.name, 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) AS accuracy 
-
             FROM students s INNER JOIN accounts a
             WHERE s.student_id = a.account_id AND a.account_type = 'Student' AND 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) > 0
             ORDER BY accuracy DESC LIMIT 20";
@@ -92,6 +91,4 @@ function viewLeaderBoard()
         return 2;
     }
 }
-
 ?>
-
