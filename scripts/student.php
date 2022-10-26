@@ -262,7 +262,7 @@ class Student
         
         $sql = "SELECT a.assignment_name, a.due_timestamp 
             FROM assignments a INNER JOIN students s ON a.account_id = s.teacher_account_id 
-            WHERE s.student_id = ?";
+            WHERE s.student_id = ? AND a.sent_to_students = 1";
         
         $stmt = $this->conn->prepare($sql);
         $assigned_assignment_str = "";

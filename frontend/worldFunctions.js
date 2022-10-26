@@ -265,7 +265,7 @@ var xmlhttp = new XMLHttpRequest();
                 // Split the string into an array
                 customNameArray = this.responseText.split(",");
                 for(i=0;i<customNameArray.length;i++){
-                    var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)">delete</button></td></tr>';
+                    var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary" data-bs-dismiss="modal">delete</button></td></tr>';
                     rowsHTML += row; // add in html code
                 }
                 table.innerHTML = rowsHTML; //set innerhtml code
@@ -346,7 +346,7 @@ xmlhttp.onreadystatechange = function(){
             for(i=0;i<assignmentsArray.length;i++){
                 var assignmentArray = assignmentsArray[i].split(",");
                 console.log(assignmentArray[0]);
-                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)">Attempt</button></td></tr>';
+                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)"class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
                 rowsHTML += row; // add in html code
             }
             table.innerHTML = rowsHTML; //set innerhtml code

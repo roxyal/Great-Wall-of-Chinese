@@ -82,6 +82,7 @@ class Socket implements MessageComponentInterface {
             else {
                 echo "Client ({$client->resourceId}) encountered error.\n";
             }
+            $pool->close();
         });
     }
 
@@ -185,6 +186,8 @@ class Socket implements MessageComponentInterface {
 
                 $client->currentQuestion = $row;
                 $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+
+                $pool->close();
             });
         }
 
@@ -232,7 +235,7 @@ class Socket implements MessageComponentInterface {
                 // Record in database
                 $statement = yield $pool->prepare("insert into adventure_tracking (adventure_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)");
                 yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
-
+                
                 
                 // Send the result and explanation
                 $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
@@ -276,6 +279,7 @@ class Socket implements MessageComponentInterface {
                     $client->currentQuestion = $row;
                     $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
                 }
+                $pool->close();
             });
         }
 
@@ -494,6 +498,7 @@ class Socket implements MessageComponentInterface {
             else {
                 echo "Client ({$client->resourceId}) encountered error.\n";
             }
+            $pool->close();
         });
     }
 
