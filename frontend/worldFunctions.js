@@ -367,37 +367,45 @@ xmlhttp.onreadystatechange = function(){
 
 // opening assignment modal
 function openAssignment(e){
-let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
-console.log(assignmentName);
+	let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
+	console.log(assignmentName);
 
-// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
+	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
 
-var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
-  assignmentModal.show();
+	var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
+    assignmentModal.show();
 }
 
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
 // when modal opens, load the first question
 assignmentModeModal.addEventListener('show.bs.modal', function (event){
 	var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
-// Add player character based on characterID
-switch (characterID) {
-case "1":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
-    break;
-case "2":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
-    break;
-case "3":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
-    break;
-case "4":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
-    break;
-default:
-    console.log("Something went wrong in player creation in create()");
-}
+	// Add player character based on characterID
+	switch (characterID) {
+	case "1":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+	    break;
+	case "2":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+	    break;
+	case "3":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+	    break;
+	case "4":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+	    break;
+	default:
+	    console.log("Something went wrong in player creation in create()");
+	}
 })
+
+
+
+
+
+
+
+
 
 // ADVENTURE MODE
 

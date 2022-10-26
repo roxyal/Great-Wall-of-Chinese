@@ -164,3 +164,116 @@ function removeQuestion(e){
 	let rowElements = e.srcElement.parentElement.parentElement;
 	rowElements.remove();
 }
+
+
+
+// LEADER BOARD
+
+let leaderBoardModal = document.getElementById('leaderboard-modal');
+leaderBoardModal.addEventListener('show.bs.modal', function (event){
+	var adventureMode = document.getElementById('adventureModeLeaderBoard'); // Table body for adventure mode leaderboard
+	var pvpMode = document.getElementById('pvpModeLeaderBoard');  // Table body for pvp mode leaderboard
+	var rowAdventure = "";
+	var rowPvp = "";
+
+	//link backend here to get leaderboard details
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200){
+			// the viewLeaderBoard has three possible output 1,2 and string (Adventure&PVP)
+			//1 represents account_id cannot be found, 2 represents server error
+			
+			if (this.responseText.length > 2){
+				
+				// This is an example of the string of information for Adventure/PVP leaderboard
+				// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143*1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
+				
+				// We then split the string into an array
+				// WE use (*) to spit the leaderboard to Adventure and PVP
+				// leaderBoardArray[0] represents Adventure LeaderBoard
+				// leaderBoardArray[1] represents PVP LeaderBoard
+				leaderBoardArray = this.responseText.split("*");
+				adventureLeaderBoard = leaderBoardArray[0];
+				pvpLeaderBoard = leaderBoardArray[1];
+				
+				// Printing Adventure on the HTML
+				// Example of adventureLeaderBoard string
+				// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143
+				
+				// We use (|) to split the individual's information
+				// Therefore, you can see that each element of the array is a player's info
+				// Example of adventureLeaderBoardArray
+				// ['1,Kelvin,85.0000', '2,Kelly,67.5000', '3,kyrin,55.7143']
+				// Check to see if the adventureLeaderBoard is an empty list
+                                if (adventureLeaderBoard.length !== 0){
+                                    adventureLeaderBoardArray = adventureLeaderBoard.split("|");
+                                    for(i=0;i<adventureLeaderBoardArray.length;i++){
+					// rowAdventure = '<tr>';
+					
+					// We use (,) to split again, to obtain respestive columns player's information
+					// [Position, Name, Accuracy]
+					// ['1', 'Kelvin', '85.0000']
+					student_info = adventureLeaderBoardArray[i].split(",");
+					let rank = student_info[0];
+					let name = student_info[1];
+					let accuracy = (Math.round(student_info[2] * 100) / 100).toFixed(2)
+
+					rowAdventure += `<tr>
+										<td>` + rank + `</td>
+										<td>` + name + `</td>
+										<td>` + accuracy + `</td>
+									</tr>`
+					
+					// for(j=0;j<student_info.length;j++){
+					// 	if (j===student_info.length-1){
+					// 		rowAdventure += '<td>' + (Math.round(student_info[j] * 100) / 100).toFixed(2) + '%' + '</td>';
+					// 	}
+					// 	else {
+					// 		rowAdventure += '<td>' + student_info[j] + '</td>';
+					// 	}
+					// }
+					// rowAdventure += '</tr>';
+                                    }
+                                    adventureMode.innerHTML  = rowAdventure; //set innerhtml code
+                                }
+				
+				// Printing PVP on the HTML
+				// Example of pvpLeaderBoard string
+				// 1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
+				
+				// Similar to adventureMode's LeaderBoard we use 
+				// We use (|) to split the individual's information
+				// Therefore, you can see that each element of the array is a player's info
+				// Example of pvpLeaderBoardArray
+				// ['1,kyrin,Bling Bling,1000', '2,Kelvin,Bronze,50', '3,Kelly,Bronze,50\n']
+				// Check to see if the pvpLeaderBoard is an empty list
+                                if (pvpLeaderBoard.length !== 0){
+                                    pvpLeaderBoardArray = pvpLeaderBoard.split("|");
+                                    for(i=0;i<pvpLeaderBoardArray.length;i++){
+					rowPvp = rowPvp + '<tr>';
+					
+					// We use (,) to split again, to obtain respestive columns player's information
+					// [Position, Name, Rank, Rank Points]
+					// ['1', 'kyrin', 'Bling Bling', '1000']
+					student_info = pvpLeaderBoardArray[i].split(",");
+					for(j=0;j<student_info.length;j++){
+						rowPvp += '<td>' + student_info[j] + '</td>';
+					}
+					rowPvp += '</tr>';
+                                    }
+                                    pvpMode.innerHTML  = rowPvp; //set innerhtml code
+                                }
+                        }
+			if(this.responseText === 1 && this.responseText === "1"){
+				console.log("Account_id cannot be detected!");
+			}
+			if(this.responseText === 1 && this.responseText === "2"){
+				console.log("A server error occurred</div>");
+			}
+		}   
+	};
+	xmlhttp.open("POST", "../scripts/function_viewLeaderBoard", true);
+	// Request headers required for a POST request
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send(`function_name=${"viewLeaderBoard"}`);
+})
