@@ -14,6 +14,11 @@ if(isset($_POST["assignmentName"]) && isset($_POST["dateInput"]) && isset($_POST
     echo $teacher->createAssignment($_POST["assignmentName"], $account_id, $created_timestamp, convertDateToInt($_POST["dateInput"]), $_POST["qnSendToBackend"]);
 }
 
+// triggerSendToStudents
+if(isset($_POST["assignmentName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "sendToStudents"){
+    echo $teacher->sendToStudents($_POST["assignmentName"], $account_id);
+}
+
 // triggerDeleteAssignment
 if(isset($_POST["assignmentToDelete"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteAssignment"){
     echo $teacher->deleteAssignment($account_id, $_POST["assignmentToDelete"]);
@@ -28,7 +33,6 @@ if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewSummaryRepo
 if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllAssignment"){
     echo $teacher->viewAllAssignment($account_id);
 }
-
 
 
 // A Teacher class that holds all the function needed for teacher
@@ -58,6 +62,37 @@ class Teacher{
         $stmt->store_result();
         if($stmt->num_rows > 0) return true;
         return false;
+    }
+
+    // Functions: A function for teachers to send assignment to students
+    // Inputs : int $assignmentName
+    // Outputs: int 0 on successfully sent to students
+    //          int 1 when teacher does not exist
+    //          int 2 on assignment does not exist
+    //          int 3 on database error
+    public function sendToStudents(string $assignment_name, int $account_id){
+        // Check if account id exists
+        if(!checkAccountIdExists($account_id)) return 1;
+        
+        // Check if AssignmentName exists
+        if(!$this->checkAssignmentNameExists($account_id, $assignment_name)) return 2;
+        
+        $sql = "UPDATE assignments SET sent_to_students = 1 WHERE assignment_name = ?";
+        $stmt = $this->conn->prepare($sql);
+
+        if( 
+            $stmt->bind_param('s', $assignment_name) &&
+            $stmt->execute()
+        ){
+            return 0;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                    return 3; // ERROR with database SQL
+        }
+
+
     }
 
     // Functions: A function for teachers to create assignment

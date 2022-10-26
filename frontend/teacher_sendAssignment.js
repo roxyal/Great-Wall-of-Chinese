@@ -27,43 +27,70 @@ function sendAssignmentNotification(e){
 
 // link backend script here to send assignment using assignmentToSend, then display modal if successful
 function sendAssignment(){
-	let successMessage = assignmentToSend + " has been sent successfully"
-	let assignmentSent = document.getElementById('assignmentSentSuccess-Modal')
-	assignmentSent.addEventListener('show.bs.modal', function (event){
-		var modalMessage = assignmentSent.querySelector('.modal-body p');
-		modalMessage.innerHTML = successMessage;
-	})
 
-	// adding the script for the tweet button
-	document.getElementById('assignmentSentSuccess-Modal')
-	.addEventListener("show.bs.modal", async function () {
-		!(function (d, s, id) {
-			var js,
-			  fjs = d.getElementsByTagName(s)[0];
-			if (!d.getElementById(id)) {
-			  js = d.createElement(s);
-			  js.id = id;
-			  js.src = "https://platform.twitter.com/widgets.js";
-			  fjs.parentNode.insertBefore(js, fjs);
-			}
-		  })(document, "script", "twitter-wjs");
-	});
+	var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                
+				// Outputs: int 0 on successfully sent to students
+    			//          int 1 when teacher does not exist
+    			//          int 2 on assignment does not exist
+    			//          int 3 on database error
 
-	// adding the script for the facebook button
-	document.getElementById('assignmentSentSuccess-Modal')
-	.addEventListener("show.bs.modal", async function () {
-		!(function (d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) return;
-			js = d.createElement(s); 
-			js.id = id;
-			js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	});
+                if (this.responseText.includes(0)){
+					let successMessage = assignmentToSend + " has been sent successfully"
+					let assignmentSent = document.getElementById('assignmentSentSuccess-Modal')
+					assignmentSent.addEventListener('show.bs.modal', function (event){
+						var modalMessage = assignmentSent.querySelector('.modal-body p');
+						modalMessage.innerHTML = successMessage;
+					})
 
-	var assignmentSentSuccessModal = new bootstrap.Modal(document.getElementById('assignmentSentSuccess-Modal'), {});
-	assignmentSentSuccessModal.show();
+					// adding the script for the tweet button
+					document.getElementById('assignmentSentSuccess-Modal')
+					.addEventListener("show.bs.modal", async function () {
+						!(function (d, s, id) {
+							var js,
+							fjs = d.getElementsByTagName(s)[0];
+							if (!d.getElementById(id)) {
+							js = d.createElement(s);
+							js.id = id;
+							js.src = "https://platform.twitter.com/widgets.js";
+							fjs.parentNode.insertBefore(js, fjs);
+							}
+						})(document, "script", "twitter-wjs");
+					});
+
+					// adding the script for the facebook button
+					document.getElementById('assignmentSentSuccess-Modal')
+					.addEventListener("show.bs.modal", async function () {
+						!(function (d, s, id) {
+							var js, fjs = d.getElementsByTagName(s)[0];
+							if (d.getElementById(id)) return;
+							js = d.createElement(s); 
+							js.id = id;
+							js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+							fjs.parentNode.insertBefore(js, fjs);
+						}(document, 'script', 'facebook-jssdk'));
+					});
+
+					var assignmentSentSuccessModal = new bootstrap.Modal(document.getElementById('assignmentSentSuccess-Modal'), {});
+					assignmentSentSuccessModal.show();
+                }
+                if(this.responseText.includes(1)){
+                    console.log("Account_id cannot be detected!");
+                }
+                if(this.responseText.includes(2)){
+                    console.log("Assignment name does not exist!");
+                }
+                if(this.responseText.includes(3)){
+                    console.log("A server error occurred");
+                }
+            }   
+        };
+        xmlhttp.open("POST", "../scripts/teacher", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`assignmentName=${assignmentToSend}&function_name=${"sendToStudents"}`);
 }
 
 
