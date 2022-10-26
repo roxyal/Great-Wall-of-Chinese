@@ -4,11 +4,11 @@
 var characterID; // character ID
 var characterUserName; // character username
 
-var selectedAdventureSection; // the section selected by user to attempt adventure mode in: lower pri/upper pri
-var adventureModeProgress; // progress in terms of percentage, starts at 0%
-var adventureModeQnCorrect; // num of questions correct, starts at 0
-var adventureModeQnAttempted; // num of questions attempted, starts at 0
-var adventureModeCurrentQn; // current question number, starts at 1
+var selectedAdventureSection; 	// the section selected by user to attempt adventure mode in: lower pri/upper pri
+var adventureModeProgress; 		// progress in terms of percentage, starts at 0%
+var adventureModeQnCorrect; 	// num of questions correct, starts at 0
+var adventureModeQnAttempted; 	// num of questions attempted, starts at 0
+var adventureModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
@@ -297,6 +297,7 @@ xmlhttp.onreadystatechange = function(){
             // 1 Account_id cannot be found, 2 represents server error
             if(this.responseText.includes(0)){
                 rowElements.remove();
+				document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
             }
             if(this.responseText.includes(1)){
                 document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
@@ -321,10 +322,41 @@ let viewAssignmentModal = document.getElementById('viewAssignment-modal');
 viewAssignmentModal.addEventListener('show.bs.modal', function (event){
 var table = document.getElementById("viewAssignments");
 var rowsHTML = ""; // initialise empty var to hold html of all the rows
-var row = '<tr><td>TEST ASSIGNMENT NAME</td><td>15/11/2022</td><td><button onclick="openAssignment(event)" class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
-table.innerHTML = row;
+//var row = '<tr><td>TEST ASSIGNMENT NAME</td><td>15/11/2022</td><td><button onclick="openAssignment(event)" class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
+//table.innerHTML = row;
 
 //link backend here to get a list of custom level names
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function(){
+    if (this.readyState == 4 && this.status == 200){
+        // Do something with the response
+        // the viewAssignedAssignment has three possible output 1,2 and string (viewAssignedAssignment)
+        //1 represents account_id cannot be found, 2 represents server error
+          
+        if (typeof this.responseText === 'string' && this.responseText.length !== 0){
+            // Split the string into an array
+            var assignmentsArray = this.responseText.split("|");
+            
+            for(i=0;i<assignmentsArray.length;i++){
+                var assignmentArray = assignmentsArray[i].split(",");
+                console.log(assignmentArray[0]);
+                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)">Attempt</button></td></tr>';
+                rowsHTML += row; // add in html code
+            }
+            table.innerHTML = rowsHTML; //set innerhtml code
+        }
+        if(this.responseText === 1 && this.responseText === "1"){
+            document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+        }
+        if(this.responseText === 1 && this.responseText === "2"){
+            document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+        }
+    }   
+  };
+  xmlhttp.open("POST", "../scripts/student", true);
+  // Request headers required for a POST request
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
 })
 
 // opening assignment modal
@@ -360,12 +392,6 @@ default:
     console.log("Something went wrong in player creation in create()");
 }
 })
-
-
-
-
-
-
 
 // ADVENTURE MODE
 
