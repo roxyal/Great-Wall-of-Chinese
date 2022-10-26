@@ -65,7 +65,7 @@ class Teacher{
     // Outputs: Upon success, will return 0. Successfully create assignment
     //          int 1 on the teacher is not exists
     //          int 2 on database error
-    function createAssignment(string $assignment_name, int $account_id, int $created_timestamp, int $due_timestamp, string $questions)
+    public function createAssignment(string $assignment_name, int $account_id, int $created_timestamp, int $due_timestamp, string $questions)
     {
         // Check if account id exists
         if(!checkAccountIdExists($account_id)) return 1;
@@ -145,7 +145,7 @@ class Teacher{
     // Outputs: Int 0 on success, successfully deleted Assignment
     //          int 1 on account_id is not exists
     //          int 2 on server error. 
-    function deleteAssignment(int $teacher_account_id, string $assignmentName)
+    public function deleteAssignment(int $teacher_account_id, string $assignmentName)
     {
         // Check to see if account_id exists
         if (!checkAccountIdExists($teacher_account_id)) return 1;
@@ -187,7 +187,7 @@ class Teacher{
     // Outputs: Upon success, will return a string of AssignmentNames 
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
-    function viewAllAssignment(int $teacher_account_id)
+    public function viewAllAssignment(int $teacher_account_id)
     {
         // Check if user id exists
         if (!checkAccountIdExists($teacher_account_id)) return 1;

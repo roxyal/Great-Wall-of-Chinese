@@ -59,7 +59,10 @@ var xmlhttp = new XMLHttpRequest();
                     // j=1, to start the iteration of the loop on the second element
                     for (j=1;j<student_info.length;j+=2){
                         // calaculating the accuracy of the question_type with respesct to lower/upper pri
-                        question_type_acc = (100*student_info[j]/student_info[j+1]).toFixed(2) + "%";
+                        compute_acc = (100*student_info[j]/student_info[j+1]);
+                        //question_type_acc = (100*student_info[j]/student_info[j+1]).toFixed(2) + "%";
+                        // Make it to only display 2 decimal place only
+                        question_type_acc = (Math.round(compute_acc * 100) / 100).toFixed(2);
                         individualStatHTML += '<td>' + question_type_acc + '</td>';
                     }
                     // Calculcating the total number of question_type correct
@@ -78,15 +81,18 @@ var xmlhttp = new XMLHttpRequest();
                 // Display Average Statistic
                 document.getElementById('idiomsAttempted').innerHTML = (idioms_attempted/num_students).toFixed(2);
                 document.getElementById('idiomsCorrect').innerHTML = (idioms_correct/num_students).toFixed(2);
-                document.getElementById('idiomsAccuracy').innerHTML = (100*idioms_correct/idioms_attempted).toFixed(2) + "%";
+                compute_idioms_acc = 100*idioms_correct/idioms_attempted;
+                document.getElementById('idiomsAccuracy').innerHTML = (Math.round(compute_idioms_acc * 100) / 100).toFixed(2); + "%";
                 
                 document.getElementById('hanyuPinyinAttempted').innerHTML = (pinyin_attempted/num_students).toFixed(2);
                 document.getElementById('hanyuPinyinCorrect').innerHTML = (pinyin_correct/num_students).toFixed(2);
-                document.getElementById('hanyuPinyinAccuracy').innerHTML = (100*pinyin_correct/pinyin_attempted).toFixed(2) + "%";
+                compute_pinyin_acc = 100*pinyin_correct/pinyin_attempted;
+                document.getElementById('hanyuPinyinAccuracy').innerHTML = (Math.round(compute_pinyin_acc * 100) / 100).toFixed(2) + "%";
                 
                 document.getElementById('fillInTheBlanksAttempted').innerHTML = (fill_attempted/num_students).toFixed(2);
                 document.getElementById('fillInTheBlanksCorrect').innerHTML = (fill_correct/num_students).toFixed(2);
-                document.getElementById('fillInTheBlanksAccuracy').innerHTML = (100*fill_correct/fill_attempted).toFixed(2) + "%";
+                compute_fill_acc = 100*fill_correct/fill_attempted;
+                document.getElementById('fillInTheBlanksAccuracy').innerHTML = (Math.round(compute_fill_acc * 100) / 100).toFixed(2) + "%";
             }
             
             if(this.responseText === 1 && this.responseText === "1"){
