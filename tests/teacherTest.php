@@ -19,7 +19,6 @@ class teacherTest extends PHPUnit\Framework\TestCase{
         $result_1 = $teacher->viewSummaryReport($noStudent_teacher_account_id);
         $this->assertEquals(1, $result_1);
 
-
         // Lets say the teacher has one student tied under him
         $test_array = array(0=>array(
                             'student_id' => 1,
