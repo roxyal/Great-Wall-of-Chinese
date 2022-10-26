@@ -51,7 +51,7 @@ class Socket implements MessageComponentInterface {
                 $client->userinfoWorld = $queryParameters["world"];
                 $client->posX = 200;
                 $client->posY = 400;
-
+                
                 // Hold the username of opponent and status in an array
                 // ["Available", <anything>]: the client is available for pvp
                 // ["Sent", "user1"]: the client has sent a challenge to user1
@@ -158,7 +158,7 @@ class Socket implements MessageComponentInterface {
                     $attempted = $row["{$client->userinfoWorld}_{$section}_attempted"];
                     $accuracy = $correct / $attempted;
                 }
-
+                
                 // Create the room id from <userid><timestamp> to be unique. These values won't ever be extracted from the room id, it is only used as an identifier. 
                 $rid = intval($client->userinfoID.time());
 
@@ -246,6 +246,22 @@ class Socket implements MessageComponentInterface {
                     $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"]));
                     unset($client->currentQuestion);
                     unset($client->currentRoom);
+                    
+                    // Obtain the section
+                    $section = $client->currentRoom["section"];
+                    
+                    // Update the players' record
+                    // world_section_correct = e.g. idiom_lower_correct
+                    // world_section_attempted = e.g. idiom_lower_attempted
+                    $world_section_correct = $client->userinfoWorld +'_' + $section + '_' + 'correct';
+                    $world_section_attempted = $client->userinfoWorld +'_' + $section + '_' + 'attempted';
+                    $num_correct = count($client->currentRoom["sessionCorrect"]);
+                    $num_attempted = count($client->currentRoom["sessionAttempted"]);
+                    
+                    $sql = "UPDATE students SET {$world_section_correct} = {$world_section_correct} + {$num_correct}, {$world_section_attempted} = {$world_section_attempted} + {$num_attempted} WHERE student_id = {$client->userinfoID}";
+                    $statement = yield $pool->prepare($sql);
+                    $statement->execute();
+                    
                     // Make the player available for pvp
                     $client->pvpStatus = ["Available", ""];
                 }
