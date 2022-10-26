@@ -17,6 +17,11 @@ if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllCustomGa
     echo $student->viewAllCustomGame($account_id);
 }
 
+// Trigger viewAssignedAssignment
+if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAssignedAssignment"){
+    echo $student->viewAssignedAssignment($account_id);
+}
+
 // Trigger deleteCustomGame
 if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteCustomGame"){
     echo $_POST["customLevelName"];
@@ -237,6 +242,50 @@ class Student
             $row = $result->fetch_assoc();
             
             return $row;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                return 2; // ERROR with database SQL
+        }
+    }
+
+    // Functions: Student to view assigned assignment
+    // Inputs: int $account_id
+    // Outputs: Upon success, will return a list of assignments assigned to the student
+    //          int 1 on player that you want to view does not exists
+    //          int 2 on database error
+    public function viewAssignedAssignment(int $account_id)
+    {
+        // Check to see if player that you want view is valid
+        if (!checkAccountIdExists($account_id)) return 1;
+        
+        $sql = "SELECT a.assignment_name, a.due_timestamp 
+            FROM assignments a INNER JOIN students s ON a.account_id = s.teacher_account_id 
+            WHERE s.student_id = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        $assigned_assignment_str = "";
+
+        if( 
+            $stmt->bind_param('i', $account_id) &&
+            $stmt->execute()
+        ){
+            $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
+            $comma = ',';
+            while ($row = $result->fetch_assoc())
+            {
+                // Concatenate all the customName created by the user into a string format
+                $assigned_assignment_str = $assigned_assignment_str.$row['assignment_name'].$comma.
+                        $row['due_timestamp'];
+
+                if ($count+1 != $num_rows)
+                    $assigned_assignment_str = $assigned_assignment_str.'|';
+                $count = $count + 1;
+            }
+            return $assigned_assignment_str;
         }
         else
         {

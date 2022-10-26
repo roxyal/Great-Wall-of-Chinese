@@ -286,7 +286,7 @@
         <div class="modal-body">
           <div class="container text-left">
             <h4>Adventure mode</h4>
-            <table class="table table-bordered table-dark">
+            <table class="table table-bordered table-light">
               <thead>
                 <tr>
                   <th scope="col">Position</th>
@@ -300,7 +300,7 @@
           </div>
           <div class="container mt-5 text-left">
             <h4>PVP mode</h4>
-            <table class="table table-bordered table-dark">
+            <table class="table table-bordered table-light">
               <thead>
                 <tr>
                   <th scope="col">Position</th>
@@ -341,78 +341,90 @@
 
     <!--Adventure mode Modal starts here-->
     <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="container">
-              <h1 class="text-center">Blanks adventure</h1>
-              <div class="row justify-content-center">
-                <div class="col-2" style="margin-top: 20%;" id="characterAvatarAdventure">
-                </div>
-                <div class="col-10" style="margin-top: 5%;">
-                  <div class="row">
-                    <div class="col-2">
-                      <p class="fs-4 text-center">Progress:</p>
-                    </div>
-                    <div class="col-8" style="margin-top: 1%;" >
-                      <div class="progress">
-                        <div id="adventureModeProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label, start at 0% -->
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="container">
+                <h1 class="text-center">Hanyu Pinyin adventure</h1>
+                <div class="row justify-content-center">
+                  <div class="col-2" style="margin-top: 20%;" id="characterAvatar">
+                  </div>
+                  <div class="col-10" style="margin-top: 5%;">
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Progress:</p>
                       </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-2">
-                      <p class="fs-4 text-center">Score:</p>
-                    </div>
-                    <div class="col-8">
-                      <p id="adventureModeScore" class="fs-4 text-left">0/0</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="card">
-                        <h5 id="adventureModeQuestionNo" class="card-header text-center">Question 1</h5> <!--question number-->
-                        <div class="card-body">
-                          <p id="adventureModeQuestion" class="card-text text-center">This is a sample question</p>
+                      <div class="col-8" style="margin-top: 1%;" >
+                        <div class="progress">
+                          <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="row mt-5 text-center">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="adventureModeOption1" onclick="adventureModeSubmit(event)" type="button" value="1" class="btn btn-primary">This is Option 1</button>
+                    <div class="row">
+                      <div class="col-2">
+                        <p class="fs-4 text-center">Score:</p>
+                      </div>
+                      <div class="col-8">
+                        <p class="fs-4 text-left">0/0</p>
+                      </div>
                     </div>
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="adventureModeOption2" onclick="adventureModeSubmit(event)" type="button" value="2" class="btn btn-primary">This is Option 2</button>
+                    <div class="row">
+                      <div class="col">
+                        <div class="card">
+                          <h5 class="card-header text-center">Question 1</h5> <!--question number-->
+                          <div class="card-body">
+                            <p class="card-text">This is a sample question</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="row mt-3 text-center">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="adventureModeOption3" onclick="adventureModeSubmit(event)" type="button" value="3" class="btn btn-primary">This is Option 3</button>
+                    <div class="row mt-5 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">1) This is Option 1</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">2) This is Option 2</button>
+                      </div>
                     </div>
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="adventureModeOption4" onclick="adventureModeSubmit(event)" type="button" value="4" class="btn btn-primary">This is Option 4</button>
+                    <div class="row mt-3 text-center">
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">3) This is Option 3</button>
+                      </div>
+                      <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="button" class="btn btn-primary">4) This is Option 4</button>
+                      </div>
                     </div>
-                  </div>
-                  <div class="row mt-5">
-                    <div id="adventureModeExplanation" class="col">
+                    <div class="row mt-5">
+                      <div class="col">
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">Correct!</h4>
+                          <p>The answer is 1</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                          <h4 class="alert-heading">Wrong!</h4>
+                          <p>The answer is 3</p>
+                          <hr>
+                          <p class="mb-0">This is the explanation for the question</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="row mt-3">
-                     <div class="col text-center">
-                       <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
-                     </div>
+                    <div class="row mt-3">
+                       <div class="col text-center">
+                         <button type="button" class="btn btn-success">next question</button>
+                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit adventure mode</button>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
-      </div>
-  </div>
+    </div>
     <!--Adventure mode Modal ends here-->
 
     <!--Logout Modal starts here-->
