@@ -42,7 +42,8 @@ function loadPlayers(players) {
         }
     }
 }
-import { spawnPlayer, movePlayer, destroyPlayer } from "../frontend/src/idioms.js";
+import { spawnPlayer, movePlayer, destroyPlayer } from "../frontend/src/exports.js";
+import { addMessageElement, recipients } from "../frontend/src/exports.js";
 // export var socket;
 var token;
 var world;
@@ -187,18 +188,21 @@ generateSocketAuth().then(result => {
             }
             else if(/^to (.+)$/.test(type)) {
                 // private message sent from the client
+                let recipient = type.match(/^to (.+)$/)[1];
                 // do something like adding the chat message to chat div
+                addMessageElement("To "+recipient, sender, message);
             }
             else if(type == "message") {
                 // private message sent to the client
                 // do something like adding the chat message to chat div
+                addMessageElement("Message", sender, message);
             }
             else if(type == "world") {
                 // message is a world message
-                
+                addMessageElement("World", sender, message);
             }
             else if(type == "challenge") {
-    
+                
             }
             else if(type == "challenge sent") {
                 
