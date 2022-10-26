@@ -10,6 +10,11 @@ var adventureModeQnCorrect; 	// num of questions correct, starts at 0
 var adventureModeQnAttempted; 	// num of questions attempted, starts at 0
 var adventureModeCurrentQn; 	// current question number, starts at 1
 
+var assignmentModeProgress; 	// progress in terms of percentage, starts at 0%
+var assignmentModeQnCorrect; 	// num of questions correct, starts at 0
+var assignmentModeQnAttempted; 	// num of questions attempted, starts at 0
+var assignmentModeCurrentQn; 	// current question number, starts at 1
+
 var assignmentToAttempt; // details of assignment to display on the modal
 
 function getLoggedInCharacter() {
@@ -370,15 +375,65 @@ function openAssignment(e){
 	let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
 	console.log(assignmentName);
 
-	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
-
 	var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
     assignmentModal.show();
+
+	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
 }
+
+// get all the components in the assignment mode modal
+var assignmentModeProgressBar = document.getElementById('assignmentModeProgressBar');
+var assignmentModeScore = document.getElementById('assignmentModeScore');
+var assignmentModeQuestionNo = document.getElementById('assignmentModeQuestionNo');
+var assignmentModeQuestion = document.getElementById('assignmentModeQuestion');
+var assignmentModeOption1 = document.getElementById('assignmentModeOption1');
+var assignmentModeOption2 = document.getElementById('assignmentModeOption2');
+var assignmentModeOption3 = document.getElementById('assignmentModeOption3');
+var assignmentModeOption4 = document.getElementById('assignmentModeOption4');
+var assignmentModeExplanation = document.getElementById('assignmentModeExplanation');
+var assignmentModeNextQuestionBtn = document.getElementById('assignmentModeNextQuestion');
+
+// submit answer for assignment mode
+function assignmentModeSubmit(e){
+	var selectedAnswer = e.srcElement.value; //selected answer
+	console.log(selectedAnswer);
+
+	//socket.send("/answer "+selectedAnswer);
+
+	//disabling all option buttons
+	assignmentModeOption1.disabled = true;
+	assignmentModeOption2.disabled = true;
+	assignmentModeOption3.disabled = true;
+	assignmentModeOption4.disabled = true;
+
+	assignmentModeProgress += 10;
+	assignmentModeProgressBar.innerHTML = assignmentModeProgress + "%"; // update label of progress bar
+	assignmentModeProgressBar.style.width = assignmentModeProgress + "%"; // update width of progress bar
+
+	if(assignmentModeProgress < 100){
+		assignmentModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
+	}
+}
+
+function assignmentModeLoadNextQuestion(){}
 
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
 // when modal opens, load the first question
 assignmentModeModal.addEventListener('show.bs.modal', function (event){
+	// set starting values
+	assignmentModeProgress = 0; // progress in terms of percentage, starts at 0
+	assignmentModeQnCorrect = 0; // num of questions correct, starts at 0
+	assignmentModeQnAttempted = 0; // num of questions attempted, starts at 0
+	assignmentModeCurrentQn = 0; // current question number, starts at 1
+
+	assignmentModeNextQuestionBtn.className = "btn btn-success invisible"; // make next question btn invisible
+	assignmentModeExplanation.innerHTML = ""; // make explanation blank
+	assignmentModeProgressBar.innerHTML = "0%"; // set label of progress bar to 0%
+	assignmentModeProgressBar.style.width = "0%"; // set width of progress bar to 0%
+	assignmentModeScore.innerHTML = "0/0" // set score to 0
+	assignmentModeQuestionNo.innerHTML = "Question 1" // set question number to 1
+
+
 	var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
 	// Add player character based on characterID
 	switch (characterID) {
@@ -397,6 +452,8 @@ assignmentModeModal.addEventListener('show.bs.modal', function (event){
 	default:
 	    console.log("Something went wrong in player creation in create()");
 	}
+
+	// load first question here
 })
 
 
