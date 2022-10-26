@@ -361,12 +361,6 @@ default:
 }
 })
 
-
-
-
-
-
-
 // ADVENTURE MODE
 
 // function to assign section to attempt adventure in, then open adventure mode modal

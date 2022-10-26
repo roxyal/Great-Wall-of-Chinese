@@ -133,7 +133,7 @@ generateSocketAuth().then(result => {
         // question handler
         if(/^\[question\] (.+)/.test(e.data)) {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
-            if(adventureModeCurrentQn == "1" && adventureModeNextQuestionBtn.classList.contains("invisible")) {
+            if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestion').classList.contains("invisible")) {
                 let question = e.data.match(/^\[question\] (.+)/)[1].split(",");
                 adventureModeQuestion.innerHTML = question[0];
                 for(let i=1; i<=4; i++) {

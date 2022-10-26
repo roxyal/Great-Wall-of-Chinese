@@ -158,8 +158,11 @@ class Socket implements MessageComponentInterface {
                     $accuracy = $correct / $attempted;
                 }
 
+                // Create the room id from <userid><timestamp> to be unique. These values won't ever be extracted from the room id, it is only used as an identifier. 
+                $rid = intval($client->userinfoID.time());
+
                 // Assign player to a new room
-                $client->currentRoom = array("type" => "adv", "section" => $section, "totalCorrect" => $correct, "totalAttempted" => $attempted, "sessionCorrect" => [], "sessionAttempted" => []);
+                $client->currentRoom = array("room" => $rid, "type" => "adv", "section" => $section, "totalCorrect" => $correct, "totalAttempted" => $attempted, "sessionCorrect" => [], "sessionAttempted" => []);
                 // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
                 
                 if($accuracy < 0.5) {
@@ -225,6 +228,11 @@ class Socket implements MessageComponentInterface {
                 }
                 $client->currentRoom = $roomObject;
                 unset($roomObject);
+
+                // Record in database
+                $statement = yield $pool->prepare("insert into adventure_tracking (adventure_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)");
+                yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
+
                 
                 // Send the result and explanation
                 $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
