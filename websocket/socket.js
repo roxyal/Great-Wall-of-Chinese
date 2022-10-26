@@ -58,9 +58,9 @@ var moves = {};
 // }, 1000);
 generateSocketAuth().then(result => {
     token = result;
-    if(window.location.pathname.includes("idioms")) world = "Idioms";
-    else if(window.location.pathname.includes("hanyu")) world = "Hanyu";
-    else if (window.location.pathname.includes("blanks")) world = "Blanks";
+    if(window.location.pathname.includes("idioms")) world = "idiom";
+    else if(window.location.pathname.includes("hanyu")) world = "pinyin";
+    else if (window.location.pathname.includes("blanks")) world = "fill";
     // console.log(token);
     
     // Create a new WebSocket.
@@ -128,6 +128,37 @@ generateSocketAuth().then(result => {
         } catch (e) {
             // console.log("spawnPlayer failed");
             // console.log(e);
+        }
+
+        // question handler
+        if(/^\[question\] (.+)/.test(e.data)) {
+            // [question text, choice1, choice2, choice3, choice4, level lower|upper]
+            if(adventureModeCurrentQn == "1" && adventureModeNextQuestionBtn.classList.contains("invisible")) {
+                let question = e.data.match(/^\[question\] (.+)/)[1].split(",");
+                adventureModeQuestion.innerHTML = question[0];
+                for(let i=1; i<=4; i++) {
+                    document.getElementById('adventureModeOption'+i).innerHTML = question[i];
+                }
+                return;
+            }
+            questionQueue = e.data.match(/^\[question\] (.+)/)[1].split(",");
+            return;
+        }
+
+        if(/^\[answer\] (.+)/.test(e.data)) {
+            var answer = e.data.match(/^\[answer\] (.+)/)[1].split(",");
+            // [correct 1|0, correct answer, explanation]
+            adventureModeQnAttempted += 1
+            if(answer[0]) adventureModeQnCorrect += 1
+            adventureModeScore.innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
+            adventureModeExplanation.innerHTML = `
+                <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
+                <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
+                <p>The answer is ${answer[1]}</p>
+                <hr>
+                <p class="mb-0">${answer[2]}</p>
+                </div>
+            `;
         }
 
         // message will come in the format:
