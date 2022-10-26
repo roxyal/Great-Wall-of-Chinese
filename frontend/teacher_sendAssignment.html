@@ -26,7 +26,7 @@
             <a class="nav-item nav-link my-0" href='teacher_summary.html'>View Summary Report</a>
             <a class="nav-item nav-link my-0" href='teacher_createAssignment.html'>Create Assignment</a>
             <a class="nav-item nav-link active my-0" href='teacher_sendAssignment.html'>View Assignments<span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link my-0" href="#">Leaderboard</a>
+            <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#leaderboard-modal">Leaderboard</a>
            </div>
         </div>
         <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
@@ -48,6 +48,53 @@
           </div>
         </div>
     </div>
+
+    <!--Leaderboard Modal starts here-->
+    <div class="modal fade" id="leaderboard-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h3 class="modal-title" id="modal-title">Leaderboard</h3>
+          </div>
+          <div class="modal-body">
+            <div class="container text-left">
+              <h4>Adventure mode</h4>
+              <table class="table table-bordered table-light">
+                <thead>
+                  <tr>
+                    <th scope="col">Position</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Accuracy</th>
+                  </tr>
+                </thead>
+                <tbody id="adventureModeLeaderBoard">
+                </tbody>
+              </table>
+            </div>
+            <div class="container mt-5 text-left">
+              <h4>PVP mode</h4>
+              <table class="table table-bordered table-light">
+                <thead>
+                  <tr>
+                    <th scope="col">Position</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Rank Points</th>
+                  </tr>
+                </thead>
+                <tbody id="pvpModeLeaderBoard">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Leaderboard Modal ends here-->
+
     <!--Log out Modal starts here-->
     <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog">

@@ -187,8 +187,8 @@
   </div>
   <!--View assignment Modal ends here-->
 
-  <!--Assignment mode Modal starts here-->
-  <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <!--Assignment mode Modal starts here-->
+    <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
           <div class="modal-body">
@@ -196,7 +196,6 @@
               <h1 class="text-center">Assignment</h1>
               <div class="row justify-content-center">
                 <div class="col-2" style="margin-top: 20%;" id="characterAvatarAssignment">
-                  <!--<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>-->
                 </div>
                 <div class="col-10" style="margin-top: 5%;">
                   <div class="row">
@@ -205,7 +204,7 @@
                     </div>
                     <div class="col-8" style="margin-top: 1%;" >
                       <div class="progress">
-                        <div class="progress-bar" style="width: 50%;">50%</div> <!--width to update progress bar, inner html to update label -->
+                        <div id="assignmentModeProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label -->
                       </div>
                     </div>
                   </div>
@@ -214,38 +213,38 @@
                       <p class="fs-4 text-center">Score:</p>
                     </div>
                     <div class="col-8">
-                      <p class="fs-4 text-left">0/0</p>
+                      <p id="assignmentModeScore" class="fs-4 text-left">0/0</p>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col">
                       <div class="card">
-                        <h5 class="card-header text-center">Question 1</h5> <!--question number-->
+                        <h5 id="assignmentModeQuestionNo" class="card-header text-center">Question 1</h5> <!--question number-->
                         <div class="card-body">
-                          <p class="card-text">This is a sample question</p>
+                          <p id="assignmentModeQuestion" class="card-text">This is a sample question</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="row mt-5 text-center">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">1) This is Option 1</button>
+                      <button id="assignmentModeOption1" type="button" class="btn btn-primary">This is Option 1</button>
                     </div>
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">2) This is Option 2</button>
+                      <button id="assignmentModeOption2" type="button" class="btn btn-primary">This is Option 2</button>
                     </div>
                   </div>
                   <div class="row mt-3 text-center">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">3) This is Option 3</button>
+                      <button id="assignmentModeOption3" type="button" class="btn btn-primary">This is Option 3</button>
                     </div>
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button type="button" class="btn btn-primary">4) This is Option 4</button>
+                      <button id="assignmentModeOption4" type="button" class="btn btn-primary">This is Option 4</button>
                     </div>
                   </div>
                   <div class="row mt-5">
-                    <div class="col">
-                      <div class="alert alert-success" role="alert">
+                    <div id="assignmentModeExplanation" class="col">
+                      <!-- <div class="alert alert-success" role="alert">
                         <h4 class="alert-heading">Correct!</h4>
                         <p>The answer is 1</p>
                         <hr>
@@ -256,12 +255,12 @@
                         <p>The answer is 3</p>
                         <hr>
                         <p class="mb-0">This is the explanation for the question</p>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                   <div class="row mt-3">
                      <div class="col text-center">
-                       <button type="button" class="btn btn-success">next question</button>
+                       <button type="button" onclick="assignmentModeLoadNextQuestion()" class="btn btn-success invisible" id="assignmentModeNextQuestion">next question</button>
                      </div>
                   </div>
                 </div>
@@ -269,7 +268,7 @@
             </div>
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit assignment</button>
           </div>
         </div>
       </div>

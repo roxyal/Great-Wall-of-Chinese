@@ -265,7 +265,7 @@ var xmlhttp = new XMLHttpRequest();
                 // Split the string into an array
                 customNameArray = this.responseText.split(",");
                 for(i=0;i<customNameArray.length;i++){
-                    var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)">delete</button></td></tr>';
+                    var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary" data-bs-dismiss="modal">delete</button></td></tr>';
                     rowsHTML += row; // add in html code
                 }
                 table.innerHTML = rowsHTML; //set innerhtml code
@@ -346,7 +346,7 @@ xmlhttp.onreadystatechange = function(){
             for(i=0;i<assignmentsArray.length;i++){
                 var assignmentArray = assignmentsArray[i].split(",");
                 console.log(assignmentArray[0]);
-                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)">Attempt</button></td></tr>';
+                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)"class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
                 rowsHTML += row; // add in html code
             }
             table.innerHTML = rowsHTML; //set innerhtml code
@@ -367,37 +367,45 @@ xmlhttp.onreadystatechange = function(){
 
 // opening assignment modal
 function openAssignment(e){
-let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
-console.log(assignmentName);
+	let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
+	console.log(assignmentName);
 
-// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
+	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
 
-var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
-  assignmentModal.show();
+	var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
+    assignmentModal.show();
 }
 
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
 // when modal opens, load the first question
 assignmentModeModal.addEventListener('show.bs.modal', function (event){
 	var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
-// Add player character based on characterID
-switch (characterID) {
-case "1":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
-    break;
-case "2":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
-    break;
-case "3":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
-    break;
-case "4":
-    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
-    break;
-default:
-    console.log("Something went wrong in player creation in create()");
-}
+	// Add player character based on characterID
+	switch (characterID) {
+	case "1":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+	    break;
+	case "2":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+	    break;
+	case "3":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+	    break;
+	case "4":
+	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+	    break;
+	default:
+	    console.log("Something went wrong in player creation in create()");
+	}
 })
+
+
+
+
+
+
+
+
 
 // ADVENTURE MODE
 
