@@ -1,6 +1,7 @@
 //import {IdiomsWorld} from "./scenes/IdiomsWorld.js";
 import {getLoggedInUsername} from "../utility.js";
 import {getLoggedInCharacter} from "../utility.js";
+import "./exports.js";
 
 //showStartAdventureModal();
 
@@ -34,7 +35,6 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
-var spawn; 
 
 function preload() {
     // Load world assets
@@ -105,32 +105,23 @@ function create() {
         let message = chatInput.value;
         if (message) {
             chatInput.value = '';
-            addMessageElement(message);
+
+            // Check for slash commands
+            if(/^\/(.+)/.test(message)) {
+                socket.send(message);
+                return;
+            }
+
+            if(chatSetting == "World") {
+                socket.send(`/world ${message}`);
+            }
+            else {
+                socket.send(`/message ${chatSetting} ${message}`);
+            }
+            // addMessageElement(message);
         }
     }
-
-    // Add new message to chat box
-    function addMessageElement(message) {
-        const chatType = document.createElement('span');
-        chatType.textContent = chatSetting === "World" ? "[World] " : `To [${chatSetting}]: `;
-        chatType.style.color = chatSetting === "World" ? "blue" : "purple";
-
-        const usernameSpan = document.createElement('span');
-        usernameSpan.textContent = chatSetting === "World" ? `${userName}: ` : "";
-        usernameSpan.style.color = "green";
-        
-        const messageSpan = document.createElement('span');
-        messageSpan.textContent = message;
-        
-        const messageLi = document.createElement("li");
-        messageLi.append(chatType);
-        messageLi.append(usernameSpan);
-        messageLi.append(messageSpan);
-        
-        chatList.append(messageLi);
-        chatList.lastChild.scrollIntoView();
-    }
-
+    
     // Create animations for player
     this.anims.create({
         key: "huntressIdle",
@@ -325,30 +316,112 @@ function create() {
     // Spawn handlers
     this.otherPlayers = {};
     spawn = (username, characterType, posX, posY) => {
-        console.log("spawning player "+username);
-        this.otherPlayers[username] = [];
-        switch (characterType) {
-            case "1":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "martialIdle").setScale(2);
-                break;
-            case "2":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "huntress").setScale(2.2);
-                break;
-            case "3":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "heroKnight").setScale(1.7);
-                break;
-            case "4":
-                this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "wizard").setScale(1.3);
-                break;
-            default:
-                console.log("Something went wrong in player creation in create()");
-        }
+        if(!this.otherPlayers.hasOwnProperty(username)) {
+            console.log("spawning player "+username);
+            this.otherPlayers[username] = [];
+            switch (characterType) {
+                case "1":
+                    this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "martialIdle").setScale(2);
+                    break;
+                case "2":
+                    this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "huntress").setScale(2.2);
+                    break;
+                case "3":
+                    this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "heroKnight").setScale(1.7);
+                    break;
+                case "4":
+                    this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "wizard").setScale(1.3);
+                    break;
+                default:
+                    console.log("Something went wrong in player creation in create()");
+            }
+            let spriteKey = this.otherPlayers[username]["sprite"].texture.key == "martialIdle" ? "martialIdle" : `${this.otherPlayers[username]["sprite"].texture.key}Idle`;
+            console.log(spriteKey);
+            this.otherPlayers[username]["sprite"].anims.play(spriteKey, true);
 
-        // Add username below player character
-        this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+            // Add username below player character
+            this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
+        }
+        else {
+            moving(username, characterType, posX, posY);
+        }
+    }
+    moving = (username, characterType, posX, posY) => {
+        if(this.otherPlayers.hasOwnProperty(username)) {
+            console.log("moving player "+username);
+            let player = this.otherPlayers[username];
+            
+            switch (characterType) {
+                case "1":
+                    var spriteName = "martial";
+                    break;
+                case "2":
+                    var spriteName = "huntress";
+                    break;
+                case "3":
+                    var spriteName = "heroKnight";
+                    break;
+                case "4":
+                    var spriteName = "wizard";
+                    break;
+                default:
+                    console.log("unknown character type in moving player");
+            }
+
+            // Convert to a decimal from 0-1
+            // dt = dt > 20 ? 1 : dt/20;
+
+            // Check direction of player moving
+            player["sprite"].anims.play(spriteName+"Running", true);
+            if (posX > player["sprite"].x) {
+                // moving left
+                player["sprite"].flipX = false;
+                for(let x=player["sprite"].x; x<posX; x++) {
+                    let incrementValue = Phaser.Math.Interpolation.SmootherStep(x/posX, player["sprite"].x, posX);
+                    console.log(x, incrementValue);
+                    player["sprite"].x = incrementValue;
+                }
+            } else if (posX < player["sprite"].x) {
+                // moving right
+                player["sprite"].flipX = true;
+                for(let x=player["sprite"].x; x>posX; x--) {
+                    player["sprite"].x --;
+                }   
+            }
+            if (posY > player["sprite"].y) {
+                // moving up
+                for(let y=player["sprite"].y; y<posY; y++) {
+                    player["sprite"].y ++;
+                }
+            } else if (posY < player["sprite"].y) {
+                // moving down
+                for(let y=player["sprite"].y; y>posY; y--) {
+                    player["sprite"].y --;
+                }
+            }
+            
+            // player["sprite"].setVelocity(0);
+            window.setTimeout(function() {
+                player["sprite"].anims.play(spriteName+"Idle", true);
+            }, 500);
+
+            player["name"].setPosition(player["sprite"].x, player["sprite"].y + player["sprite"].height);
+        }
+        else {
+            spawn(username, characterType, posX, posY);
+        }
+    }
+    destroy = username => {
+        if(this.otherPlayers.hasOwnProperty(username)) {
+            this.otherPlayers[username]["sprite"].destroy(true);
+            this.otherPlayers[username]["sprite"] = null;
+            this.otherPlayers[username]["name"].destroy(true);
+            this.otherPlayers[username]["name"] = null;
+            delete this.otherPlayers[username];
+        }
     }
 }
-
+var timer = 0;
 function update() {
     var move = false;
     if (this.cursors.right.isDown) {
@@ -383,17 +456,19 @@ function update() {
     // Set text to follow character
     this.playerName.setPosition(this.player.x, this.player.y + this.player.height);
 
-    // Update player's sprite and position on the socket
-    if(move) {
-        updateMovement(userName, this.player.x, this.player.y, this.runningKey, this.player.flipX);
+    // Update player's sprite and position on the socket every x ticks
+    timer++;
+    if(move && timer % 5 == 0) {
+        console.log("PHASER: x"+this.player.x+" y"+this.player.y);
+        updateMovement(this.player.x, this.player.y, timer);
     }
 
     // Update the positions of all other players
-    for(let [key, value] of Object.entries(this.otherPlayers)) {
-        let spriteKey = value["sprite"].texture.key == "martialIdle" ? value["sprite"].texture.key : `${value["sprite"].texture.key}Idle`;
-        value["sprite"].anims.play(spriteKey, true);
-        value["name"].setPosition(value["sprite"].x, value["sprite"].y + value["sprite"].height);
-    }
+    // for(let [key, value] of Object.entries(this.otherPlayers)) {
+    //     let spriteKey = value["sprite"].texture.key == "martialIdle" ? value["sprite"].texture.key : `${value["sprite"].texture.key}Idle`;
+    //     value["sprite"].anims.play(spriteKey, true);
+    //     value["name"].setPosition(value["sprite"].x, value["sprite"].y + value["sprite"].height);
+    // }
 
     // Display NPC dialogue only when character is close
     if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y) <= 150) {
@@ -410,12 +485,6 @@ function showStartAdventureModal(){
 	startAdventureModal.show();
 }
 
-function updateMovement(username, posX, posY, sprite, flipX) {
-    socket.send(`/move x${posX} y${posY} sprite${sprite} flip${flipX}`);
-}
-
-// Spawn new players that log in
-export function spawnPlayer(username, characterType, posX, posy) {
-    console.log("spawnPlayer player "+username);
-    spawn(username, characterType, posX, posy);
+function updateMovement(posX, posY, timer) {
+    socket.send(`/move x${posX} y${posY} t${timer}`);
 }

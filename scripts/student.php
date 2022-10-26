@@ -151,7 +151,7 @@ class Student
     // Outputs: Int 0 on success, successfully deleted CustomGame
     //          int 1 on account_id is not exists
     //          int 2 on server error. 
-    function deleteCustomGame(int $account_id, string $customLevelName)
+    public function deleteCustomGame(int $account_id, string $customLevelName)
     {
         // Check to see if account_id exists
         if (!checkAccountIdExists($account_id)) return 1;
@@ -174,69 +174,6 @@ class Student
         }
     }
         
-    // A helper function for CustomGame question function.
-    public function generateQuestion(int $account_id, int $idiom_lower_count, int $idiom_upper_count,
-                                        int $fill_lower_count, int $fill_upper_count,
-                                        int $pinyin_lower_count, int $pinyin_upper_count)
-    {
-        
-        $qn_category = ['idiom_Lower pri', 'idiom_Upper pri','fill_Lower pri',
-                        'fill_Upper pri','pinyin_Lower pri', 'pinyin_Upper pri'];
-        
-        $qn_list = [$idiom_lower_count, $idiom_upper_count, $fill_lower_count,
-            $fill_upper_count, $pinyin_lower_count, $pinyin_upper_count];
-        
-        for ($x=0; $x <count($qn_list); $x++)
-        {
-            if ($qn_list[$x] > 0)
-            {
-                
-                // Using delimiter to extract the section name question type name
-                // word[0] = fill/pinyin/idiom
-                // word[1] = Lower pri / Upper pri
-                $delimiter = '_';
-                $word = explode($delimiter, $qn_category[$x]); 
-                
-                $sql_1 = "SELECT * FROM questions WHERE section = ? AND question_type = ?
-                        ORDER BY RAND()
-                        LIMIT ?";
-                $stmt_1 = $this->conn->prepare($sql_1);
-                if( 
-                    $stmt_1->bind_param('ssi', $word[1], $word[0], $qn_list[$x]) &&
-                    $stmt_1->execute()
-                ){
-                    $result = $stmt_1->get_result();
-                    while ($row = $result->fetch_assoc())
-                    {
-                        $sql_2 = "INSERT INTO questions_bank (question_type, section, level, question, choice1, choice2, choice3, choice4, answer, explanation, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                        $stmt_2 = $this->conn->prepare($sql_2);
-                    
-                        if(
-                            $stmt_2->bind_param('ssssssssssi', $row['question_type'], $row['section'],
-                                                $row['level'], $row['question'], $row['choice1'],
-                                                $row['choice2'], $row['choice3'], $row['choice4'],
-                                                $row['answer'], $row['explanation'], $account_id) &&
-                            $stmt_2->execute()  
-                        ){
-                            continue;
-                        }
-                        else
-                        {
-                            if($debug_mode) echo $this->conn->error;
-                                return 2; // ERROR with database SQL
-                        }
-                    }
-                }
-                else
-                {
-                    if($debug_mode) echo $this->conn->error;
-                        return 2; // ERROR with database SQL
-                }
-            }
-        }
-        return 0;
-    }
-    
     // Functions: Send Pvp request to opponent
     // Inputs: int $requester_id, int $opponent_id, int $pvp_room_type
     // Outputs: Int 0 on success, successfully sendPvp request to opponent
@@ -313,7 +250,7 @@ class Student
     // Outputs: Upon success, will return a string of CustomLevelName 
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
-    function viewAllCustomGame(int $account_id)
+    public function viewAllCustomGame(int $account_id)
     {
         // Check if user id exists
         if (!checkAccountIdExists($account_id)) return 1;
@@ -341,39 +278,6 @@ class Student
                 $count = $count + 1;
             }
             return $customLevelName_str;
-        }
-        else
-        {
-            if($debug_mode) echo $this->conn->error;
-                    return 2; // ERROR with database SQL
-        }
-    }
- 
-    function viewLeaderBoard($account_id)
-    {   
-    
-        // Check if user id exists
-        if (!checkAccountIdExists($account_id)) return 1;
-
-        $leaderboard_list = [];
-        // Obtain the whole leaderboards information PVP rank, rank_points as well as Adventure's mode accuracy
-        $sql = "SELECT a.name, s.student_id, s.idiom_lower_accuracy, s.idiom_upper_accuracy, s.fill_lower_accuracy,
-                                s.fill_upper_accuracy, s.pinyin_lower_accuracy, s.pinyin_upper_accuracy, l.rank,
-                                l.rank_points FROM students s INNER JOIN leaderboard l ON s.student_id = l.account_id
-                                INNER JOIN accounts a ON l.account_id = a.account_id";
-
-        $stmt = $this->conn->prepare($sql);
-        
-        if( 
-            $stmt->execute()
-
-        ){
-            $result = $stmt->get_result();
-            while ($row = $result->fetch_assoc())
-            {
-                array_push($leaderboard_list, $row);
-            }
-            return $leaderboard_list;
         }
         else
         {

@@ -59,8 +59,11 @@ class Socket implements MessageComponentInterface {
                 // ["Playing", "user1"]: the client is currently playing against user1
                 $client->pvpStatus = ["Available", ""]; 
 
+                // Hold the client's current room that they are doing adventure or assignment in
+                // $client->currentRoom = [];
+
                 // Pass the coordinates and character id to all logged in players in the game world
-                $allPlayers = [];
+                $allPlayers["firstload"] = 0;
                 foreach ($this->clients as $player) {
                     // var_dump($player->posX);
                     // var_dump($player->posY);
@@ -70,6 +73,7 @@ class Socket implements MessageComponentInterface {
                         $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
                     }
                 }
+
                 // Send the client the data of all logged in users
                 $client->send(json_encode($allPlayers));
                 
@@ -83,32 +87,198 @@ class Socket implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $client, $msg) {
 
-        echo "Client $client->resourceId said $msg\n";
-
         // Character moving
-        if(preg_match_all("/^\/move x(\d+) y(\d+) sprite(.+) flip(.+)$/", $msg, $matches)) {
+        if(preg_match_all("/^\/move x(.+) y(.+) t(.+)$/", $msg, $matches)) {
             $posX = $matches[1][0];
             $posY = $matches[2][0];
+            $time = $matches[3][0];
             // Save the player's updated location
             $client->posX = $posX;
             $client->posY = $posY;
-            // echo $client->posX." ".client->posY;
+            echo "$client->userinfoUsername moved to x$client->posX y$client->posY t$time\n";
 
-            // Broadcast new location to all other players
-            // foreach ($this->clients as $player) {
-            //     // if($client->userinfoUsername == $player->userinfoUsername) continue;
-            //     if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
-            //         $player->send("[move] $client->userinfoUsername: x$player->posX y$player->posY");
-            //     }
-            // }
+            // Broadcast the update to all other players
+            foreach ($this->clients as $player) {
+                // if($client->userinfoUsername == $player->userinfoUsername) continue;
+                if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+                    $player->send("[move] $client->userinfoUsername: c$client->userinfoCharacter x$client->posX y$client->posY t$time");
+                }
+            }
+        }
+
+        // Update the client
+        if(preg_match("/^\/update$/", $msg)) {
+            $allPlayers = [];
+            foreach ($this->clients as $player) {
+                // if($client->userinfoUsername == $player->userinfoUsername) continue;
+                if($player->userinfoWorld == $client->userinfoWorld && $client->userinfoUsername !== $player->userinfoUsername) {
+                    $allPlayers[$player->userinfoUsername] = "$player->userinfoCharacter-$player->posX-$player->posY";
+                }
+            }
+
+            // Send the client the data of all logged in users
+            $client->send(json_encode($allPlayers));
+            return;
+        }
+
+        // Start adventure mode
+        if(preg_match_all("/^\/adventure (.+)/", $msg, $matches)) {
+            $section = strtolower($matches[1][0]); // lower or upper
+
+            // Make the player unavailable for pvp
+            $client->pvpStatus = ["Playing", ""];
+
+            \Amp\Loop::run(function() use ($client, $section) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+                
+                // Get the client's accuracy data
+                $statement = yield $pool->prepare("select * from students where student_id = :id");
+
+                $result = yield $statement->execute(['id' => $client->userinfoID]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $resetdate = $row["{$client->userinfoWorld}_{$section}_reset_date"];
+
+                // The reset date saved in db is the date at which the scores will be reset. Attempting adventure before this reset date will change the reset date to 2 days from the attempt. 
+                if(time() > $resetdate) {
+                    // Reset the scores
+                    $correct = 0;
+                    $attempted = 0;
+                    $accuracy = 0;
+                }
+                else {
+                    $correct = $row["{$client->userinfoWorld}_{$section}_correct"];
+                    $attempted = $row["{$client->userinfoWorld}_{$section}_attempted"];
+                    $accuracy = $correct / $attempted;
+                }
+
+                // Assign player to a new room
+                $client->currentRoom = array("type" => "adv", "section" => $section, "totalCorrect" => $correct, "totalAttempted" => $attempted, "sessionCorrect" => [], "sessionAttempted" => []);
+                // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
+                
+                if($accuracy < 0.5) {
+                    // Give easy question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' order by rand() limit 1";
+                }
+                elseif($accuracy < 0.75) {
+                    // Give medium question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' order by rand() limit 1";
+                }
+                else {
+                    // Give hard question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                }
+
+                $statement = yield $pool->prepare($sql);
+                $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "$section Pri"]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $client->currentQuestion = $row;
+                $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+            });
+        }
+
+        // Mark client's answer
+        if(preg_match_all("/^\/answer (\d)/", $msg, $matches)) {
+            // Check game mode 
+            if(isset($client->currentRoom["type"]) && $client->currentRoom["type"] == "adv") {
+                $max_qns = 10;                
+            }
+            elseif(isset($client->currentRoom["type"]) && $client->currentRoom["type"] == "adv") {
+
+            }
+            elseif($client->pvpStatus[0] == "Playing") {
+                $max_qns = 5;
+            }
+            else {
+                echo "$client->userinfoUsername is not allowed to answer\n";
+                return;
+            }
+            $answer = $matches[1][0]; 
+            
+            \Amp\Loop::run(function() use ($client, $answer, $max_qns) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+
+                $roomObject = $client->currentRoom;
+                $roomObject["totalAttempted"]++;
+                $roomObject["sessionAttempted"][] = [$client->currentQuestion["question_id"], $answer];
+                $correct = false;
+
+                // Check against client's current question info
+                if($client->currentQuestion["answer"] == $answer) {
+                    // Correct
+                    $roomObject["totalCorrect"]++;
+                    $roomObject["sessionCorrect"][] = [$client->currentQuestion["question_id"], $answer];
+                    $correct = true;
+                }
+                $client->currentRoom = $roomObject;
+                unset($roomObject);
+                
+                // Send the result and explanation
+                $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
+
+                // Send the next question if any
+                if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
+                    // Send result
+                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"]));
+                    unset($client->currentQuestion);
+                    unset($client->currentRoom);
+                    // Make the player available for pvp
+                    $client->pvpStatus = ["Available", ""];
+                }
+                else {
+                    $accuracy = $client->currentRoom["totalCorrect"] / $client->currentRoom["totalAttempted"];
+                    // Get array of attempted questions within this session
+                    $attempted = $client->currentRoom["sessionAttempted"][0][0];
+                    for($i = 1; $i<count($client->currentRoom["sessionAttempted"]); $i++) {
+                        $attempted .= ", {$client->currentRoom["sessionAttempted"][$i][0]}";
+                    }
+
+                    // Send next question
+                    if($accuracy < 0.5) {
+                        // Give easy question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+                    elseif($accuracy < 0.75) {
+                        // Give medium question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+                    else {
+                        // Give hard question
+                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' and question_id not in ($attempted) order by rand() limit 1";
+                    }
+
+                    $statement = yield $pool->prepare($sql);
+                    $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "{$client->currentRoom["section"]} Pri"]);
+                    yield $result->advance();
+                    $row = $result->getCurrent();
+
+                    $client->currentQuestion = $row;
+                    $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                }
+            });
         }
 
         // Message handler for slash commands
 
+        echo "Client $client->resourceId said $msg\n";
+
         // /challenge <player_username>: create a new challenge record in db
         if(preg_match_all("/^\/challenge (.+)$/", $msg, $matches)) {
             $recipientUsername = $matches[1][0];
-            if($client->userinfoUsername == $recipientUsername) {
+            if(!strcasecmp($client->userinfoUsername, $recipientUsername)) {
                 $client->send("[error] 1: You cannot challenge yourself!");
                 return;
             }
@@ -120,7 +290,7 @@ class Socket implements MessageComponentInterface {
             
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && !strcasecmp($player->userinfoUsername, $recipientUsername)) {
                     // May need some constraint checks e.g. cannot challenge a player if they already have a challenge ongoing
                     if($player->pvpStatus[0] !== "Available") {
                         $client->send("[error] 3: Your opponent is currently engaged in a match.");
@@ -149,21 +319,21 @@ class Socket implements MessageComponentInterface {
         if(preg_match_all("/^\/accept (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
             $recipientUsername = $matches[1][0];
-            if($client->userinfoUsername == $recipientUsername) {
+            if(!strcasecmp($client->userinfoUsername, $recipientUsername)) {
                 $client->send("[error] 1: You cannot challenge yourself!");
                 return;
             }
             
             // Check if client has existing invitation
-            if($client->pvpStatus[0] !== "Received" || $client->pvpStatus[1] !== $recipientUsername) {
+            if($client->pvpStatus[0] !== "Received" || strcasecmp($client->pvpStatus[1], $recipientUsername)) {
                 $client->send("[error] 4: This challenge request does not exist.");
                 return;
             }
 
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
-                    if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && !strcasecmp($player->userinfoUsername, $recipientUsername)) {
+                    if($player->pvpStatus[0] !== "Sent" || strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
                         $client->send("[error] 4: This challenge request does not exist.");
                         return;
                     }
@@ -191,21 +361,21 @@ class Socket implements MessageComponentInterface {
         if(preg_match_all("/^\/reject (.+)$/", $msg, $matches)) {
             // Do some database checks for existing challenge id, permissions, etc
             $recipientUsername = $matches[1][0];
-            if($client->userinfoUsername == $recipientUsername) {
+            if(!strcasecmp($client->userinfoUsername, $recipientUsername)) {
                 $client->send("[error] 1: You cannot challenge yourself!");
                 return;
             }
             
             // Check if client has existing invitation
-            if($client->pvpStatus[0] !== "Received" || $client->pvpStatus[1] !== $recipientUsername) {
+            if($client->pvpStatus[0] !== "Received" || strcasecmp($client->pvpStatus[1], $recipientUsername)) {
                 $client->send("[error] 4: This challenge request does not exist.");
                 return;
             }
 
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
-                    if($player->pvpStatus[0] !== "Sent" || $player->pvpStatus[1] !== $client->userinfoUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && !strcasecmp($player->userinfoUsername, $recipientUsername)) {
+                    if($player->pvpStatus[0] !== "Sent" || strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
                         $client->send("[error] 4: This challenge request does not exist.");
                         return;
                     }
@@ -235,11 +405,10 @@ class Socket implements MessageComponentInterface {
             $message = $matches[2][0];
             echo "Sending message to user $recipientUsername: $message\n";
 
-            $client->send("[to $recipientUsername] $client->userinfoUsername: $message");
-
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && !strcasecmp($player->userinfoUsername, $recipientUsername)) {
                     $player->send("[message] $client->userinfoUsername: $message");
+                    $client->send("[to $player->userinfoUsername] $client->userinfoUsername: $message");
                     return;
                 }
             }
@@ -254,7 +423,7 @@ class Socket implements MessageComponentInterface {
             echo "Client $client->resourceId messaged world: $message\n";
 
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld) {
                     // Don't send the message back to the person who sent it
                     // if ($client->resourceId == $player->resourceId) {
                     //     continue;
@@ -270,7 +439,7 @@ class Socket implements MessageComponentInterface {
             echo "Client $client->resourceId checked the pvpStatus of $recipientUsername\n";
 
             foreach ($this->clients as $player) {
-                if ($player->userinfoWorld == $client->userinfoWorld && $player->userinfoUsername == $recipientUsername) {
+                if ($player->userinfoWorld == $client->userinfoWorld && !strcasecmp($player->userinfoUsername, $recipientUsername)) {
                     $client->send("[status] $player->userinfoUsername: {$player->pvpStatus[0]} {$player->pvpStatus[1]}");
                     return;
                 }
@@ -284,10 +453,13 @@ class Socket implements MessageComponentInterface {
     public function onClose(ConnectionInterface $client) {
         echo "Client $client->resourceId left\n";
 
+        // Disconnect the resource
+        $this->clients->detach($client);
+
         // Change the token in db to disconnected
         \Amp\Loop::run(function() use ($client) {
             // Get the auth token
-            parse_str($client->httpRequest->getUri()->getQuery(), $queryParameters);
+            // parse_str($client->httpRequest->getUri()->getQuery(), $queryParameters);
     
             require "../../../secrets.php";
             $config = \Amp\Mysql\ConnectionConfig::fromString(
