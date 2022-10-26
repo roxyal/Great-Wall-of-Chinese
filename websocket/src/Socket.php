@@ -253,8 +253,8 @@ class Socket implements MessageComponentInterface {
                     // Update the players' record
                     // world_section_correct = e.g. idiom_lower_correct
                     // world_section_attempted = e.g. idiom_lower_attempted
-                    $world_section_correct = $client->userinfoWorld +'_' + $section + '_' + 'correct';
-                    $world_section_attempted = $client->userinfoWorld +'_' + $section + '_' + 'attempted';
+                    $world_section_correct = $client->userinfoWorld.'_'.$section.'_'.'correct';
+                    $world_section_attempted = $client->userinfoWorld.'_'.$section.'_'.'attempted';
                     $num_correct = count($client->currentRoom["sessionCorrect"]);
                     $num_attempted = count($client->currentRoom["sessionAttempted"]);
                     
