@@ -4,11 +4,11 @@
 var characterID; // character ID
 var characterUserName; // character username
 
-var selectedAdventureSection; // the section selected by user to attempt adventure mode in: lower pri/upper pri
-var adventureModeProgress; // progress in terms of percentage, starts at 0%
-var adventureModeQnCorrect; // num of questions correct, starts at 0
-var adventureModeQnAttempted; // num of questions attempted, starts at 0
-var adventureModeCurrentQn; // current question number, starts at 1
+var selectedAdventureSection; 	// the section selected by user to attempt adventure mode in: lower pri/upper pri
+var adventureModeProgress; 		// progress in terms of percentage, starts at 0%
+var adventureModeQnCorrect; 	// num of questions correct, starts at 0
+var adventureModeQnAttempted; 	// num of questions attempted, starts at 0
+var adventureModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
@@ -297,6 +297,7 @@ xmlhttp.onreadystatechange = function(){
             // 1 Account_id cannot be found, 2 represents server error
             if(this.responseText.includes(0)){
                 rowElements.remove();
+				document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
             }
             if(this.responseText.includes(1)){
                 document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
