@@ -27,11 +27,8 @@ if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST[
     echo $student->deleteCustomGame($account_id, $_POST["customLevelName"]);
 }
 
-echo $_POST["username"];
-echo $_POST["function_name"];
 // Trigger viewProfile
 if(isset($_POST["username"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "viewProfile"){
-    echo "HELLO";
     echo $student->viewProfile($_POST["username"]);
 }
 
@@ -252,18 +249,15 @@ class Student
             $stmt->execute()
         ){
             $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
 
-            while ($row = $result->fetch_assoc())
-            {
-                $viewProfile_str = "{$viewProfile_str},{$row['name']},
-                                {$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
-                                {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
-                                {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
-                                {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
-                                {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
-                                {$row['pinyin_upper_attempted']}";
-            }
-            echo $viewProfile_str;
+            $viewProfile_str += "{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
+                            {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
+                            {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
+                            {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
+                            {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
+                            {$row['pinyin_upper_attempted']}";
+                            
             return $viewProfile_str;
         }
         else
