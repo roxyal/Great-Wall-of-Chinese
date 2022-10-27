@@ -675,6 +675,8 @@ return new Promise(function(resolve) {
 }
 let adventureModeModal = document.getElementById('adventureMode-modal');
 adventureModeModal.addEventListener('show.bs.modal', async function (event){
+    console.log('OPENING ADVENTURE MODE MODAL')
+
 	// set starting values
 	adventureModeProgress = 0; // progress in terms of percentage, starts at 0
 	adventureModeQnCorrect = 0; // num of questions correct, starts at 0
