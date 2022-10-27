@@ -125,6 +125,10 @@ function create() {
     // handling keyboard inputs when modals open/close
 
     const createCustomLevelModal = document.getElementById('createCustomLevel-modal');
+    const customLevelName = document.getElementById('customLevelName');
+    customLevelName.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
     createCustomLevelModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
     });
