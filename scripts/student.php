@@ -27,8 +27,11 @@ if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST[
     echo $student->deleteCustomGame($account_id, $_POST["customLevelName"]);
 }
 
+echo $_POST["username"];
+echo $_POST["function_name"];
 // Trigger viewProfile
 if(isset($_POST["username"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "viewProfile"){
+    echo "HELLO";
     echo $student->viewProfile($_POST["username"]);
 }
 
