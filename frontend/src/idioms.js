@@ -480,17 +480,18 @@ function update() {
     }
 
     // viewing custom level
-    // let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
-    // viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
-    //     console.log("HELLO FROM PHASER UPDATE FUNCTION")
-    // })
+    let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
+    viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+        console.log("HELLO FROM PHASER UPDATE FUNCTION")
+        this.cursors.enabled = false; //disable
+    })
 
-    if (game.input.activePointer.withinGame){
-        game.input.enabled = true;
-    } else {
-        game.input.enabled = false;
-    }
-    
+    // if (game.input.activePointer.withinGame){
+    //     game.input.enabled = true;
+    // } else {
+    //     game.input.enabled = false;
+    // }
+
 }
 
 function showStartAdventureModal(){
