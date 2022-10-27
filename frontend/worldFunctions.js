@@ -23,7 +23,7 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
-var questionQueue;
+var questionQueue = [];
 
 function acceptInvitation(sender){
     socket.send('/accept ' + sender);
@@ -67,7 +67,7 @@ function viewProfile(username){
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
 		if (this.responseText.length > 2){
-                    viewProfileArray = this.responseText.split(",");
+                    var viewProfileArray = this.responseText.split(",");
                     console.log(viewProfileArray);
                 }
                 if (this.responseText.length === 1 && this.responseText === "1"){
@@ -79,9 +79,9 @@ function viewProfile(username){
             }
 	};
 	xmlhttp.open("POST", "../scripts/student", true);
-        // Request headers required for a POST request
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(`username=${username}&function_name=viewProfile`);
+    // Request headers required for a POST request
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(`username=${username}&function_name=viewProfile`);
 }
 
 function getLoggedInCharacter() {
@@ -502,7 +502,8 @@ function assignmentModeLoadNextQuestion(){
 
         assignmentModeExplanation.innerHTML = "";
         
-        if(questionQueue) {
+        if(questionQueue.length > 0) {
+            console.log("queue", questionQueue);
             assignmentModeQuestion.innerHTML = questionQueue[0];
             for(let i=1; i<=4; i++) {
                 document.getElementById('assignmentModeOption'+i).innerHTML = questionQueue[i];
@@ -609,7 +610,7 @@ function adventureModeSubmit(e){
   if(adventureModeProgress < 100){
     document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success"; // make next question btn visible if progress is not 100
   }else{
-    adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+    document.getElementById('adventureModeComplete').innerHTML = `<div class="alert alert-info text-center" role="alert">
                                         Adventure mode completed!
                                       </div>`;
   }
@@ -642,36 +643,37 @@ function adventureModeSubmit(e){
 }
 // function to update modal upon clicking on next button
 function adventureModeLoadNextQuestion(){
-return new Promise(function(resolve) {
-    // update questionNo, question, option1, option2, option3, option4
-    // make explanation empty
-    // make nextQuestionBtn invisible
-    // reenable all option buttons so they can answer new question
+    return new Promise(function(resolve) {
+        // update questionNo, question, option1, option2, option3, option4
+        // make explanation empty
+        // make nextQuestionBtn invisible
+        // reenable all option buttons so they can answer new question
 
-    // update current question label
-    adventureModeCurrentQn += 1;
-    adventureModeQuestionNo.innerHTML = "Question " + adventureModeCurrentQn;
+        // update current question label
+        adventureModeCurrentQn += 1;
+        document.getElementById('adventureModeQuestionNo').innerHTML = "Question " + adventureModeCurrentQn;
 
-    // make next question btn invisible
-    adventureModeNextQuestionBtn.className = "btn btn-success invisible";
+        // make next question btn invisible
+        document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success invisible";
 
-    // reenabling all option buttons
-    adventureModeOption1.disabled = false;
-    adventureModeOption2.disabled = false;
-    adventureModeOption3.disabled = false;
-    adventureModeOption4.disabled = false;
+        // reenabling all option buttons
+        document.getElementById('adventureModeOption1').disabled = false;
+        document.getElementById('adventureModeOption2').disabled = false;
+        document.getElementById('adventureModeOption3').disabled = false;
+        document.getElementById('adventureModeOption4').disabled = false;
 
-    adventureModeExplanation.innerHTML = ""; // empty the explanation
+        document.getElementById('adventureModeExplanation').innerHTML = ""; // empty the explanation
 
-    console.log("loading next question")
+        console.log("loading next question")
 
-    if(questionQueue) {
-      adventureModeQuestion.innerHTML = questionQueue[0];
-      for(let i=1; i<=4; i++) {
-          document.getElementById('adventureModeOption'+i).innerHTML = questionQueue[i];
-      }
-    }
-});
+        if(questionQueue.length > 0) {
+            console.log("queue", questionQueue);
+            document.getElementById('adventureModeQuestion').innerHTML = questionQueue[0];
+        for(let i=1; i<=4; i++) {
+            document.getElementById('adventureModeOption'+i).innerHTML = questionQueue[i];
+        }
+        }
+    });
 }
 let adventureModeModal = document.getElementById('adventureMode-modal');
 adventureModeModal.addEventListener('show.bs.modal', async function (event){
@@ -683,12 +685,12 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
 	adventureModeCurrentQn = 0; // current question number, starts at 1
 
-	adventureModeNextQuestionBtn.className = "btn btn-success invisible"; // make next question btn invisible
-	adventureModeExplanation.innerHTML = ""; // make explanation blank
-	adventureModeProgressBar.innerHTML = "0%"; // set label of progress bar to 0%
-	adventureModeProgressBar.style.width = "0%"; // set width of progress bar to 0%
-	adventureModeScore.innerHTML = "0/0" // set score to 0
-	adventureModeQuestionNo.innerHTML = "Question 1" // set question number to 1
+	document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success invisible"; // make next question btn invisible
+	document.getElementById('adventureModeExplanation').innerHTML = ""; // make explanation blank
+	document.getElementById('adventureModeProgressBar').innerHTML = "0%"; // set label of progress bar to 0%
+	document.getElementById('adventureModeProgressBar').style.width = "0%"; // set width of progress bar to 0%
+	document.getElementById('adventureModeScore').innerHTML = "0/0" // set score to 0
+	document.getElementById('adventureModeQuestionNo').innerHTML = "Question 1" // set question number to 1
 
 	// when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
 	// console.log(selectedAdventureSection);
@@ -697,16 +699,16 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
 	switch (characterID) {
 	case "1":
-	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
+	    adventureModeModal.querySelector('#characterAvatarAdventure').innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
 	    break;
 	case "2":
-	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
+	    adventureModeModal.querySelector('#characterAvatarAdventure').innerHTML = '<img class = "img-responsive" width = "100%"  src="images/huntress.png"/>';
 	    break;
 	case "3":
-	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
+	    adventureModeModal.querySelector('#characterAvatarAdventure').innerHTML = '<img class = "img-responsive" width = "100%"  src="images/heroKnight.png"/>';
 	    break;
 	case "4":
-	    character.innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
+	    adventureModeModal.querySelector('#characterAvatarAdventure').innerHTML = '<img class = "img-responsive" width = "100%"  src="images/wizard.png"/>';
 	    break;
 	default:
 	    console.log("Something went wrong in player creation in create()");

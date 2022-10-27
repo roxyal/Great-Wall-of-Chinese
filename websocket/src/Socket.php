@@ -186,7 +186,7 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
 
                 $client->currentQuestion = $row;
-                $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                $client->send("[question] adv: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
 
                 $pool->close();
             });
@@ -232,7 +232,7 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
 
                 $client->currentQuestion = $row;
-                $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-{$client->currentRoom["qns"]}" : $client->currentRoom["type"];
+                $type = "ass-{$client->currentRoom["qns"]}";
                 $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
 
                 $pool->close();

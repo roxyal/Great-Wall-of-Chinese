@@ -136,9 +136,10 @@ generateSocketAuth().then(result => {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
             let mode = e.data.match(pattern)[1];
             if(mode == "adv") {
-                if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestion').classList.contains("invisible")) {
+                console.log(adventureModeCurrentQn);
+                if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
                     let question = e.data.match(pattern)[2].split(",");
-                    adventureModeQuestion.innerHTML = question[0];
+                    document.getElementById('adventureModeQuestion').innerHTML = question[0];
                     for(let i=1; i<=4; i++) {
                         document.getElementById('adventureModeOption'+i).innerHTML = question[i];
                     }
@@ -166,7 +167,7 @@ generateSocketAuth().then(result => {
         }
 
         if(/^\[answer\] (.+)/.test(e.data)) {
-            var answer = e.data.match(/^\[answer\] (.+)/)[1].split(",");
+            var answer = e.data.match(/^\[answer\] (.+)/)[1].split(", ");
             // [correct 1|0, correct answer, explanation, mode]
             if(answer[3] == "adv") {
                 adventureModeQnAttempted += 1
