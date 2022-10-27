@@ -592,6 +592,7 @@ function showProfileModal(username){
                 console.log(this.responseText);
                 console.log(this.responseText.length);
 		if (this.responseText.length > 2){
+                    console.log("SUCCESS");
                     username_row += username;
                     view_username.innerHTML = username_row;  
                 }
