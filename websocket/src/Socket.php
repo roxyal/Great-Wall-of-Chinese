@@ -244,9 +244,8 @@ class Socket implements MessageComponentInterface {
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
                     // Send result
                     $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"]));
-                    unset($client->currentQuestion);
-                    unset($client->currentRoom);
                     
+                    echo "HELLO";
                     // Obtain the section
                     $section = $client->currentRoom["section"];
                     
@@ -261,6 +260,9 @@ class Socket implements MessageComponentInterface {
                     $sql = "UPDATE students SET {$world_section_correct} = {$world_section_correct} + {$num_correct}, {$world_section_attempted} = {$world_section_attempted} + {$num_attempted} WHERE student_id = {$client->userinfoID}";
                     $statement = yield $pool->prepare($sql);
                     $statement->execute();
+                    
+                    unset($client->currentQuestion);
+                    unset($client->currentRoom);
                     
                     // Make the player available for pvp
                     $client->pvpStatus = ["Available", ""];
