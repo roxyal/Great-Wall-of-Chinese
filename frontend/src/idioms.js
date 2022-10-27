@@ -603,7 +603,7 @@ function showProfileModal(username){
                 }
             }
 	};
-	xmlhttp.open("POST", "../scripts/student", true);
+	xmlhttp.open("POST", "scripts/student", true);
         // Request headers required for a POST request
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send(`username=${username}&function_name=viewProfile`);
