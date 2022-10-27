@@ -237,7 +237,7 @@ class Student
         
         // variable of the viewProfile information
         $viewProfile_str = '';
-        $sql = "SELECT a.username, s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
+        $sql = "SELECT s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
                  s.fill_lower_correct, s.fill_lower_attempted, s.fill_upper_correct, s.fill_upper_attempted,
                  s.pinyin_lower_correct, s.pinyin_lower_attempted, s.pinyin_upper_correct, s.pinyin_upper_attempted, l.rank
                  FROM students s INNER JOIN accounts a ON s.student_id = a.account_id INNER JOIN leaderboard l ON 

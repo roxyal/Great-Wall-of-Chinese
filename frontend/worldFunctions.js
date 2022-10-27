@@ -56,38 +56,29 @@ function updateAssignmentNotification(){
     xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
 }
 
-var viewProfileModal = document.getElementById('viewProfile-modal');
-var username = document.getElementById('username');
-var idioms = document.getElementById('idioms');
-var pinyin = document.getElementById('pinyin');
-var fill = document.getElementById('fill');
-
-var profile_detail = document.getElementById('profile_detail');
-var info = "";
-function viewProfile(username){
-    var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                console.log("NANI");
-		if (this.responseText.length > 2){
-                    info = "<div>" + "<p class=small text-muted mb-1>Idioms %</p>"
-                                + "<p class=mb-0>" + "KELVIN" + "</p>" +
-                            "</div>";
-                }
-                profile_detail.innerHTML = info;
-                if (this.responseText.length === 1 && this.responseText === "1"){
-                    console.log("Account_id cannot be detected!");
-                }
-                if (this.responseText.length === 1 && this.responseText === "2"){
-                    console.log("A server error occurred</div>");
-                }
-            }
-	};
-	xmlhttp.open("POST", "../scripts/student", true);
-        // Request headers required for a POST request
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send(`username=${username}&function_name=viewProfile`);
-}
+//var profile_detail = document.getElementById('profile_detail');
+//var info = "";
+//
+//function viewProfile(){
+//    var xmlhttp = new XMLHttpRequest();
+//	xmlhttp.onreadystatechange = function() {
+//            if (this.readyState === 4 && this.status === 200) {
+//                console.log("NANI");
+//		if (this.responseText.length > 2){
+//                }
+//                if (this.responseText.length === 1 && this.responseText === "1"){
+//                    console.log("Account_id cannot be detected!");
+//                }
+//                if (this.responseText.length === 1 && this.responseText === "2"){
+//                    console.log("A server error occurred</div>");
+//                }
+//            }
+//	};
+//	xmlhttp.open("POST", "../scripts/student", true);
+//        // Request headers required for a POST request
+//        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//        xmlhttp.send(`username=${username}&function_name=viewProfile`);
+//}
 
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
