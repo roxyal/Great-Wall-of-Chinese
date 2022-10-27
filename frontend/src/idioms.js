@@ -582,8 +582,8 @@ function showStartAdventureModal(){
 	startAdventureModal.show();
 }
 function showProfileModal(username){
-    var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
-	startAdventureModal.show();
+    var viewProfileModal = new bootstrap.Modal(document.getElementById('viewProfile-modal'), {});
+	viewProfileModal.show();
 }
 function updateMovement(posX, posY, timer) {
     socket.send(`/move x${posX} y${posY} t${timer}`);
