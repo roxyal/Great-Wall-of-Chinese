@@ -252,14 +252,16 @@ class Socket implements MessageComponentInterface {
                     // Update the players' record
                     // world_section_correct = e.g. idiom_lower_correct
                     // world_section_attempted = e.g. idiom_lower_attempted
-                    $world_section_correct = $client->userinfoWorld.'_'.$section.'_'.'correct';
-                    $world_section_attempted = $client->userinfoWorld.'_'.$section.'_'.'attempted';
+                    $world_section_correct = $client->userinfoWorld.'_'.$section.'_correct';
+                    $world_section_attempted = $client->userinfoWorld.'_'.$section.'_attempted';
+                    $world_section_reset = $client->userinfoWorld.'_'.$section.'_reset_date';
                     $num_correct = count($client->currentRoom["sessionCorrect"]);
                     $num_attempted = count($client->currentRoom["sessionAttempted"]);
+                    $reset_date = time()+86400*2;
                     
-                    $sql = "UPDATE students SET {$world_section_correct} = {$world_section_correct} + {$num_correct}, {$world_section_attempted} = {$world_section_attempted} + {$num_attempted} WHERE student_id = {$client->userinfoID}";
-                    $statement = yield $pool->prepare($sql);
-                    $statement->execute();
+                    $sql = "UPDATE students SET {$world_section_correct} = {$world_section_correct} + {$num_correct}, {$world_section_attempted} = {$world_section_attempted} + {$num_attempted}, {$world_section_reset} = {$reset_date} WHERE student_id = {$client->userinfoID}";
+                    $statement = yield $pool->query($sql);
+                    // $statement->execute();
                     
                     unset($client->currentQuestion);
                     unset($client->currentRoom);
