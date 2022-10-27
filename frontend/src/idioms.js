@@ -589,9 +589,11 @@ function showProfileModal(username){
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 console.log("NANI");
+                console.log(this.responseText);
+                console.log(this.responseText.length);
 		if (this.responseText.length > 2){
                     username_row += username;
-                   view_username.innerHTML = username_row;  
+                    view_username.innerHTML = username_row;  
                 }
                 if (this.responseText.length === 1 && this.responseText === "1"){
                     console.log("Account_id cannot be detected!");
