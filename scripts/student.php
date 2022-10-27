@@ -260,7 +260,7 @@ class Student
         // Check to see if player that you want view is valid
         if (!checkAccountIdExists($account_id)) return 1;
         
-        $sql = "SELECT a.assignment_name, a.due_timestamp 
+        $sql = "SELECT a.assignment_id, a.assignment_name, a.due_timestamp 
             FROM assignments a INNER JOIN students s ON a.account_id = s.teacher_account_id 
             WHERE s.student_id = ? AND a.sent_to_students = 1";
         
@@ -278,8 +278,7 @@ class Student
             while ($row = $result->fetch_assoc())
             {
                 // Concatenate all the customName created by the user into a string format
-                $assigned_assignment_str = $assigned_assignment_str.$row['assignment_name'].$comma.
-                        $row['due_timestamp'];
+                $assigned_assignment_str = "$assigned_assignment_str{$row['assignment_name']},{$row['assignment_id']},{$row['due_timestamp']}";
 
                 if ($count+1 != $num_rows)
                     $assigned_assignment_str = $assigned_assignment_str.'|';
