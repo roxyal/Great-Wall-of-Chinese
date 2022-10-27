@@ -150,11 +150,15 @@ var xmlhttp = new XMLHttpRequest();
                 
                 if (this.responseText.length > 1){
                     // Split the string into an array
-                    assignmentNameArray = this.responseText.split(",");
-                    
-                    for(i=0;i<assignmentNameArray.length;i++){
+					var assignmentNamesArray = this.responseText.split("|");
+                    console.log(assignmentNamesArray);
+                    for(i=0;i<assignmentNamesArray.length;i++){
+						var assignmentNameArray = assignmentNamesArray[i].split(",");
+
                         var row = '<tr>';
-                        row += '<td>' + assignmentNameArray[i] + '</td>' + 
+                        row += '<td>' + assignmentNameArray[0] + '</td>' + 
+								'<td>' + assignmentNameArray[1] + '</td>' +
+								'<td>' + assignmentNameArray[2] + '</td>' + 
                                 '<td><button onclick = sendAssignmentNotification(event) class="btn btn-primary mx-1 text-nowrap" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send">Send</button><button onclick = deleteRowNotification(event) class="btn btn-secondary mx-1" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">Delete</button></td>';
                         row += '</tr>';
                         rowsHTML += row; // add in html code
