@@ -478,6 +478,21 @@ function update() {
         this.dialogue.setVisible(false);
         this.speech.setVisible(true);
     }
+
+    // viewing custom level
+    let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
+    viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+        console.log("HELLO FROM PHASER UPDATE FUNCTION")
+        //this.cursors.enabled = false; //disable keyboard input
+        this.input.keyboard.enabled = false;
+    })
+
+    // if (game.input.activePointer.withinGame){
+    //     game.input.enabled = true;
+    // } else {
+    //     game.input.enabled = false;
+    // }
+
 }
 
 function showStartAdventureModal(){
