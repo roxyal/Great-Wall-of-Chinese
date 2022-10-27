@@ -171,11 +171,11 @@ generateSocketAuth().then(result => {
             // [correct 1|0, correct answer, explanation, mode]
             if(answer[3] == "adv") {
                 adventureModeQnAttempted += 1
-                if(answer[0]) adventureModeQnCorrect += 1
+                if(answer[0] == "1") adventureModeQnCorrect += 1
                 document.getElementById('adventureModeScore').innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
                 document.getElementById('adventureModeExplanation').innerHTML = `
-                    <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
-                    <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
+                    <div class="alert alert-${answer[0] == "1" ? "success" : "danger"}" role="alert">
+                    <h4 class="alert-heading">${answer[0] == "1" ? "Correct!" : "Incorrect!"}</h4>
                     <p>The answer is ${answer[1]}</p>
                     <hr>
                     <p class="mb-0">${answer[2]}</p>
