@@ -186,6 +186,95 @@
   </div>
   <!--View assignment Modal ends here-->
 
+    <!--PVP mode Modal starts here-->
+    <div class="modal fade" id="pvpMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h1 class="text-center">PVP Mode</h1>
+            <div class="row">
+              <!--For user-->
+              <div class="col-2" style="margin-top: 5%;">
+                <div class="row">
+                  <div class="col text-center">
+                    <p id="pvpModeUserScore" class="fs-4">Your score: 0/0</p>
+                  </div>
+                </div>
+                <div class="col" style="margin-right: 5%;" id="characterAvatarUserPVP">
+                  <img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>
+                </div>
+              </div>
+              <!--For showing questions-->
+              <div class="col-8" style="margin-top: 5%;">
+                <div class="row">
+                  <div class="col-2">
+                    <p class="fs-4 text-center">Progress:</p>
+                  </div>
+                  <div class="col-8" style="margin-top: 1%;" >
+                    <div class="progress">
+                      <div id="adventureModeProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label, start at 0% -->
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="card">
+                      <h5 id="pvpModeQuestionNo" class="card-header text-center">Question 1</h5> <!--question number-->
+                      <div class="card-body">
+                        <p id="pvpModeQuestion" class="card-text text-center">This is a sample question</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-5 text-center">
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                    <button id="pvpModeOption1" onclick="pvpModeSubmit(event)" type="button" value="1" class="btn btn-primary">Option 1</button>
+                  </div>
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                    <button id="pvpModeOption2" onclick="pvpModeSubmit(event)" type="button" value="2" class="btn btn-primary">Option 2</button>
+                  </div>
+                </div>
+                <div class="row mt-3 text-center">
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                    <button id="pvpModeOption3" onclick="pvpModeSubmit(event)" type="button" value="3" class="btn btn-primary">Option 3</button>
+                  </div>
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                    <button id="pvpModeOption4" onclick="pvpModeSubmit(event)" type="button" value="4" class="btn btn-primary">Option 4</button>
+                  </div>
+                </div>
+                <div class="row mt-5">
+                  <div id="pvpModeExplanation" class="col"></div>
+                </div>
+                <div class="row mt-3">
+                  <div id="pvpModeComplete" class="col"></div> <!--Declare who is the winner here-->
+                </div>
+                <!-- <div class="row">
+                   <div class="col text-center">
+                     <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button>
+                   </div>
+                </div> -->
+              </div>
+              <!--For opponent-->
+              <div class="col-2" style="margin-top: 5%;">
+                <div class="row">
+                  <div class="col text-center">
+                    <p id="pvpModeOpponentScore" class="fs-4">Opponent's score: 0/0</p>
+                  </div>
+                </div>
+                <div class="col-auto" style="margin-left: 5%;" id="characterAvatarOpponentPVP">
+                  <img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit PVP</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--PVP mode Modal ends here-->
+
     <!--invitationMessage Modal starts here-->
     <div class="modal fade" id="invitationMessage-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
