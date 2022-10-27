@@ -478,6 +478,12 @@ function update() {
         this.dialogue.setVisible(false);
         this.speech.setVisible(true);
     }
+
+    // viewing custom level
+    let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
+    viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+        console.log("HELLO FROM PHASER UPDATE FUNCTION")
+    })
 }
 
 function showStartAdventureModal(){
