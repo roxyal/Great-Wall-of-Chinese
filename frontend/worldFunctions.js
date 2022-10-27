@@ -677,10 +677,10 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
     console.log('OPENING ADVENTURE MODE MODAL')
 
 	// set starting values
-	// adventureModeProgress = 0; // progress in terms of percentage, starts at 0
-	// adventureModeQnCorrect = 0; // num of questions correct, starts at 0
-	// adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
-	// adventureModeCurrentQn = 0; // current question number, starts at 1
+	adventureModeProgress = 0; // progress in terms of percentage, starts at 0
+	adventureModeQnCorrect = 0; // num of questions correct, starts at 0
+	adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
+	adventureModeCurrentQn = 0; // current question number, starts at 1
 
 	document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success invisible"; // make next question btn invisible
 	document.getElementById('adventureModeExplanation').innerHTML = ""; // make explanation blank
