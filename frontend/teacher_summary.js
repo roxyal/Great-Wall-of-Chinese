@@ -32,7 +32,6 @@ var xmlhttp = new XMLHttpRequest();
             // the Teacher viewSummaryReport has three possible output 1,2, strings which contain all his/her student information
             // success equals obtaing a string with all the student information,
             // 1 represents account_id cannot be found, 2 represents server error
-
             if (this.responseText.length > 1){
                 
                 // If there is more than 1 student tied under the teacher
@@ -55,15 +54,20 @@ var xmlhttp = new XMLHttpRequest();
                     
                     // Add Student Name first 
                     individualStatHTML += '<td>' + student_info[0] + '</td>';
-                    
                     // j=1, to start the iteration of the loop on the second element
                     for (j=1;j<student_info.length;j+=2){
                         // calaculating the accuracy of the question_type with respesct to lower/upper pri
-                        compute_acc = (100*student_info[j]/student_info[j+1]);
-                        //question_type_acc = (100*student_info[j]/student_info[j+1]).toFixed(2) + "%";
-                        // Make it to only display 2 decimal place only
-                        question_type_acc = (Math.round(compute_acc * 100) / 100).toFixed(2);
-                        individualStatHTML += '<td>' + question_type_acc + '</td>';
+                        if (parseInt(student_info[j]) !== 0){
+                            compute_acc = (100*student_info[j]/student_info[j+1]);
+                            //question_type_acc = (100*student_info[j]/student_info[j+1]).toFixed(2) + "%";
+                            // Make it to only display 2 decimal place only
+                            question_type_acc = (Math.round(compute_acc * 100) / 100).toFixed(2);
+                            individualStatHTML += '<td>' + question_type_acc + '%' +'</td>';
+                        }
+                        else
+                        {
+                            individualStatHTML += '<td>' + '0%' + '</td>';
+                        }
                     }
                     // Calculcating the total number of question_type correct
                     idioms_correct += parseInt(student_info[1]) + parseInt(student_info[3]);
@@ -82,26 +86,26 @@ var xmlhttp = new XMLHttpRequest();
                 document.getElementById('idiomsAttempted').innerHTML = (idioms_attempted/num_students).toFixed(2);
                 document.getElementById('idiomsCorrect').innerHTML = (idioms_correct/num_students).toFixed(2);
                 compute_idioms_acc = 100*idioms_correct/idioms_attempted;
-                document.getElementById('idiomsAccuracy').innerHTML = (Math.round(compute_idioms_acc * 100) / 100).toFixed(2); + "%";
+                (idioms_attempted > 0 ) ? document.getElementById('idiomsAccuracy').innerHTML = (Math.round(compute_idioms_acc * 100) / 100).toFixed(2) + "%":document.getElementById('idiomsAccuracy').innerHTML = "0%";
                 
                 document.getElementById('hanyuPinyinAttempted').innerHTML = (pinyin_attempted/num_students).toFixed(2);
                 document.getElementById('hanyuPinyinCorrect').innerHTML = (pinyin_correct/num_students).toFixed(2);
                 compute_pinyin_acc = 100*pinyin_correct/pinyin_attempted;
-                document.getElementById('hanyuPinyinAccuracy').innerHTML = (Math.round(compute_pinyin_acc * 100) / 100).toFixed(2) + "%";
+                (pinyin_attempted > 0 ) ? document.getElementById('hanyuPinyinAccuracy').innerHTML = (Math.round(compute_pinyin_acc * 100) / 100).toFixed(2) + "%":document.getElementById('hanyuPinyinAccuracy').innerHTML = "0%";
                 
                 document.getElementById('fillInTheBlanksAttempted').innerHTML = (fill_attempted/num_students).toFixed(2);
                 document.getElementById('fillInTheBlanksCorrect').innerHTML = (fill_correct/num_students).toFixed(2);
                 compute_fill_acc = 100*fill_correct/fill_attempted;
-                document.getElementById('fillInTheBlanksAccuracy').innerHTML = (Math.round(compute_fill_acc * 100) / 100).toFixed(2) + "%";
+                (fill_attempted > 0 ) ? document.getElementById('fillInTheBlanksAccuracy').innerHTML = (Math.round(compute_fill_acc * 100) / 100).toFixed(2) + "%":document.getElementById('fillInTheBlanksAccuracy').innerHTML = "0%";
             }
             
-            if(this.responseText === 1 && this.responseText === "1"){
+            if(this.responseText.length === 1 && this.responseText === "1"){
                 console.log("Account_id does not exists");
             }
-            if(this.responseText === 1 && this.responseText === "2"){
+            if(this.responseText.length === 1 && this.responseText === "2"){
                 console.log("No students data at the moment");
             }
-            if(this.responseText === 1 && this.responseText === "3"){
+            if(this.responseText.length === 1 && this.responseText === "3"){
                 console.log("A server error occurred");
             }
         }   

@@ -233,16 +233,35 @@ generateSocketAuth().then(result => {
                 addMessageElement("World", sender, message);
             }
             else if(type == "challenge") {
-                
+                // someone sent to me the challenge
+                // "Player (sender variable) sent you a challenge"
+                var challengeModal = new bootstrap.Modal(document.getElementById('invitationMessage-modal'), {
+                    keyboard: false
+                  })
+                  document.getElementById('invitationMessageSender').innerHTML = sender + " sent you an pvp invitation";
+                  challengeModal.show();
+                  
+                  document.getElementById('acceptPvpInvitation').value = sender;
+                  document.getElementById('rejectPvpInvitation').value = sender;
             }
             else if(type == "challenge sent") {
+                // you have sent to the player 
+                var rejectedModal = new bootstrap.Modal(document.getElementById('sentInvitation-modal'), {
+                    keyboard: false
+                  })
+                  document.getElementById('invitationMessageReceiver').innerHTML = "The invitation has been sent!";
                 
+                  rejectedModal.show();
             }
             else if(type == "challenge accepted") {
-    
+                // just head to the pvp page
             }
             else if(type == "challenge rejected") {
-    
+                var rejectedModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+                    keyboard: false
+                  })
+                
+                  rejectedModal.show();
             }
         }
     }

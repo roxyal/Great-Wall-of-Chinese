@@ -284,6 +284,7 @@ class Student
                     $assigned_assignment_str = $assigned_assignment_str.'|';
                 $count = $count + 1;
             }
+
             return $assigned_assignment_str;
         }
         else

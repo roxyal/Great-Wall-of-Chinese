@@ -17,6 +17,13 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
+function acceptInvitation(sender){
+    socket.send('/accept ' + sender);
+}
+function rejectInvitation(sender){
+    socket.send('/reject ' + sender);
+}
+
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
@@ -253,35 +260,35 @@ function saveCustomLevel(){
 // viewing custom level
 let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
 viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
-var table = document.getElementById("viewCustomLevel");
-var rowsHTML = ""; // initialise empty var to hold html of all the rows
+    var table = document.getElementById("viewCustomLevel");
+    var rowsHTML = ""; // initialise empty var to hold html of all the rows
 
-//link backend here to get a list of custom level names
-var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function(){
-        if (this.readyState == 4 && this.status == 200){
-            // Do something with the response
-            //console.log(this.responseText);
-            
-            // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
-            //1 represents account_id cannot be found, 2 represents server error
-            if (this.responseText.length > 1){
-                // Split the string into an array
-                customNameArray = this.responseText.split(",");
-                for(i=0;i<customNameArray.length;i++){
-                    var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary" data-bs-dismiss="modal">delete</button></td></tr>';
-                    rowsHTML += row; // add in html code
+    //link backend here to get a list of custom level names
+    var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                //console.log(this.responseText);
+                
+                // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
+                //1 represents account_id cannot be found, 2 represents server error
+                if (this.responseText.length > 1){
+                    // Split the string into an array
+                    customNameArray = this.responseText.split(",");
+                    for(i=0;i<customNameArray.length;i++){
+                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary" data-bs-dismiss="modal">delete</button></td></tr>';
+                        rowsHTML += row; // add in html code
+                    }
+                    table.innerHTML = rowsHTML; //set innerhtml code
                 }
-                table.innerHTML = rowsHTML; //set innerhtml code
-            }
-            if(this.responseText === 1 && this.responseText === "1"){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
-            }
-            if(this.responseText === 1 && this.responseText === "2"){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
-            }
-        }   
-    };
+                if(this.responseText === 1 && this.responseText === "1"){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText === 1 && this.responseText === "2"){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }   
+        };
     xmlhttp.open("POST", "../scripts/student", true);
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -290,33 +297,33 @@ var xmlhttp = new XMLHttpRequest();
 
 // deleting custom levels
 function deleteCustomLevel(e){
-let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
-let customLevelName = rowElements.firstChild.innerHTML;
+    let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
+    let customLevelName = rowElements.firstChild.innerHTML;
 
-//console.log(customLevelName)
-// link delete custom level script here, send customLevelName
-// if successful, remove elements
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function(){
-        if (this.readyState == 4 && this.status == 200){
-            // Do something with the response
-            console.log(this.responseText);
-            
-            // the deleteCustomGame has three possible output 0,1,2
-            // 0 represents customGame delete success
-            // 1 Account_id cannot be found, 2 represents server error
-            if(this.responseText.includes(0)){
-                rowElements.remove();
-				document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
-            }
-            if(this.responseText.includes(1)){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
-            }
-            if(this.responseText.includes(2)){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
-            }
-        }   
-    };
+    //console.log(customLevelName)
+    // link delete custom level script here, send customLevelName
+    // if successful, remove elements
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                // Do something with the response
+                console.log(this.responseText);
+                
+                // the deleteCustomGame has three possible output 0,1,2
+                // 0 represents customGame delete success
+                // 1 Account_id cannot be found, 2 represents server error
+                if(this.responseText.includes(0)){
+                    rowElements.remove();
+    				document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
+                }
+                if(this.responseText.includes(1)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                }
+                if(this.responseText.includes(2)){
+                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                }
+            }   
+        };
     xmlhttp.open("POST", "../scripts/student", true);
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
