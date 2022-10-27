@@ -609,8 +609,8 @@ function adventureModeSubmit(e){
   document.getElementById('adventureModeOption4').disabled = true;
 
   adventureModeProgress += 10;
-  document.getElementById('adventureModeProgressBar').innerHTML = document.getElementById('adventureModeProgress') + "%"; // update label of progress bar
-  document.getElementById('adventureModeProgressBar').style.width = document.getElementById('adventureModeProgress') + "%"; // update width of progress bar
+  document.getElementById('adventureModeProgressBar').innerHTML = adventureModeProgress + "%"; // update label of progress bar
+  document.getElementById('adventureModeProgressBar').style.width = adventureModeProgress + "%"; // update width of progress bar
 
   if(adventureModeProgress < 100){
     document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success"; // make next question btn visible if progress is not 100
