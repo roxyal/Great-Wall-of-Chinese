@@ -1,5 +1,11 @@
 // script to be used by all 3 worlds: idiomsWorld.html, hanyuPinyinWorld.html, blanksWorld.html
 
+// to be commented
+var pvpModal = new bootstrap.Modal(document.getElementById('pvpMode-modal'), {});
+pvpModal.show();
+// var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
+// adventureModal.show();
+
 // global variables
 var characterID; // character ID
 var characterUserName; // character username
@@ -554,7 +560,7 @@ function adventureModeSubmit(e){
     adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
   }else{
     adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
-                                        Adventure mode completed
+                                        Adventure mode completed!
                                       </div>`;
   }
 
