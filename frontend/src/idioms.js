@@ -10,7 +10,7 @@ var characterID = await getLoggedInCharacter();
 
 let config = {
     width: 1200,
-    height: 600,
+    height: 500,
     parent: 'idiomWorld',
     physics: {
         default: 'arcade',
