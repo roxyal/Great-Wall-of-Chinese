@@ -17,6 +17,13 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
+function acceptInvitation(sender){
+    socket.send('/accept ' + sender);
+}
+function rejectInvitation(sender){
+    socket.send('/reject ' + sender);
+}
+
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
