@@ -532,7 +532,7 @@ function adventureModeSubmit(e){
     adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
   }else{
     adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
-                                        Adventure mode completed
+                                        Adventure mode completed!
                                       </div>`;
   }
 
