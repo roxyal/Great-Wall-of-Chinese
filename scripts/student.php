@@ -278,7 +278,8 @@ class Student
             while ($row = $result->fetch_assoc())
             {
                 // Concatenate all the customName created by the user into a string format
-                $assigned_assignment_str = "$assigned_assignment_str{$row['assignment_name']},{$row['assignment_id']},{$row['due_timestamp']}";
+                $dueTime = convertIntToDate($row['due_timestamp']);
+                $assigned_assignment_str = "$assigned_assignment_str{$row['assignment_name']},{$row['assignment_id']},{$dueTime}";
 
                 if ($count+1 != $num_rows)
                     $assigned_assignment_str = $assigned_assignment_str.'|';
