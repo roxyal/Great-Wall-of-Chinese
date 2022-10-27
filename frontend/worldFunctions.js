@@ -475,7 +475,7 @@ function assignmentModeSubmit(e){
 	assignmentModeOption4.disabled = true;
 
     let max_qns = assignmentModeProgressBar.value; 
-	assignmentModeProgress += 1/max_qns;
+	assignmentModeProgress += (1/max_qns)*100;
 	assignmentModeProgressBar.innerHTML = assignmentModeProgress + "%"; // update label of progress bar
 	assignmentModeProgressBar.style.width = assignmentModeProgress + "%"; // update width of progress bar
 

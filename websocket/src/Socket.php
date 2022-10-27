@@ -222,7 +222,7 @@ class Socket implements MessageComponentInterface {
                 $rid = intval($client->userinfoID.time());
 
                 // Assign player to a new room
-                $client->currentRoom = array("room" => $rid, "type" => "ass", "asid" => $row["assignment_id"], "qns" => $row["count"], "sessionCorrect" => [], "sessionAttempted" => []);
+                $client->currentRoom = array("room" => $rid, "type" => "ass", "asname" => $assignment, "asid" => $row["assignment_id"], "qns" => $row["count"], "sessionCorrect" => [], "sessionAttempted" => []);
                 // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
                 
                 $sql = "select * from questions_bank where assignment_name like :name order by rand() limit 1";
@@ -287,9 +287,9 @@ class Socket implements MessageComponentInterface {
                     yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
                 }
                 elseif($client->currentRoom["type"] == "ass") { 
-                    $sql = "insert into assignments_log (assignment_room_id, assignment_id, account_id, question_id, answer, timestamp) values (:rid, :asid, :acc_id, :q_id, :ans, :time)"; 
+                    $sql = "insert into assignments_log (assignment_id, account_id, question_id, answer, timestamp) values (:asid, :acc_id, :q_id, :ans, :time)"; 
                     $statement = yield $pool->prepare($sql);
-                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'asid' => $client->currentRoom["asid"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
+                    yield $statement->execute(['asid' => $client->currentRoom["asid"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
                 }
                 elseif($client->currentRoom["type"] == "pvp") {
                     $sql = "insert into pvp_tracking (pvp_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
@@ -302,7 +302,7 @@ class Socket implements MessageComponentInterface {
                 }
                 
                 // Send the result and explanation
-                $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
+                $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}, {$client->currentRoom["type"]}");
 
                 // Send the next question if any
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
@@ -333,7 +333,7 @@ class Socket implements MessageComponentInterface {
 
                     }
                     elseif($client->currentRoom["type"] == "pvp") {
-
+                        
                     }
                     unset($client->currentQuestion);
                     unset($client->currentRoom);
@@ -370,7 +370,8 @@ class Socket implements MessageComponentInterface {
                     }
                     elseif($client->currentRoom["type"] == "ass") {
                         $sql = "select * from questions_bank where assignment_name like :name and question_id not in ($attempted) order by rand() limit 1";
-                        
+                        $statement = yield $pool->prepare($sql);
+                        $result = yield $statement->execute(['name' => $client->currentRoom["asname"]]);
                     }
                     elseif($client->currentRoom["type"] == "pvp") {
 
@@ -380,7 +381,7 @@ class Socket implements MessageComponentInterface {
                     $row = $result->getCurrent();
                     $client->currentQuestion = $row; 
                     $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
-                    $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                    $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
                 }
                 $pool->close();
             });
