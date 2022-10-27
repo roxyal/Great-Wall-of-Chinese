@@ -120,6 +120,16 @@ function create() {
     }
 
     // handling keyboard inputs when modals open/close
+    const customLevelName = document.getElementById('customLevelName');
+    customLevelName.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    // enable w/a/s/d for create custom level
+    customLevelName.addEventListener('keydown', event => {
+        if (event.key === 'w' || event.key === 'a' || event.key === 's' || event.key === 'd') { 
+            customLevelName.value += event.key;
+        };
+    });
 
     const createCustomLevelModal = document.getElementById('createCustomLevel-modal');
     createCustomLevelModal.addEventListener('focus', () => {
