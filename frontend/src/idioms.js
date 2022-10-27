@@ -582,8 +582,32 @@ function showStartAdventureModal(){
 	startAdventureModal.show();
 }
 function showProfileModal(username){
+    var profile_detail = document.getElementById('profile_detail');
+    var view_username = document.getElementById('username');
+    var username_row = "";
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                console.log("NANI");
+		if (this.responseText.length > 2){
+                    username_row += username;
+                   view_username.innerHTML = username_row;  
+                }
+                if (this.responseText.length === 1 && this.responseText === "1"){
+                    console.log("Account_id cannot be detected!");
+                }
+                if (this.responseText.length === 1 && this.responseText === "2"){
+                    console.log("A server error occurred</div>");
+                }
+            }
+	};
+	xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`username=${username}&function_name=viewProfile`);
+        
     var viewProfileModal = new bootstrap.Modal(document.getElementById('viewProfile-modal'), {});
-	viewProfileModal.show();
+        viewProfileModal.show();
 }
 function updateMovement(posX, posY, timer) {
     socket.send(`/move x${posX} y${posY} t${timer}`);
