@@ -582,9 +582,12 @@ function showStartAdventureModal(){
 	startAdventureModal.show();
 }
 function showProfileModal(username){
-    var profile_detail = document.getElementById('profile_detail');
     var view_username = document.getElementById('username');
-    var username_row = "";
+    var view_idioms_acc = document.getElementById('idioms_acc');
+    var view_pinyin_acc = document.getElementById('pinyin_acc');
+    var view_fill_acc = document.getElementById('fill_acc');
+    var view_rank = document.getElementById('rank');
+    
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
@@ -592,9 +595,30 @@ function showProfileModal(username){
                 console.log(this.responseText);
                 console.log(this.responseText.length);
 		if (this.responseText.length > 2){
-                    console.log("SUCCESS");
-                    username_row += username;
-                    view_username.innerHTML = username_row;  
+                    
+                    // Display Username
+                    view_username.innerHTML = username;
+                    
+                    // Split the string using (,)
+                    profile_Array = this.responseText.split(',');
+                    
+                    // Display Idioms_acc
+                    idiom_total_correct = profile_Array[0] + profile_Array[2];
+                    idiom_total_attempted = profile_Array[1] + profile_Array[3];
+                    (idiom_total_attempted > 0 ) ? view_idioms_acc.innerHTML = (Math.round(100*idiom_total_correct/idiom_total_attempted) / 100).toFixed(2) + "%":view_idioms_acc.innerHTML = "0%";
+                    
+                    // Display Pinyin_acc
+                    pinyin_total_correct = profile_Array[4] + profile_Array[6];
+                    pinyin_total_attempted = profile_Array[5] + profile_Array[7];
+                    (pinyin_total_attempted > 0 ) ? view_pinyin_acc.innerHTML = (Math.round(100*pinyin_total_correct/pinyin_total_attempted) / 100).toFixed(2) + "%":view_pinyin_acc.innerHTML = "0%";
+                    
+                    // Display fill_acc
+                    fill_total_correct = profile_Array[8] + profile_Array[10];
+                    fill_total_attempted = profile_Array[9] + profile_Array[11];
+                    (fill_total_attempted > 0 ) ? view_fill_acc.innerHTML = (Math.round(100*fill_total_correct/fill_total_attempted) / 100).toFixed(2) + "%":view_fill_acc.innerHTML = "0%";
+                    
+                    // Display Rank
+                    view_rank.innerHTML = profile_Array[12];
                 }
                 if (this.responseText.length === 1 && this.responseText === "1"){
                     console.log("Account_id cannot be detected!");

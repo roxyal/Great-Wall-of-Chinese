@@ -251,12 +251,12 @@ class Student
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
 
-            $viewProfile_str += "{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
-                            {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
-                            {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
-                            {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
-                            {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
-                            {$row['pinyin_upper_attempted']}";
+            $viewProfile_str = "{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
+                                {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
+                                {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
+                                {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
+                                {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
+                                {$row['pinyin_upper_attempted']},{$rank}";
                             
             return $viewProfile_str;
         }
