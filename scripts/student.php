@@ -279,12 +279,13 @@ class Student
             {
                 // Concatenate all the customName created by the user into a string format
                 $assigned_assignment_str = $assigned_assignment_str.$row['assignment_name'].$comma.
-                        $row['due_timestamp'];
+                        convertIntToDate($row['due_timestamp']);
 
                 if ($count+1 != $num_rows)
                     $assigned_assignment_str = $assigned_assignment_str.'|';
                 $count = $count + 1;
             }
+
             return $assigned_assignment_str;
         }
         else

@@ -349,7 +349,7 @@ xmlhttp.onreadystatechange = function(){
             
             for(i=0;i<assignmentsArray.length;i++){
                 var assignmentArray = assignmentsArray[i].split(",");
-                console.log(assignmentArray[0]);
+                
                 var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)"class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
                 rowsHTML += row; // add in html code
             }

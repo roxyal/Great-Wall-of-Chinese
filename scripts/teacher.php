@@ -230,7 +230,7 @@ class Teacher{
         $assignmentName_str = '';
         
         // sql statement to retrieve all the Assignment's name created by the $teacher_account_id
-        $sql = "SELECT assignment_name FROM assignments WHERE account_id = ?";
+        $sql = "SELECT assignment_name, created_timestamp, due_timestamp FROM assignments WHERE account_id = ?";
         $stmt = $this->conn->prepare($sql);
         
         if( 
@@ -240,13 +240,18 @@ class Teacher{
         ){
             $result = $stmt->get_result();
             $num_rows = $result->num_rows;
+            
             $count = 0;
+            $comma = ',';
             while ($row = $result->fetch_assoc())
             {
                 // Concatenate all the AssignmentName created by the user into a string format
-                $assignmentName_str = $assignmentName_str.$row['assignment_name'];
+                $assignmentName_str = $assignmentName_str.$row['assignment_name'].$comma.
+                convertIntToDate($row['created_timestamp']).$comma.
+                convertIntToDate($row['due_timestamp']);;
+
                 if ($count+1 != $num_rows)
-                    $assignmentName_str = $assignmentName_str.',';
+                    $assignmentName_str = $assignmentName_str.'|';
                 $count = $count + 1;
             }
             return $assignmentName_str;
