@@ -602,6 +602,7 @@ function showProfileModal(username){
                     // Split the string using (,)
                     profile_Array = this.responseText.split(',');
                     
+                    console.log(profile_Array);
                     // Display Idioms_acc
                     idiom_total_correct = profile_Array[0] + profile_Array[2];
                     idiom_total_attempted = profile_Array[1] + profile_Array[3];
