@@ -24,7 +24,7 @@
             <a class="nav-item nav-link my-0" href='world_selection.html'>Change World</a>
             <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#createCustomLevel-modal">Create custom level</a>
             <a class="nav-item nav-link my-0" href='#' data-bs-toggle="modal" data-bs-target="#viewCustomLevel-modal">View custom level</a>
-            <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#viewAssignment-modal">Assignments</a>
+            <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#viewAssignment-modal" id="assignmentNotification"></a>
             <a class="nav-item nav-link my-0" href="#" data-bs-toggle="modal" data-bs-target="#leaderboard-modal">Leaderboard</a>
           </div>
         </div>
@@ -276,18 +276,18 @@
                     </div>
                     <div class="row mt-5 text-center">
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="assignmentModeOption1" type="button" class="btn btn-primary">This is Option 1</button>
+                        <button id="assignmentModeOption1" type="button" onclick="assignmentModeSubmit(event)" value="1" class="btn btn-primary">This is Option 1</button>
                       </div>
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="assignmentModeOption2" type="button" class="btn btn-primary">This is Option 2</button>
+                        <button id="assignmentModeOption2" type="button" onclick="assignmentModeSubmit(event)" value="2" class="btn btn-primary">This is Option 2</button>
                       </div>
                     </div>
                     <div class="row mt-3 text-center">
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="assignmentModeOption3" type="button" class="btn btn-primary">This is Option 3</button>
+                        <button id="assignmentModeOption3" type="button" onclick="assignmentModeSubmit(event)" value="3" class="btn btn-primary">This is Option 3</button>
                       </div>
                       <div class="d-grid gap-2 col-6 mx-auto">
-                        <button id="assignmentModeOption4" type="button" class="btn btn-primary">This is Option 4</button>
+                        <button id="assignmentModeOption4" type="button" onclick="assignmentModeSubmit(event)" value="4" class="btn btn-primary">This is Option 4</button>
                       </div>
                     </div>
                     <div class="row mt-5">
@@ -571,6 +571,54 @@
     </div>
     <!--Logout Modal ends here--> 
 
+    <div class="modal fade" id="viewProfile-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header justify-content-center">
+                  <h4 class="modal-title" id="viewProfile"></h4>
+              </div>
+              <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                      <div class="col col-md-9 col-lg-7 col-xl-5">
+                        <div class="card" style="border-radius: 15px;">
+                          <div class="card-body p-4">
+                            <div class="d-flex text-black">
+                              <div class="flex-shrink-0">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                  alt="Generic placeholder image" class="img-fluid"
+                                  style="width: 180px; border-radius: 10px;">
+                              </div>
+                              <div class="flex-grow-1 ms-3">
+                                <h5 class="mb-1">Danny McLoan</h5>
+                                <p class="mb-2 pb-1" style="color: #2b2a2a;">Senior Journalist</p>
+                                <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                  style="background-color: #efefef;">
+                                <table class="table table-bordered table-light">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Idioms %</th>
+                                        <th scope="col">Pinyin %</th>
+                                        <th scope="col">Fill in the blanks</th>
+                                      </tr>
+                                    </thead>
+                                </table>
+                                </div>
+                                <div class="d-flex pt-1">
+                                  <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                                  <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script type="module" src="src/idioms.js"></script>
 </body>
 <script src="worldFunctions.js"></script>

@@ -23,11 +23,65 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
+var questionQueue;
+
 function acceptInvitation(sender){
     socket.send('/accept ' + sender);
 }
 function rejectInvitation(sender){
     socket.send('/reject ' + sender);
+}
+
+function updateAssignmentNotification(){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){
+            if (this.responseText.length === 0) document.getElementById('assignmentNotification').innerHTML = "Assignment";
+            if (this.responseText.length > 1){
+                var assignmentsArray = this.responseText.split("|");
+                document.getElementById('assignmentNotification').innerHTML = "Assignment [" + assignmentsArray.length + "]";
+                document.getElementById('assignmentNotification').style.color = "#ff0000";
+            }
+            if(this.responseText.length === 1 && this.responseText === "1"){
+                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+            }
+            if(this.responseText.length === 1 && this.responseText === "2"){
+                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+            }
+        }   
+    };
+    xmlhttp.open("POST", "../scripts/student", true);
+    // Request headers required for a POST request
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
+}
+
+var viewProfileModal = document.getElementById('viewProfile-modal');
+var username = document.getElementById('username');
+var idioms = document.getElementById('idioms');
+var pinyin = document.getElementById('pinyin');
+var fill = document.getElementById('fill');
+
+function viewProfile(username){
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+		if (this.responseText.length > 2){
+                    viewProfileArray = this.responseText.split(",");
+                    console.log(viewProfileArray);
+                }
+                if (this.responseText.length === 1 && this.responseText === "1"){
+                    console.log("Account_id cannot be detected!");
+                }
+                if (this.responseText.length === 1 && this.responseText === "2"){
+                    console.log("A server error occurred</div>");
+                }
+            }
+	};
+	xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`username=${username}&function_name=viewProfile`);
 }
 
 function getLoggedInCharacter() {
@@ -75,9 +129,7 @@ async function getCharacterName(){
 
 getCharacterID(); // call function to get characterID
 getCharacterName(); // call function to get character username
-
-
-
+updateAssignmentNotification(); // call function to get the number of assigned notification
 
 
 // LEADER BOARD
@@ -414,7 +466,7 @@ function assignmentModeSubmit(e){
 	var selectedAnswer = e.srcElement.value; //selected answer
 	console.log(selectedAnswer);
 
-	//socket.send("/answer "+selectedAnswer);
+	socket.send("/answer "+selectedAnswer);
 
 	//disabling all option buttons
 	assignmentModeOption1.disabled = true;
@@ -422,20 +474,45 @@ function assignmentModeSubmit(e){
 	assignmentModeOption3.disabled = true;
 	assignmentModeOption4.disabled = true;
 
-	assignmentModeProgress += 10;
+    let max_qns = assignmentModeProgressBar.value; 
+	assignmentModeProgress += 1/max_qns;
 	assignmentModeProgressBar.innerHTML = assignmentModeProgress + "%"; // update label of progress bar
 	assignmentModeProgressBar.style.width = assignmentModeProgress + "%"; // update width of progress bar
 
 	if(assignmentModeProgress < 100){
 		assignmentModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
-	}
+	} else {
+        adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+                                        Assignment completed!
+                                      </div>`;
+    }
 }
 
-function assignmentModeLoadNextQuestion(){}
+function assignmentModeLoadNextQuestion(){
+    return new Promise(function(resolve) {
+        assignmentModeCurrentQn += 1;
+        assignmentModeQuestionNo.innerHTML = "Question " + assignmentModeCurrentQn;
 
+        assignmentModeNextQuestionBtn.classList.add("invisible");
+
+        assignmentModeOption1.disabled = false;
+        assignmentModeOption2.disabled = false;
+        assignmentModeOption3.disabled = false;
+        assignmentModeOption4.disabled = false;
+
+        assignmentModeExplanation.innerHTML = "";
+        
+        if(questionQueue) {
+            assignmentModeQuestion.innerHTML = questionQueue[0];
+            for(let i=1; i<=4; i++) {
+                document.getElementById('assignmentModeOption'+i).innerHTML = questionQueue[i];
+            }
+          }
+    });
+}
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
 // when modal opens, load the first question
-assignmentModeModal.addEventListener('show.bs.modal', function (event){
+assignmentModeModal.addEventListener('show.bs.modal', async function (event){
 	// set starting values
 	assignmentModeProgress = 0; // progress in terms of percentage, starts at 0
 	assignmentModeQnCorrect = 0; // num of questions correct, starts at 0
@@ -470,6 +547,7 @@ assignmentModeModal.addEventListener('show.bs.modal', function (event){
 	}
 
 	// load first question here
+    await assignmentModeLoadNextQuestion();
 })
 
 
@@ -562,7 +640,6 @@ function adventureModeSubmit(e){
   //                                     </div>
   //                                    `;      
 }
-var questionQueue;
 // function to update modal upon clicking on next button
 function adventureModeLoadNextQuestion(){
 return new Promise(function(resolve) {
