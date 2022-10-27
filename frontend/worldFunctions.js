@@ -11,15 +11,15 @@ var characterID; // character ID
 var characterUserName; // character username
 
 var selectedAdventureSection; 	// the section selected by user to attempt adventure mode in: lower pri/upper pri
-var adventureModeProgress; 		// progress in terms of percentage, starts at 0%
-var adventureModeQnCorrect; 	// num of questions correct, starts at 0
-var adventureModeQnAttempted; 	// num of questions attempted, starts at 0
-var adventureModeCurrentQn; 	// current question number, starts at 1
+// var adventureModeProgress = 0; 		// progress in terms of percentage, starts at 0%
+// var adventureModeQnCorrect = 0; 	// num of questions correct, starts at 0
+// var adventureModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+// var adventureModeCurrentQn = 0; 	// current question number, starts at 1
 
-var assignmentModeProgress; 	// progress in terms of percentage, starts at 0%
-var assignmentModeQnCorrect; 	// num of questions correct, starts at 0
-var assignmentModeQnAttempted; 	// num of questions attempted, starts at 0
-var assignmentModeCurrentQn; 	// current question number, starts at 1
+// var assignmentModeProgress = 0; 	// progress in terms of percentage, starts at 0%
+// var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
+// var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+// var assignmentModeCurrentQn = 0; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
@@ -609,8 +609,8 @@ function adventureModeSubmit(e){
   document.getElementById('adventureModeOption4').disabled = true;
 
   adventureModeProgress += 10;
-  document.getElementById('adventureModeProgressBar').innerHTML = document.getElementById('adventureModeProgress') + "%"; // update label of progress bar
-  document.getElementById('adventureModeProgressBar').style.width = document.getElementById('adventureModeProgress') + "%"; // update width of progress bar
+  document.getElementById('adventureModeProgressBar').innerHTML = adventureModeProgress + "%"; // update label of progress bar
+  document.getElementById('adventureModeProgressBar').style.width = adventureModeProgress + "%"; // update width of progress bar
 
   if(adventureModeProgress < 100){
     document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success"; // make next question btn visible if progress is not 100
@@ -655,6 +655,7 @@ function adventureModeLoadNextQuestion(){
         // reenable all option buttons so they can answer new question
 
         // update current question label
+        console.log("added +1 to qn");
         adventureModeCurrentQn += 1;
         document.getElementById('adventureModeQuestionNo').innerHTML = "Question " + adventureModeCurrentQn;
 
@@ -685,10 +686,10 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
     console.log('OPENING ADVENTURE MODE MODAL')
 
 	// set starting values
-	adventureModeProgress = 0; // progress in terms of percentage, starts at 0
-	adventureModeQnCorrect = 0; // num of questions correct, starts at 0
-	adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
-	adventureModeCurrentQn = 0; // current question number, starts at 1
+	// adventureModeProgress = 0; // progress in terms of percentage, starts at 0
+	// adventureModeQnCorrect = 0; // num of questions correct, starts at 0
+	// adventureModeQnAttempted = 0; // num of questions attempted, starts at 0
+	// adventureModeCurrentQn = 0; // current question number, starts at 1
 
 	document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success invisible"; // make next question btn invisible
 	document.getElementById('adventureModeExplanation').innerHTML = ""; // make explanation blank

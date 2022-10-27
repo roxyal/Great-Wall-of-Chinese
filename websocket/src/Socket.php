@@ -301,6 +301,8 @@ class Socket implements MessageComponentInterface {
                     return;
                 }
                 
+                $correct = $correct ? 1 : 0;
+
                 // Send the result and explanation
                 $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}, {$client->currentRoom["type"]}");
 

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Great Wall of Chinese</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
-    <script type="module" src="src/hanyuPinyin.js"></script>
 
     <!-- Booststrap (CSS) assets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -186,6 +185,7 @@
     </div>
   </div>
   <!--View assignment Modal ends here-->
+
     <!--invitationMessage Modal starts here-->
     <div class="modal fade" id="invitationMessage-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -224,7 +224,7 @@
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header justify-content-center">
-            <h4 class="modal-title" id="modal-title">Your invitation got rejected :(</h4>
+            <h4 class="modal-title" id="reject-modal-title">Your invitation got rejected :(</h4>
           </div>
           <div class="modal-footer justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -275,18 +275,18 @@
                   </div>
                   <div class="row mt-5 text-center">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="assignmentModeOption1" type="button" class="btn btn-primary">This is Option 1</button>
+                      <button id="assignmentModeOption1" type="button" onclick="assignmentModeSubmit(event)" value="1" class="btn btn-primary">This is Option 1</button>
                     </div>
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="assignmentModeOption2" type="button" class="btn btn-primary">This is Option 2</button>
+                      <button id="assignmentModeOption2" type="button" onclick="assignmentModeSubmit(event)" value="2" class="btn btn-primary">This is Option 2</button>
                     </div>
                   </div>
                   <div class="row mt-3 text-center">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="assignmentModeOption3" type="button" class="btn btn-primary">This is Option 3</button>
+                      <button id="assignmentModeOption3" type="button" onclick="assignmentModeSubmit(event)" value="3" class="btn btn-primary">This is Option 3</button>
                     </div>
                     <div class="d-grid gap-2 col-6 mx-auto">
-                      <button id="assignmentModeOption4" type="button" class="btn btn-primary">This is Option 4</button>
+                      <button id="assignmentModeOption4" type="button" onclick="assignmentModeSubmit(event)" value="4" class="btn btn-primary">This is Option 4</button>
                     </div>
                   </div>
                   <div class="row mt-5">
@@ -446,7 +446,7 @@
                   </div>
                   <div class="row mt-3">
                      <div class="col text-center">
-                       <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
+                       <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestionBtn">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
                      </div>
                   </div>
                 </div>
@@ -481,6 +481,8 @@
       </div>
   </div>
   <!--Logout Modal ends here-->
+
+  <script type="module" src="src/hanyuPinyin.js"></script>
 </body>
 <script src="worldFunctions.js"></script>
 <script>
@@ -488,6 +490,15 @@
   var spawn; 
   var moving;
   var destroy;
+  var adventureModeProgress = 0; 		// progress in terms of percentage, starts at 0%
+  var adventureModeQnCorrect = 0; 	// num of questions correct, starts at 0
+  var adventureModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+  var adventureModeCurrentQn = 1; 	// current question number, starts at 1
+
+  var assignmentModeProgress = 0; 	// progress in terms of percentage, starts at 0%
+  var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
+  var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+  var assignmentModeCurrentQn = 1; 	// current question number, starts at 1
 </script>
 <script type="module" src="../websocket/socket.js"></script>
 </html>
