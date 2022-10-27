@@ -191,6 +191,75 @@ class Socket implements MessageComponentInterface {
             });
         }
 
+        // Start assignment mode
+        if(preg_match_all("/^\/assignment (.+)/", $msg, $matches)) {
+            $section = strtolower($matches[1][0]); // lower or upper
+
+            // Make the player unavailable for pvp
+            $client->pvpStatus = ["Playing", ""];
+
+            \Amp\Loop::run(function() use ($client, $section) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+                
+                // Get the client's accuracy data
+                $statement = yield $pool->prepare("select * from students where student_id = :id");
+
+                $result = yield $statement->execute(['id' => $client->userinfoID]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $resetdate = $row["{$client->userinfoWorld}_{$section}_reset_date"];
+
+                // The reset date saved in db is the date at which the scores will be reset. Attempting adventure before this reset date will change the reset date to 2 days from the attempt. 
+                if(time() > $resetdate) {
+                    // Reset the scores
+                    $correct = 0;
+                    $attempted = 0;
+                    $accuracy = 0;
+                }
+                else {
+                    $correct = $row["{$client->userinfoWorld}_{$section}_correct"];
+                    $attempted = $row["{$client->userinfoWorld}_{$section}_attempted"];
+                    $accuracy = $correct / $attempted;
+                }
+                
+                // Create the room id from <userid><timestamp> to be unique. These values won't ever be extracted from the room id, it is only used as an identifier. 
+                $rid = intval($client->userinfoID.time());
+
+                // Assign player to a new room
+                $client->currentRoom = array("room" => $rid, "type" => "adv", "section" => $section, "totalCorrect" => $correct, "totalAttempted" => $attempted, "sessionCorrect" => [], "sessionAttempted" => []);
+                // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
+                
+                if($accuracy < 0.5) {
+                    // Give easy question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' order by rand() limit 1";
+                }
+                elseif($accuracy < 0.75) {
+                    // Give medium question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' order by rand() limit 1";
+                }
+                else {
+                    // Give hard question
+                    $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                }
+
+                $statement = yield $pool->prepare($sql);
+                $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "$section Pri"]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+
+                $client->currentQuestion = $row;
+                $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+
+                $pool->close();
+            });
+        }
+
         // Mark client's answer
         if(preg_match_all("/^\/answer (\d)/", $msg, $matches)) {
             // Check game mode 
