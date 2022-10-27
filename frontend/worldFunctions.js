@@ -632,6 +632,7 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	default:
 	    console.log("Something went wrong in player creation in create()");
 	}
-	  // load first question here
-	  await adventureModeLoadNextQuestion();
+
+	// load first question here
+	await adventureModeLoadNextQuestion();
 })
