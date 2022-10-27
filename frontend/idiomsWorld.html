@@ -391,7 +391,6 @@
         <div class="modal-dialog modal-fullscreen">
           <div class="modal-content">
             <div class="modal-body">
-              
                 <h1 class="text-center">Idioms' adventure</h1>
                 <div class="row justify-content-center">
                   <div class="col-2" style="margin-top: 5%;" id="characterAvatarAdventure"></div>
@@ -453,7 +452,6 @@
                     </div>
                   </div>
                 </div>
-               
             </div>
             <div class="modal-footer justify-content-center">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit adventure mode</button>
@@ -627,6 +625,15 @@
   var spawn; 
   var moving;
   var destroy;
+  var adventureModeProgress = 0; 		// progress in terms of percentage, starts at 0%
+  var adventureModeQnCorrect = 0; 	// num of questions correct, starts at 0
+  var adventureModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+  var adventureModeCurrentQn = 1; 	// current question number, starts at 1
+
+  var assignmentModeProgress = 0; 	// progress in terms of percentage, starts at 0%
+  var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
+  var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+  var assignmentModeCurrentQn = 1; 	// current question number, starts at 1
 </script>
 <script type="module" src="../websocket/socket.js"></script>
 </html>

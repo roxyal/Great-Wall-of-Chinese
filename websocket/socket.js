@@ -137,28 +137,28 @@ generateSocketAuth().then(result => {
             let mode = e.data.match(pattern)[1];
             if(mode == "adv") {
                 console.log(adventureModeCurrentQn);
-                if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
-                    let question = e.data.match(pattern)[2].split(",");
+                if(adventureModeCurrentQn == 1 && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
+                    let question = e.data.match(pattern)[2].split(", ");
                     document.getElementById('adventureModeQuestion').innerHTML = question[0];
                     for(let i=1; i<=4; i++) {
                         document.getElementById('adventureModeOption'+i).innerHTML = question[i];
                     }
                     return;
                 }
-                questionQueue = e.data.match(pattern)[2].split(",");
+                questionQueue = e.data.match(pattern)[2].split(", ");
             }
             else if(/ass-(\d+)/.test(mode)) {
                 let max_qns = parseInt(mode.match(/ass-(\d+)/)[1]);
                 assignmentModeProgressBar.value = max_qns;
-                if(assignmentModeCurrentQn == "1" && document.getElementById('assignmentModeNextQuestion').classList.contains("invisible")) {
-                    let question = e.data.match(pattern)[2].split(",");
+                if(assignmentModeCurrentQn == 1 && document.getElementById('assignmentModeNextQuestion').classList.contains("invisible")) {
+                    let question = e.data.match(pattern)[2].split(", ");
                     assignmentModeQuestion.innerHTML = question[0];
                     for(let i=1; i<=4; i++) {
                         document.getElementById('assignmentModeOption'+i).innerHTML = question[i];
                     }
                     return;
                 }
-                questionQueue = e.data.match(pattern)[2].split(",");
+                questionQueue = e.data.match(pattern)[2].split(", ");
             }
             else if(mode == "pvp") {
                 
@@ -172,8 +172,8 @@ generateSocketAuth().then(result => {
             if(answer[3] == "adv") {
                 adventureModeQnAttempted += 1
                 if(answer[0]) adventureModeQnCorrect += 1
-                adventureModeScore.innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
-                adventureModeExplanation.innerHTML = `
+                document.getElementById('adventureModeScore').innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
+                document.getElementById('adventureModeExplanation').innerHTML = `
                     <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
                     <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
                     <p>The answer is ${answer[1]}</p>
