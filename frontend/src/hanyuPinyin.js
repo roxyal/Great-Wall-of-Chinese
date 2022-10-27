@@ -120,6 +120,72 @@ function create() {
         }
     }
 
+    // handling keyboard inputs when modals open/close
+
+    const createCustomLevelModal = document.getElementById('createCustomLevel-modal');
+    createCustomLevelModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    createCustomLevelModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
+    viewCustomLevelModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    viewCustomLevelModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const viewAssignmentModal = document.getElementById('viewAssignment-modal');
+    viewAssignmentModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    viewAssignmentModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const assignmentModal = document.getElementById('assignmentMode-modal');
+    assignmentModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    assignmentModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const startAdventureModal = document.getElementById('startAdventureMode-modal');
+    startAdventureModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    startAdventureModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const adventureModal = document.getElementById('adventureMode-modal');
+    adventureModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    adventureModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const leaderboardModal = document.getElementById('leaderboard-modal');
+    leaderboardModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    leaderboardModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
+    const logOutModal = document.getElementById('logout-modal');
+    logOutModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+    });
+    logOutModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+    });
+
     // Create animations for characters
     this.anims.create({
         key: "huntressIdle",
