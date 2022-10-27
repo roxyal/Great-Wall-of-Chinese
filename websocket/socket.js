@@ -131,7 +131,7 @@ generateSocketAuth().then(result => {
         }
 
         // question handler
-        var pattern = /^\[question\] (...[-\d+]?): (.+)/;
+        var pattern = /^\[question\] (.+): (.+)/;
         if(pattern.test(e.data)) {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
             let mode = e.data.match(pattern)[1];
@@ -146,7 +146,7 @@ generateSocketAuth().then(result => {
                 }
                 questionQueue = e.data.match(pattern)[2].split(",");
             }
-            else if(mode.includes("ass")) {
+            else if(/ass-(\d+)/.test(mode)) {
                 let max_qns = parseInt(mode.match(/ass-(\d+)/)[1]);
                 assignmentModeProgressBar.value = max_qns;
                 if(assignmentModeCurrentQn == "1" && document.getElementById('assignmentModeNextQuestion').classList.contains("invisible")) {
@@ -167,18 +167,36 @@ generateSocketAuth().then(result => {
 
         if(/^\[answer\] (.+)/.test(e.data)) {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split(",");
-            // [correct 1|0, correct answer, explanation]
-            adventureModeQnAttempted += 1
-            if(answer[0]) adventureModeQnCorrect += 1
-            adventureModeScore.innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
-            adventureModeExplanation.innerHTML = `
-                <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
-                <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
-                <p>The answer is ${answer[1]}</p>
-                <hr>
-                <p class="mb-0">${answer[2]}</p>
-                </div>
-            `;
+            // [correct 1|0, correct answer, explanation, mode]
+            if(answer[3] == "adv") {
+                adventureModeQnAttempted += 1
+                if(answer[0]) adventureModeQnCorrect += 1
+                adventureModeScore.innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
+                adventureModeExplanation.innerHTML = `
+                    <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
+                    <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
+                    <p>The answer is ${answer[1]}</p>
+                    <hr>
+                    <p class="mb-0">${answer[2]}</p>
+                    </div>
+                `;
+            }
+            else if(answer[3] == "ass") {
+                assignmentModeQnAttempted += 1
+                if(answer[0]) assignmentModeQnCorrect += 1
+                assignmentModeScore.innerHTML = assignmentModeQnCorrect + "/" + assignmentModeQnAttempted;
+                assignmentModeExplanation.innerHTML = `
+                    <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
+                    <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
+                    <p>The answer is ${answer[1]}</p>
+                    <hr>
+                    <p class="mb-0">${answer[2]}</p>
+                    </div>
+                `;
+            }
+            else if(answer[3] == "pvp") {
+                
+            }
         }
 
         // message will come in the format:
