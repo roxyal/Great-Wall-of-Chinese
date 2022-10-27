@@ -1,5 +1,11 @@
 // script to be used by all 3 worlds: idiomsWorld.html, hanyuPinyinWorld.html, blanksWorld.html
 
+var pvpModal = new bootstrap.Modal(document.getElementById('pvpMode-modal'), {});
+pvpModal.show();
+
+// var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
+// adventureModal.show();
+
 // global variables
 var characterID; // character ID
 var characterUserName; // character username
