@@ -32,6 +32,58 @@ function rejectInvitation(sender){
     socket.send('/reject ' + sender);
 }
 
+function updateAssignmentNotification(){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){
+            if (this.responseText.length === 0) document.getElementById('assignmentNotification').innerHTML = "Assignment";
+            if (this.responseText.length > 1){
+                var assignmentsArray = this.responseText.split("|");
+                document.getElementById('assignmentNotification').innerHTML = "Assignment [" + assignmentsArray.length + "]";
+                document.getElementById('assignmentNotification').style.color = "#ff0000";
+            }
+            if(this.responseText.length === 1 && this.responseText === "1"){
+                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+            }
+            if(this.responseText.length === 1 && this.responseText === "2"){
+                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+            }
+        }   
+    };
+    xmlhttp.open("POST", "../scripts/student", true);
+    // Request headers required for a POST request
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
+}
+
+var viewProfileModal = document.getElementById('viewProfile-modal');
+var username = document.getElementById('username');
+var idioms = document.getElementById('idioms');
+var pinyin = document.getElementById('pinyin');
+var fill = document.getElementById('fill');
+
+function viewProfile(username){
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+		if (this.responseText.length > 2){
+                    viewProfileArray = this.responseText.split(",");
+                    console.log(viewProfileArray);
+                }
+                if (this.responseText.length === 1 && this.responseText === "1"){
+                    console.log("Account_id cannot be detected!");
+                }
+                if (this.responseText.length === 1 && this.responseText === "2"){
+                    console.log("A server error occurred</div>");
+                }
+            }
+	};
+	xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`username=${username}&function_name=viewProfile`);
+}
+
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
@@ -77,9 +129,7 @@ async function getCharacterName(){
 
 getCharacterID(); // call function to get characterID
 getCharacterName(); // call function to get character username
-
-
-
+updateAssignmentNotification(); // call function to get the number of assigned notification
 
 
 // LEADER BOARD

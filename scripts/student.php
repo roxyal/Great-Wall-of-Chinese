@@ -24,8 +24,12 @@ if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAssignedAss
 
 // Trigger deleteCustomGame
 if(isset($_POST["customLevelName"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "deleteCustomGame"){
-    echo $_POST["customLevelName"];
     echo $student->deleteCustomGame($account_id, $_POST["customLevelName"]);
+}
+
+// Trigger viewProfile
+if(isset($_POST["username"]) && isset($_POST["function_name"]) && $_POST["function_name"] == "viewProfile"){
+    echo $student->viewProfile($_POST["username"]);
 }
 
 // A Student class that holds all the function needed for students
@@ -223,25 +227,39 @@ class Student
     // Outputs: Upon success, will return a list of information of the player that you want view
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
-    public function viewProfile(int $account_id)
+    public function viewProfile(string $viewPlayerName)
     {
+        // Retrieve account_id using SESSION
+        $account_id = getLoggedInAccountId();
+        
         // Check to see if player that you want view is valid
         if (!checkAccountIdExists($account_id)) return 1;
         
-        $sql = "SELECT student_id, character_type, idiom_lower_accuracy, idiom_upper_accuracy,
-        fill_lower_accuracy, fill_upper_accuracy, pinyin_lower_accuracy,
-        pinyin_upper_accuracy,name FROM students s LEFT JOIN accounts a ON a.account_id = s.student_id WHERE s.student_id = ?";
+        // variable of the viewProfile information
+        $viewProfile_str = '';
+        $sql = "SELECT a.username, s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
+                 s.fill_lower_correct, s.fill_lower_attempted, s.fill_upper_correct, s.fill_upper_attempted,
+                 s.pinyin_lower_correct, s.pinyin_lower_attempted, s.pinyin_upper_correct, s.pinyin_upper_attempted
+                 FROM students s INNER JOIN accounts a ON s.student_id = a.account_id WHERE a.username = ?";
         
         $stmt = $this->conn->prepare($sql);
-        
         if( 
-            $stmt->bind_param('i', $account_id) &&
+            $stmt->bind_param('s', $viewPlayerName) &&
             $stmt->execute()
         ){
             $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            
-            return $row;
+
+            while ($row = $result->fetch_assoc())
+            {
+                $viewProfile_str = "{$viewProfile_str},{$row['name']},
+                                {$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
+                                {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
+                                {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
+                                {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
+                                {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
+                                {$row['pinyin_upper_attempted']}";
+            }
+            return $viewProfile_str;
         }
         else
         {
@@ -255,8 +273,11 @@ class Student
     // Outputs: Upon success, will return a list of assignments assigned to the student
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
-    public function viewAssignedAssignment(int $account_id)
+    public function viewAssignedAssignment()
     {
+        // Retrieve account_id using SESSION
+        $account_id = getLoggedInAccountId();
+        
         // Check to see if player that you want view is valid
         if (!checkAccountIdExists($account_id)) return 1;
         
