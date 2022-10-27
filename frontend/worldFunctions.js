@@ -597,17 +597,17 @@ function adventureModeSubmit(e){
   socket.send("/answer "+selectedAnswer);
 
   //disabling all option buttons
-  adventureModeOption1.disabled = true;
-  adventureModeOption2.disabled = true;
-  adventureModeOption3.disabled = true;
-  adventureModeOption4.disabled = true;
+  document.getElementById('adventureModeOption1').disabled = true;
+  document.getElementById('adventureModeOption2').disabled = true;
+  document.getElementById('adventureModeOption3').disabled = true;
+  document.getElementById('adventureModeOption4').disabled = true;
 
   adventureModeProgress += 10;
-  adventureModeProgressBar.innerHTML = adventureModeProgress + "%"; // update label of progress bar
-  adventureModeProgressBar.style.width = adventureModeProgress + "%"; // update width of progress bar
+  document.getElementById('adventureModeProgressBar').innerHTML = document.getElementById('adventureModeProgress') + "%"; // update label of progress bar
+  document.getElementById('adventureModeProgressBar').style.width = document.getElementById('adventureModeProgress') + "%"; // update width of progress bar
 
   if(adventureModeProgress < 100){
-    adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
+    document.getElementById('adventureModeNextQuestionBtn').className = "btn btn-success"; // make next question btn visible if progress is not 100
   }else{
     adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
                                         Adventure mode completed!
