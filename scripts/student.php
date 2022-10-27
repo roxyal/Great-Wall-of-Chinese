@@ -256,7 +256,7 @@ class Student
                                 {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
                                 {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
                                 {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
-                                {$row['pinyin_upper_attempted']},{$rank}";
+                                {$row['pinyin_upper_attempted']},{$row['rank']}";
                             
             return $viewProfile_str;
         }
