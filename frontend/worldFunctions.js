@@ -17,6 +17,13 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
+function acceptInvitation(sender){
+    socket.send('/accept ' + sender);
+}
+function rejectInvitation(sender){
+    socket.send('/reject ' + sender);
+}
+
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
@@ -350,15 +357,15 @@ xmlhttp.onreadystatechange = function(){
             for(i=0;i<assignmentsArray.length;i++){
                 var assignmentArray = assignmentsArray[i].split(",");
                 console.log(assignmentArray[0]);
-                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[1] + '</td><td><button onclick="openAssignment(event)"class="btn btn-primary" data-bs-dismiss="modal">Attempt</button></td></tr>';
+                var row = '<tr><td>' + assignmentArray[0] + '</td><td>' + assignmentArray[2] + '</td><td><button onclick="openAssignment(event)"class="btn btn-primary" data-bs-dismiss="modal" value='+assignmentArray[1]+'>Attempt</button></td></tr>';
                 rowsHTML += row; // add in html code
             }
             table.innerHTML = rowsHTML; //set innerhtml code
         }
-        if(this.responseText === 1 && this.responseText === "1"){
+        if(this.responseText.length === 1 && this.responseText === "1"){
             document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
         }
-        if(this.responseText === 1 && this.responseText === "2"){
+        if(this.responseText.length === 1 && this.responseText === "2"){
             document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
         }
     }   
@@ -372,12 +379,16 @@ xmlhttp.onreadystatechange = function(){
 // opening assignment modal
 function openAssignment(e){
 	let assignmentName = e.srcElement.parentElement.parentElement.firstChild.innerHTML;
+    let assignmentID = e.srcElement.value;
 	console.log(assignmentName);
+    // console.log(assignmentID);
 
 	var assignmentModal = new bootstrap.Modal(document.getElementById('assignmentMode-modal'), {});
     assignmentModal.show();
 
 	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
+
+    socket.send("/assignment "+assignmentName);
 }
 
 // get all the components in the assignment mode modal

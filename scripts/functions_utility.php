@@ -100,6 +100,11 @@ function convertDateToInt($date){
     return $int_date; 
 }
 
+function convertIntToDate($int_date){
+    $str_date = date("Y-m-d H:i:s", $int_date);
+    return $str_date;
+}
+
 if(isset($_GET["func"])) {
     try {
         echo call_user_func("getLoggedIn{$_GET["func"]}");

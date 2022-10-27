@@ -32,7 +32,7 @@
               <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
           </form>
       </nav>
-    <div id="idiomWorld"></div>
+    <div id="idiomWorld" style="height: 95%;"></div>
 
     <!--Create custom level Modal starts here-->
     <div class="modal fade" id="createCustomLevel-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -186,6 +186,54 @@
       </div>
     </div>
     <!--View assignment Modal ends here-->
+
+    <!--invitationMessage Modal starts here-->
+    <div class="modal fade" id="invitationMessage-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="invitationMessageSender"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body text-center">
+              <button onclick="acceptInvitation(this.value)" id="acceptPvpInvitation" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Accept</button>
+              <button onclick="rejectInvitation(this.value)" id="rejectPvpInvitation" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--invitationMessage Modal ends here-->
+
+    <!--sentInvitation Modal starts here-->
+    <div class="modal fade" id="sentInvitation-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="invitationMessageReceiver"></h4>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--sentInvitation Modal ends here-->
+
+    <!--rejectInvitation Modal starts here-->
+    <div class="modal fade" id="rejectInvitation-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="reject-modal-title">Your invitation got rejected :(</h4>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--sentInvitation Modal ends here-->
 
     <!--Assignment mode Modal starts here-->
     <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -394,12 +442,10 @@
                       </div>
                     </div>
                     <div class="row mt-5">
-                      <div id="adventureModeExplanation" class="col"></div>
+                      <div id="adventureModeExplanation" class="col">
+                      </div>
                     </div>
                     <div class="row mt-3">
-                      <div id="adventureModeComplete" class="col"></div> 
-                    </div>
-                    <div class="row">
                        <div class="col text-center">
                          <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
                        </div>
