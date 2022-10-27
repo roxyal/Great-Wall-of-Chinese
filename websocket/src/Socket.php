@@ -204,7 +204,7 @@ class Socket implements MessageComponentInterface {
             
                 $pool = \Amp\Mysql\pool($config);
 
-                $statement = yield $pool->prepare("select assignments.account_id, assignments.assignment_id, count(*) as count from assignments join questions_bank on assignments.assignment_name = questions_bank.assignment_name where assignment_name = :name");
+                $statement = yield $pool->prepare("select assignments.account_id, assignments.assignment_id, count(*) as count from assignments join questions_bank on assignments.assignment_name = questions_bank.assignment_name where assignments.assignment_name = :name");
                 $result = yield $statement->execute(['name' => $assignment]);
                 yield $result->advance();
                 $row = $result->getCurrent();
@@ -232,7 +232,8 @@ class Socket implements MessageComponentInterface {
                 $row = $result->getCurrent();
 
                 $client->currentQuestion = $row;
-                $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-{$client->currentRoom["qns"]}" : $client->currentRoom["type"];
+                $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
 
                 $pool->close();
             });
@@ -265,14 +266,14 @@ class Socket implements MessageComponentInterface {
                 $pool = \Amp\Mysql\pool($config);
 
                 $roomObject = $client->currentRoom;
-                $roomObject["totalAttempted"]++;
+                if(isset($roomObject["totalAttempted"])) $roomObject["totalAttempted"]++;
                 $roomObject["sessionAttempted"][] = [$client->currentQuestion["question_id"], $answer];
                 $correct = false;
 
                 // Check against client's current question info
                 if($client->currentQuestion["answer"] == $answer) {
                     // Correct
-                    $roomObject["totalCorrect"]++;
+                    if(isset($roomObject["totalCorrect"])) $roomObject["totalCorrect"]++;
                     $roomObject["sessionCorrect"][] = [$client->currentQuestion["question_id"], $answer];
                     $correct = true;
                 }
@@ -328,7 +329,12 @@ class Socket implements MessageComponentInterface {
                         $statement = yield $pool->query($sql);
                         // $statement->execute();
                     }
-                    
+                    elseif($client->currentRoom["type"] == "ass") {
+
+                    }
+                    elseif($client->currentRoom["type"] == "pvp") {
+
+                    }
                     unset($client->currentQuestion);
                     unset($client->currentRoom);
                     
@@ -336,34 +342,45 @@ class Socket implements MessageComponentInterface {
                     $client->pvpStatus = ["Available", "", time()];
                 }
                 else {
-                    $accuracy = $client->currentRoom["totalCorrect"] / $client->currentRoom["totalAttempted"];
                     // Get array of attempted questions within this session
                     $attempted = $client->currentRoom["sessionAttempted"][0][0];
                     for($i = 1; $i<count($client->currentRoom["sessionAttempted"]); $i++) {
                         $attempted .= ", {$client->currentRoom["sessionAttempted"][$i][0]}";
                     }
 
-                    // Send next question
-                    if($accuracy < 0.5) {
-                        // Give easy question
-                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' and question_id not in ($attempted) order by rand() limit 1";
-                    }
-                    elseif($accuracy < 0.75) {
-                        // Give medium question
-                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' and question_id not in ($attempted) order by rand() limit 1";
-                    }
-                    else {
-                        // Give hard question
-                        $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' and question_id not in ($attempted) order by rand() limit 1";
-                    }
+                    if($client->currentRoom["type"] == "adv") {
+                        $accuracy = $client->currentRoom["totalCorrect"] / $client->currentRoom["totalAttempted"];
 
-                    $statement = yield $pool->prepare($sql);
-                    $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "{$client->currentRoom["section"]} Pri"]);
+                        // Send next question
+                        if($accuracy < 0.5) {
+                            // Give easy question
+                            $sql = "select * from questions where question_type like :world and section like :section and level = 'Easy' and question_id not in ($attempted) order by rand() limit 1";
+                        }
+                        elseif($accuracy < 0.75) {
+                            // Give medium question
+                            $sql = "select * from questions where question_type like :world and section like :section and level = 'Medium' and question_id not in ($attempted) order by rand() limit 1";
+                        }
+                        else {
+                            // Give hard question
+                            $sql = "select * from questions where question_type like :world and section like :section and level = 'Hard' and question_id not in ($attempted) order by rand() limit 1";
+                        }
+
+                        $statement = yield $pool->prepare($sql);
+                        $result = yield $statement->execute(['world' => $client->userinfoWorld, 'section' => "{$client->currentRoom["section"]} Pri"]);
+                    }
+                    elseif($client->currentRoom["type"] == "ass") {
+                        $sql = "select * from questions_bank where assignment_name like :name and question_id not in ($attempted) order by rand() limit 1";
+                        
+                    }
+                    elseif($client->currentRoom["type"] == "pvp") {
+
+                    }
+                    
                     yield $result->advance();
                     $row = $result->getCurrent();
-
-                    $client->currentQuestion = $row;
-                    $client->send("[question] {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                    $client->currentQuestion = $row; 
+                    $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
+                    $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
                 }
                 $pool->close();
             });

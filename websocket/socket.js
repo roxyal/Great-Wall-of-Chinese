@@ -131,17 +131,37 @@ generateSocketAuth().then(result => {
         }
 
         // question handler
-        if(/^\[question\] (.+)/.test(e.data)) {
+        var pattern = /^\[question\] (...[-\d+]?): (.+)/;
+        if(pattern.test(e.data)) {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
-            if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestion').classList.contains("invisible")) {
-                let question = e.data.match(/^\[question\] (.+)/)[1].split(",");
-                adventureModeQuestion.innerHTML = question[0];
-                for(let i=1; i<=4; i++) {
-                    document.getElementById('adventureModeOption'+i).innerHTML = question[i];
+            let mode = e.data.match(pattern)[1];
+            if(mode == "adv") {
+                if(adventureModeCurrentQn == "1" && document.getElementById('adventureModeNextQuestion').classList.contains("invisible")) {
+                    let question = e.data.match(pattern)[2].split(",");
+                    adventureModeQuestion.innerHTML = question[0];
+                    for(let i=1; i<=4; i++) {
+                        document.getElementById('adventureModeOption'+i).innerHTML = question[i];
+                    }
+                    return;
                 }
-                return;
+                questionQueue = e.data.match(pattern)[2].split(",");
             }
-            questionQueue = e.data.match(/^\[question\] (.+)/)[1].split(",");
+            else if(mode.includes("ass")) {
+                let max_qns = parseInt(mode.match(/ass-(\d+)/)[1]);
+                assignmentModeProgressBar.value = max_qns;
+                if(assignmentModeCurrentQn == "1" && document.getElementById('assignmentModeNextQuestion').classList.contains("invisible")) {
+                    let question = e.data.match(pattern)[2].split(",");
+                    assignmentModeQuestion.innerHTML = question[0];
+                    for(let i=1; i<=4; i++) {
+                        document.getElementById('assignmentModeOption'+i).innerHTML = question[i];
+                    }
+                    return;
+                }
+                questionQueue = e.data.match(pattern)[2].split(",");
+            }
+            else if(mode == "pvp") {
+                
+            }
             return;
         }
 

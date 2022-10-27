@@ -17,6 +17,8 @@ var assignmentModeCurrentQn; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
+var questionQueue;
+
 function acceptInvitation(sender){
     socket.send('/accept ' + sender);
 }
@@ -408,7 +410,7 @@ function assignmentModeSubmit(e){
 	var selectedAnswer = e.srcElement.value; //selected answer
 	console.log(selectedAnswer);
 
-	//socket.send("/answer "+selectedAnswer);
+	socket.send("/answer "+selectedAnswer);
 
 	//disabling all option buttons
 	assignmentModeOption1.disabled = true;
@@ -416,20 +418,45 @@ function assignmentModeSubmit(e){
 	assignmentModeOption3.disabled = true;
 	assignmentModeOption4.disabled = true;
 
-	assignmentModeProgress += 10;
+    let max_qns = assignmentModeProgressBar.value; 
+	assignmentModeProgress += 1/max_qns;
 	assignmentModeProgressBar.innerHTML = assignmentModeProgress + "%"; // update label of progress bar
 	assignmentModeProgressBar.style.width = assignmentModeProgress + "%"; // update width of progress bar
 
 	if(assignmentModeProgress < 100){
 		assignmentModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
-	}
+	} else {
+        adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+                                        Assignment completed!
+                                      </div>`;
+    }
 }
 
-function assignmentModeLoadNextQuestion(){}
+function assignmentModeLoadNextQuestion(){
+    return new Promise(function(resolve) {
+        assignmentModeCurrentQn += 1;
+        assignmentModeQuestionNo.innerHTML = "Question " + assignmentModeCurrentQn;
 
+        assignmentModeNextQuestionBtn.classList.add("invisible");
+
+        assignmentModeOption1.disabled = false;
+        assignmentModeOption2.disabled = false;
+        assignmentModeOption3.disabled = false;
+        assignmentModeOption4.disabled = false;
+
+        assignmentModeExplanation.innerHTML = "";
+        
+        if(questionQueue) {
+            assignmentModeQuestion.innerHTML = questionQueue[0];
+            for(let i=1; i<=4; i++) {
+                document.getElementById('assignmentModeOption'+i).innerHTML = questionQueue[i];
+            }
+          }
+    });
+}
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
 // when modal opens, load the first question
-assignmentModeModal.addEventListener('show.bs.modal', function (event){
+assignmentModeModal.addEventListener('show.bs.modal', async function (event){
 	// set starting values
 	assignmentModeProgress = 0; // progress in terms of percentage, starts at 0
 	assignmentModeQnCorrect = 0; // num of questions correct, starts at 0
@@ -464,6 +491,7 @@ assignmentModeModal.addEventListener('show.bs.modal', function (event){
 	}
 
 	// load first question here
+    await assignmentModeLoadNextQuestion();
 })
 
 
@@ -556,7 +584,6 @@ function adventureModeSubmit(e){
   //                                     </div>
   //                                    `;      
 }
-var questionQueue;
 // function to update modal upon clicking on next button
 function adventureModeLoadNextQuestion(){
 return new Promise(function(resolve) {
