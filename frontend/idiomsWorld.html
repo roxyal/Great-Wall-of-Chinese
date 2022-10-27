@@ -391,7 +391,7 @@
 
     <!--Adventure mode Modal starts here-->
     <div class="modal fade" id="adventureMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog modal-fullscreen-xl-down">
           <div class="modal-content">
             <div class="modal-body">
               <div class="container">
@@ -445,10 +445,12 @@
                       </div>
                     </div>
                     <div class="row mt-5">
-                      <div id="adventureModeExplanation" class="col">
-                      </div>
+                      <div id="adventureModeExplanation" class="col"></div>
                     </div>
                     <div class="row mt-3">
+                      <div id="adventureModeComplete" class="col"></div> 
+                    </div>
+                    <div class="row">
                        <div class="col text-center">
                          <button type="button" onclick="adventureModeLoadNextQuestion()" class="btn btn-success invisible" id="adventureModeNextQuestion">next question</button> <!--invisible at the start, visible when user submits an answer, loads next question onto the modal-->
                        </div>
