@@ -1,8 +1,8 @@
 // script to be used by all 3 worlds: idiomsWorld.html, hanyuPinyinWorld.html, blanksWorld.html
 
+// to be commented
 var pvpModal = new bootstrap.Modal(document.getElementById('pvpMode-modal'), {});
 pvpModal.show();
-
 // var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
 // adventureModal.show();
 
