@@ -432,6 +432,10 @@ function create() {
             console.log(spriteKey);
             this.otherPlayers[username]["sprite"].anims.play(spriteKey, true);
 
+            // Add interactive for players
+            this.otherPlayers[username]["sprite"].setInteractive();
+            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username));
+
             // Add username below player character
             this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
         }
@@ -577,7 +581,10 @@ function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
 }
-
+function showProfileModal(username){
+    var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
+	startAdventureModal.show();
+}
 function updateMovement(posX, posY, timer) {
     socket.send(`/move x${posX} y${posY} t${timer}`);
 }

@@ -204,7 +204,7 @@ class Socket implements MessageComponentInterface {
             
                 $pool = \Amp\Mysql\pool($config);
 
-                $statement = yield $pool->prepare("select assignments.account_id, count(*) as count from assignments join questions_bank on assignments.assignment_name = questions_bank.assignment_name where assignment_name = :name");
+                $statement = yield $pool->prepare("select assignments.account_id, assignments.assignment_id, count(*) as count from assignments join questions_bank on assignments.assignment_name = questions_bank.assignment_name where assignment_name = :name");
                 $result = yield $statement->execute(['name' => $assignment]);
                 yield $result->advance();
                 $row = $result->getCurrent();
@@ -222,7 +222,7 @@ class Socket implements MessageComponentInterface {
                 $rid = intval($client->userinfoID.time());
 
                 // Assign player to a new room
-                $client->currentRoom = array("room" => $rid, "type" => "ass", "qns" => $row["count"], "sessionCorrect" => [], "sessionAttempted" => []);
+                $client->currentRoom = array("room" => $rid, "type" => "ass", "asid" => $row["assignment_id"], "qns" => $row["count"], "sessionCorrect" => [], "sessionAttempted" => []);
                 // "sessionCorrect" and "sessionAttempted" hold arrays of question ids and answer given, only within currentRoom
                 
                 $sql = "select * from questions_bank where assignment_name like :name order by rand() limit 1";
@@ -282,20 +282,23 @@ class Socket implements MessageComponentInterface {
                 // Record in database
                 if($client->currentRoom["type"] == "adv") {
                     $sql = "insert into adventure_tracking (adventure_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
+                    $statement = yield $pool->prepare($sql);
+                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
                 }
                 elseif($client->currentRoom["type"] == "ass") { 
-                    $sql = "";
+                    $sql = "insert into assignments_log (assignment_room_id, assignment_id, account_id, question_id, answer, timestamp) values (:rid, :asid, :acc_id, :q_id, :ans, :time)"; 
+                    $statement = yield $pool->prepare($sql);
+                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'asid' => $client->currentRoom["asid"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
                 }
                 elseif($client->currentRoom["type"] == "pvp") {
-                    $sql = "";
+                    $sql = "insert into pvp_tracking (pvp_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
+                    $statement = yield $pool->prepare($sql);
+                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
                 }
                 else {
                     echo "$client->userinfoUsername encountered an unknown error.";
                     return;
                 }
-                $statement = yield $pool->prepare($sql);
-                yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
-                
                 
                 // Send the result and explanation
                 $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}");
