@@ -487,6 +487,7 @@ var adventureModeOption3 = document.getElementById('adventureModeOption3');
 var adventureModeOption4 = document.getElementById('adventureModeOption4');
 var adventureModeExplanation = document.getElementById('adventureModeExplanation');
 var adventureModeNextQuestionBtn = document.getElementById('adventureModeNextQuestion');
+var adventureModeComplete = document.getElementById('adventureModeComplete');
 
 // function for option buttons to submit answer
 function adventureModeSubmit(e){
@@ -512,6 +513,10 @@ function adventureModeSubmit(e){
 
   if(adventureModeProgress < 100){
     adventureModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
+  }else{
+    adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+                                        Adventure mode completed
+                                      </div>`;
   }
 
   // adventureModeQnAttempted += 1
@@ -525,12 +530,12 @@ function adventureModeSubmit(e){
   //   <hr>
   //   <p class="mb-0">This is the explanation for the question</p>
   // </div>
-  // <div class="alert alert-danger" role="alert">
-  //   <h4 class="alert-heading">Wrong!</h4>
-  //   <p>The answer is 3</p>
-  //   <hr>
-  //   <p class="mb-0">This is the explanation for the question</p>
-  // </div>
+//   <div class="alert alert-danger" role="alert">
+//     <h4 class="alert-heading">Wrong!</h4>
+//     <p>The answer is 3</p>
+//     <hr>
+//     <p class="mb-0">This is the explanation for the question</p>
+//   </div>
 
   // adventureModeExplanation.innerHTML = `<div class="alert alert-success" role="alert">
   //                                       <h4 class="alert-heading">Correct!</h4>
