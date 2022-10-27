@@ -590,8 +590,9 @@ function showProfileModal(username){
             if (this.readyState === 4 && this.status === 200) {
                 console.log("NANI");
 		if (this.responseText.length > 2){
+                    console.log("TEST");
                     username_row += username;
-                   view_username.innerHTML = username_row;  
+                    view_username.innerHTML = username_row;  
                 }
                 if (this.responseText.length === 1 && this.responseText === "1"){
                     console.log("Account_id cannot be detected!");
