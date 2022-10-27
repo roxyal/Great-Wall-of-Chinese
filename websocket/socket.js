@@ -257,6 +257,10 @@ generateSocketAuth().then(result => {
                 // just head to the pvp page
             }
             else if(type == "challenge rejected") {
+                if(!message.includes("sadface")) {
+                    
+                    document.getElementById("reject-modal-title").innerHTML = "You rejected "+sender+"'s request"; 
+                }
                 var rejectedModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
                     keyboard: false
                   })
