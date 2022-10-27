@@ -265,8 +265,7 @@ var xmlhttp = new XMLHttpRequest();
             
             // the viewAllCustomGame has three possible output 1,2 and string (allCustomName)
             //1 represents account_id cannot be found, 2 represents server error
-            
-            if (typeof this.responseText === 'string' && this.responseText.length !== 0){
+            if (this.responseText.length > 1){
                 // Split the string into an array
                 customNameArray = this.responseText.split(",");
                 for(i=0;i<customNameArray.length;i++){
@@ -344,7 +343,7 @@ xmlhttp.onreadystatechange = function(){
         // the viewAssignedAssignment has three possible output 1,2 and string (viewAssignedAssignment)
         //1 represents account_id cannot be found, 2 represents server error
           
-        if (typeof this.responseText === 'string' && this.responseText.length !== 0){
+        if (this.responseText.length > 1){
             // Split the string into an array
             var assignmentsArray = this.responseText.split("|");
             
