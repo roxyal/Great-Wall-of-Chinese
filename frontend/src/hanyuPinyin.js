@@ -124,6 +124,7 @@ function create() {
     const customLevelName = document.getElementById('customLevelName');
     customLevelName.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     // enable w/a/s/d for create custom level
     customLevelName.addEventListener('keydown', event => {
@@ -135,65 +136,81 @@ function create() {
     const createCustomLevelModal = document.getElementById('createCustomLevel-modal');
     createCustomLevelModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     createCustomLevelModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
     viewCustomLevelModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     viewCustomLevelModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const viewAssignmentModal = document.getElementById('viewAssignment-modal');
     viewAssignmentModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     viewAssignmentModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const assignmentModal = document.getElementById('assignmentMode-modal');
     assignmentModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     assignmentModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const startAdventureModal = document.getElementById('startAdventureMode-modal');
     startAdventureModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     startAdventureModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const adventureModal = document.getElementById('adventureMode-modal');
     adventureModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     adventureModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const leaderboardModal = document.getElementById('leaderboard-modal');
     leaderboardModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     leaderboardModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     const logOutModal = document.getElementById('logout-modal');
     logOutModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
     });
     logOutModal.addEventListener('focusout', () => {
         this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
     });
 
     // Create animations for characters
