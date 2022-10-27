@@ -11,15 +11,15 @@ var characterID; // character ID
 var characterUserName; // character username
 
 var selectedAdventureSection; 	// the section selected by user to attempt adventure mode in: lower pri/upper pri
-// var adventureModeProgress = 0; 		// progress in terms of percentage, starts at 0%
-// var adventureModeQnCorrect = 0; 	// num of questions correct, starts at 0
-// var adventureModeQnAttempted = 0; 	// num of questions attempted, starts at 0
-// var adventureModeCurrentQn = 0; 	// current question number, starts at 1
+var adventureModeProgress = 0; 		// progress in terms of percentage, starts at 0%
+var adventureModeQnCorrect = 0; 	// num of questions correct, starts at 0
+var adventureModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+var adventureModeCurrentQn = 0; 	// current question number, starts at 1
 
-// var assignmentModeProgress = 0; 	// progress in terms of percentage, starts at 0%
-// var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
-// var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
-// var assignmentModeCurrentQn = 0; 	// current question number, starts at 1
+var assignmentModeProgress = 0; 	// progress in terms of percentage, starts at 0%
+var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
+var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+var assignmentModeCurrentQn = 0; 	// current question number, starts at 1
 
 var assignmentToAttempt; // details of assignment to display on the modal
 
