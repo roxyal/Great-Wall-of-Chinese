@@ -685,11 +685,7 @@ function showProfileModal(username){
                     var idiom_total_correct = parseInt(profile_Array[0]) + parseInt(profile_Array[2]);
                     var idiom_total_attempted = parseInt(profile_Array[1]) + parseInt(profile_Array[3]);
                     (idiom_total_attempted > 0 ) ? view_idioms_acc.innerHTML = (Math.round(100*idiom_total_correct/idiom_total_attempted)).toFixed(2) + "%":view_idioms_acc.innerHTML = "0%";
-                    
-                    console.log(idiom_total_correct);
-                    console.log(idiom_total_attempted);
-                    console.log((Math.round(100*idiom_total_correct/idiom_total_attempted)));
-                    
+                   
                     // Display fill_acc
                     var fill_total_correct = parseInt(profile_Array[4]) + parseInt(profile_Array[6]);
                     var fill_total_attempted = parseInt(profile_Array[5]) + parseInt(profile_Array[7]);
