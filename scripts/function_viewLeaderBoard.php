@@ -27,10 +27,20 @@ function viewLeaderBoard()
     $comma = ',';
     
     // SQL statement that sort and calculates the accuracy for ADVENTURE MODE
-    $sql_1 = "SELECT a.name, 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) AS accuracy 
-            FROM students s INNER JOIN accounts a
-            WHERE s.student_id = a.account_id AND a.account_type = 'Student' AND 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) > 0
-            ORDER BY accuracy DESC LIMIT 20";
+    // lower question will be awarded 1 points if correct, upper will be awarded 2 points
+    // This is to differentiate between players
+    // First sort will be based on number_adventure_points, second will be based on their accuracy
+    $sql_1 = "SELECT a.name, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
+            . "2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct) "
+            . "AS adv_score, 100*((s.idiom_lower_correct+s.fill_lower_correct+"
+            . "s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+"
+            . "s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+"
+            . "s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+"
+            . "s.pinyin_upper_attempted)) AS accuracy FROM students s INNER JOIN accounts a"
+            . " WHERE s.student_id = a.account_id AND a.account_type = 'Student' AND"
+            . " 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
+            . " 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+"
+            . "2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) > 0 ORDER BY adv_score DESC, accuracy DESC LIMIT 20";
     
     $stmt_1 = $conn->prepare($sql_1);
     
