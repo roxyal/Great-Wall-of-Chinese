@@ -95,7 +95,7 @@ function getLoggedInCharacter() {
 	  var xmlhttp = new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 		  if (this.readyState == 4 && this.status == 200) {
-			  console.log("response" + this.responseText);
+			  //console.log("response" + this.responseText);
 			  resolve(this.responseText);
 		  }
 	  };
@@ -105,10 +105,10 @@ function getLoggedInCharacter() {
 }
 
 async function getCharacterID(){
-  console.log('calling backend script')
+  //console.log('calling backend script')
   const getcharacterID = await getLoggedInCharacter();
   characterID = getcharacterID;
-  console.log(characterID);
+  //console.log(characterID);
 
 }
 
@@ -126,10 +126,10 @@ function getLoggedInUsername() {
 }
 
 async function getCharacterName(){
-  console.log('calling backend script')
+  //console.log('calling backend script')
   const getcharacterUsername = await getLoggedInUsername();
   characterUserName = getcharacterUsername;
-  console.log(characterUserName);
+  //console.log(characterUserName);
 
 }
 
@@ -254,6 +254,13 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 
 // CUSTOM LEVEL
 
+let createCustomLevelModal = document.getElementById('createCustomLevel-modal');
+createCustomLevelModal.addEventListener('show.bs.modal', function (event){
+    // empty response div when opening creating custom level
+    document.getElementById('createCustomLevelresponse').innerHTML = ""
+})
+
+
 // Saving custom level
 function saveCustomLevel(){
     let emptyFields = false;
@@ -289,7 +296,7 @@ function saveCustomLevel(){
                 // 3 represents the length of customGameName is less than 2 letters.
                 // 4 represente server error
                 if(this.responseText.includes(0)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">CustomLevel Game created successfully!</div>`;
+                    document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-success my-2" role="alert">CustomLevel Game created successfully!</div>`;
                     // empty all inputs
                     allQuestions.forEach(input => {
                       input.value = '';
@@ -301,16 +308,16 @@ function saveCustomLevel(){
                     document.getElementById("customLevelName").value = '';
                 }
                 if(this.responseText.includes(1)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                    document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-danger my-2" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText.includes(2)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">There is already an CustomGame with this name, please use a different one!</div>`;
+                    document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-danger my-2" role="alert">There is already an CustomGame with this name, please use a different one!</div>`;
                 }
                 if(this.responseText.includes(3)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Please enter the CustomGame name with at least TWO letter</div>`;
+                    document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please enter the CustomGame name with at least TWO letter</div>`;
                 }
                 if(this.responseText.includes(4)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                    document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-danger my-2" role="alert">A server error occurred</div>`;
                 }
             }   
         };
@@ -324,6 +331,7 @@ function saveCustomLevel(){
 // viewing custom level
 let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
 viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
+    document.getElementById('viewCustomresponse').innerHTML = "" // empty response div whenever modal is opened
     var table = document.getElementById("viewCustomLevel");
     var rowsHTML = ""; // initialise empty var to hold html of all the rows
 
@@ -340,16 +348,16 @@ viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
                     // Split the string into an array
                     customNameArray = this.responseText.split(",");
                     for(i=0;i<customNameArray.length;i++){
-                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary" data-bs-dismiss="modal">delete</button></td></tr>';
+                        var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="deleteCustomLevel(event)"class="btn btn-primary">delete</button></td></tr>';
                         rowsHTML += row; // add in html code
                     }
                     table.innerHTML = rowsHTML; //set innerhtml code
                 }
                 if(this.responseText === 1 && this.responseText === "1"){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                    document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText === 1 && this.responseText === "2"){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                    document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   
         };
@@ -378,13 +386,13 @@ function deleteCustomLevel(e){
                 // 1 Account_id cannot be found, 2 represents server error
                 if(this.responseText.includes(0)){
                     rowElements.remove();
-    				document.getElementById('response').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
+    				document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-success" role="alert">Custom level deleted!</div>`;
                 }
                 if(this.responseText.includes(1)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                    document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
                 if(this.responseText.includes(2)){
-                    document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+                    document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   
         };
