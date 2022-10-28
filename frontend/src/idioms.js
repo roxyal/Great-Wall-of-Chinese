@@ -591,7 +591,7 @@ function showProfileModal(username){
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-                console.log("NANI");
+
                 console.log(this.responseText);
                 console.log(this.responseText.length);
 		if (this.responseText.length > 2){
@@ -602,7 +602,7 @@ function showProfileModal(username){
                     // Split the string using (,)
                     profile_Array = this.responseText.split(',');
                     
-                    console.log(profile_Array)
+                    console.log(profile_Array);
                     // Display Idioms_acc
                     idiom_total_correct = profile_Array[0] + profile_Array[2];
                     idiom_total_attempted = profile_Array[1] + profile_Array[3];

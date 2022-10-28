@@ -251,12 +251,12 @@ class Student
             $row = $result->fetch_assoc();
             
             // Obtain the profile information such as the (IDIOM_correct/Fill_correct/Pinyin_correct)
-            $viewProfile_str = "$viewProfile_str{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
-                            {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
-                            {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
-                            {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
-                            {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
-                            {$row['pinyin_upper_attempted']}";
+            $viewProfile_str = "$viewProfile_str{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},"
+                            . "{$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},"
+                            . "{$row['fill_lower_attempted']},{$row['fill_upper_correct']},"
+                            . "{$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},"
+                            . "{$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},"
+                            . "{$row['pinyin_upper_attempted']}";
 
             $view_studentId = $row['student_id'];
 
