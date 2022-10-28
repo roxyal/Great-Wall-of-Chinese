@@ -170,6 +170,8 @@ generateSocketAuth().then(result => {
         if(/^\[answer\] (.+)/.test(e.data)) {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split("|");
             // [correct 1|0, correct answer, explanation, mode]
+            console.log("TESTING BEFORE IF STATEMENT " + answer[3])
+
             if(answer[3] == "adv") {
                 console.log("Updating adventure modal score and explanation") // for testing purpose
 
