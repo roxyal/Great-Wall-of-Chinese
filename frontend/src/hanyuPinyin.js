@@ -509,6 +509,10 @@ function create() {
             console.log(spriteKey);
             this.otherPlayers[username]["sprite"].anims.play(spriteKey, true);
 
+            // Add interactive for players
+            this.otherPlayers[username]["sprite"].setInteractive();
+            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username));
+            
             // Add username below player character
             this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
         }
@@ -647,6 +651,69 @@ function update() {
 function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
+}
+
+function showProfileModal(username){
+    var view_username = document.getElementById('username');
+    var view_idioms_acc = document.getElementById('idioms_acc');
+    var view_pinyin_acc = document.getElementById('pinyin_acc');
+    var view_fill_acc = document.getElementById('fill_acc');
+    var view_rank = document.getElementById('rank');
+    
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+
+                console.log(this.responseText);
+                console.log(this.responseText.length);
+		if (this.responseText.length > 2){
+                    
+                    // Display Username
+                    view_username.innerHTML = username;
+                    
+                    // Split the string using (,)
+                    // profile_Array[0] - idiom_lower_correct // profile_Array[1] - idiom_lower_attempted
+                    // profile_Array[2] - idiom_upper_correct // profile_Array[3] - idiom_upper_attempted
+                    // profile_Array[4] - fill_lower_correct // profile_Array[5] - fill_lower_attempted
+                    // profile_Array[6] - fill_upper_correct // profile_Array[7] - fill_upper_attempted
+                    // profile_Array[8] - pinyin_lower_correct // profile_Array[9] - pinyin_lower_attempted
+                    // profile_Array[10] - pinyin_upper_correct // profile_Array[11] - pinyin_upper_attempted
+                    // profile_Array[12] - rank or "NO RECORD YET"
+                    var profile_Array = this.responseText.split(',');
+                    
+                    // Display Idioms_acc
+                    var idiom_total_correct = profile_Array[0] + profile_Array[2];
+                    var idiom_total_attempted = profile_Array[1] + profile_Array[3];
+                    (idiom_total_attempted > 0 ) ? view_idioms_acc.innerHTML = (Math.round(100*idiom_total_correct/idiom_total_attempted)).toFixed(2) + "%":view_idioms_acc.innerHTML = "0%";
+                    
+                    // Display fill_acc
+                    var fill_total_correct = profile_Array[4] + profile_Array[6];
+                    var fill_total_attempted = profile_Array[5] + profile_Array[7];
+                    (fill_total_attempted > 0 ) ? view_fill_acc.innerHTML = (Math.round(100*fill_total_correct/fill_total_attempted)).toFixed(2) + "%":view_fill_acc.innerHTML = "0%";
+                    
+                    // Display Pinyin_acc
+                    var pinyin_total_correct = profile_Array[8] + profile_Array[10];
+                    var pinyin_total_attempted = profile_Array[9] + profile_Array[11];
+                    (pinyin_total_attempted > 0 ) ? view_pinyin_acc.innerHTML = (Math.round(100*pinyin_total_correct/pinyin_total_attempted)).toFixed(2) + "%":view_pinyin_acc.innerHTML = "0%";
+                    
+                    // Display Rank
+                    view_rank.innerHTML = profile_Array[12];
+                }
+                if (this.responseText.length === 1 && this.responseText === "1"){
+                    console.log("Account_id cannot be detected!");
+                }
+                if (this.responseText.length === 1 && this.responseText === "2"){
+                    console.log("A server error occurred</div>");
+                }
+            }
+	};
+	xmlhttp.open("POST", "../scripts/student", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`username=${username}&function_name=viewProfile`);
+        
+    var viewProfileModal = new bootstrap.Modal(document.getElementById('viewProfile-modal'), {});
+        viewProfileModal.show();
 }
 
 function updateMovement(posX, posY, timer) {
