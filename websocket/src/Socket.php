@@ -393,8 +393,8 @@ class Socket implements MessageComponentInterface {
 
         echo "Client $client->resourceId said $msg\n";
 
-        // /challenge <player_username>: create a new challenge record in db
-        if(preg_match_all("/^\/challenge (.+)$/", $msg, $matches)) {
+        // /challenge <player_username> <customroom_id>: create a new challenge record in db
+        if(preg_match_all("/^\/challenge (.+) ?(.*)$/", $msg, $matches)) {
             $recipientUsername = $matches[1][0];
             if(!strcasecmp($client->userinfoUsername, $recipientUsername)) {
                 $client->send("[error] 1: You cannot challenge yourself!");
@@ -405,6 +405,29 @@ class Socket implements MessageComponentInterface {
                 $client->send("[error] 5: You currently have an ongoing challenge.");
                 return;
             }
+            $customRoomID = 0;
+            if(isset($matches[2][0])) $customRoomID = $matches[2][0];  
+
+            \Amp\Loop::run(function() use ($client, $customRoomID) {
+                require "../../../secrets.php";
+                $config = \Amp\Mysql\ConnectionConfig::fromString(
+                    "host=127.0.0.1 user=$username password=$password db=$db"
+                );
+            
+                $pool = \Amp\Mysql\pool($config);
+
+                $statement = yield $pool->prepare("select count(*) as count from custom_levels where custom_game_id = :custom and account_id = :acid");
+                $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
+                yield $result->advance();
+                $row = $result->getCurrent();
+                // Make sure the client is allowed to answer this assignment
+                if($row["count"] < 1) {
+                    $client->send("[error] This custom level does not exist.");
+                    echo "$client->userinfoUsername tried to send a non-existent custom level.";
+                    return;
+                }
+                $pool->close();
+            });
             
             // Loop through players in the socket to see if username matches
             foreach ($this->clients as $player) {
@@ -417,8 +440,8 @@ class Socket implements MessageComponentInterface {
                     
                     // Save the info in pvpStatus
                     $time = time();
-                    $client->pvpStatus = ["Sent", $player->userinfoUsername, $time];
-                    $player->pvpStatus = ["Received", $client->userinfoUsername, $time];
+                    $client->pvpStatus = ["Sent", $player->userinfoUsername, $time, $customRoomID];
+                    $player->pvpStatus = ["Received", $client->userinfoUsername, $time, $customRoomID];
                     $client->send("[challenge sent] $client->userinfoUsername: I challenge you to battle, $player->userinfoUsername!");
                     $player->send("[challenge] $client->userinfoUsername: I challenge you to battle, $player->userinfoUsername! Will you accept or reject?");
                     
@@ -457,15 +480,34 @@ class Socket implements MessageComponentInterface {
                         return;
                     }
                     
+                    $customRoomID = $client->pvpStatus[3];
+
                     // Save the info in pvpStatus
                     $time = time();
-                    $client->pvpStatus = ["Playing", $player->userinfoUsername, time()];
-                    $player->pvpStatus = ["Playing", $client->userinfoUsername, time()];
-                    $client->send("[challenge accepted] $client->userinfoUsername: I accept your challenge, $player->userinfoUsername!");
-                    $player->send("[challenge accepted] $client->userinfoUsername: I accept your challenge, $player->userinfoUsername!");
+                    $client->pvpStatus = ["Playing", $player->userinfoUsername, time(), $customRoomID];
+                    $player->pvpStatus = ["Playing", $client->userinfoUsername, time(), $customRoomID];
+                    $client->send("[challenge accepted] $player->userinfoUsername: I am your opponent!");
+                    $player->send("[challenge accepted] $client->userinfoUsername: I am your opponent!");
                     
                     // Save the info in database
                     // ...
+                    
+                    \Amp\Loop::run(function() use ($client, $customRoomID) {
+                        require "../../../secrets.php";
+                        $config = \Amp\Mysql\ConnectionConfig::fromString(
+                            "host=127.0.0.1 user=$username password=$password db=$db"
+                        );
+                    
+                        $pool = \Amp\Mysql\pool($config);
+
+                        $statement = yield $pool->prepare("insert into pvp_session (requester_id, opponent_id, status, timestamp, pvp_room_type) values (:sender, :recipient, :status, :time, :custom) ");
+                        $result = yield $statement->execute(['sender' => $player->userinfoID, 'recipient' => $client->userinfoID, 'status' => 1, 'time' => time(), 'custom' => $customRoomID]);
+
+                        // get the first question
+                        
+
+                        $pool->close();
+                    });
 
                     // echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
                     return;

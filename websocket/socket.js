@@ -44,6 +44,7 @@ function loadPlayers(players) {
 }
 import { spawnPlayer, movePlayer, destroyPlayer } from "../frontend/src/exports.js";
 import { addMessageElement, recipients } from "../frontend/src/exports.js";
+import { getCharacterFromUsername } from "../frontend/utility.js";
 // export var socket;
 var token;
 var world;
@@ -76,7 +77,7 @@ generateSocketAuth().then(result => {
         socket.send( message.value );
     }
 
-    socket.onmessage = function(e) {
+    socket.onmessage = async function(e) {
         console.log(e.data);
 
         // Spawn the players that are already logged in
@@ -279,6 +280,42 @@ generateSocketAuth().then(result => {
                 // just head to the pvp page
                 sentModal.hide();
                 pvpModal.show();
+
+                // get player character's id
+                let playerCharacter = await getLoggedInCharacter();
+                let opponentCharacter = await getCharacterFromUsername(sender);
+                let playerSprite = "";
+                let opponentSprite = "";
+                switch(playerCharacter) {
+                    case "2":
+                        playerSprite = "images/huntress.png";
+                        break;
+                    case "3":
+                        playerSprite = "images/heroKnight.png";
+                        break;
+                    case "4": 
+                        playerSprite = "images/wizard.png";
+                        break;
+                    default:
+                        playerSprite = "images/martialHero.png";
+                        break;
+                }
+                switch(opponentCharacter) {
+                    case "2":
+                        opponentSprite = "images/huntress.png";
+                        break;
+                    case "3":
+                        opponentSprite = "images/heroKnight.png";
+                        break;
+                    case "4": 
+                        opponentSprite = "images/wizard.png";
+                        break;
+                    default:
+                        opponentSprite = "images/martialHero.png";
+                        break;
+                }
+                document.getElementById("pvpPlayerAvatar").src = playerSprite;
+                document.getElementById("pvpOpponentAvatar").src = opponentSprite;
             }
             else if(type == "challenge rejected") {
                 if(!message.includes("sadface")) {

@@ -36,6 +36,19 @@ export function getLoggedInCharacter() {
     })
 }
 
+export function getCharacterFromUsername(uname) {
+    return new Promise(function(resolve) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(this.responseText);
+            }
+        };
+        xmlhttp.open("GET", "../scripts/functions_utility?func=getCharacterFromUsername&uname="+uname);
+        xmlhttp.send();
+    })
+}
+
 function getLoggedInTeacherId() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
