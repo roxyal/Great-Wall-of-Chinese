@@ -237,11 +237,10 @@ class Student
         
         // variable of the viewProfile information
         $viewProfile_str = '';
-        $sql = "SELECT s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
+        $sql = "SELECT s.student_id, s.idiom_lower_correct, s.idiom_lower_attempted, s.idiom_upper_correct, s.idiom_upper_attempted,
                  s.fill_lower_correct, s.fill_lower_attempted, s.fill_upper_correct, s.fill_upper_attempted,
-                 s.pinyin_lower_correct, s.pinyin_lower_attempted, s.pinyin_upper_correct, s.pinyin_upper_attempted, l.rank
-                 FROM students s INNER JOIN accounts a ON s.student_id = a.account_id INNER JOIN leaderboard l ON 
-                 s.student_id = l.account_id WHERE a.username = ?";
+                 s.pinyin_lower_correct, s.pinyin_lower_attempted, s.pinyin_upper_correct, s.pinyin_upper_attempted
+                 FROM students s INNER JOIN accounts a ON s.student_id = a.account_id WHERE a.username = ?";
         
         $stmt = $this->conn->prepare($sql);
         if( 
@@ -250,15 +249,34 @@ class Student
         ){
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
-
-            $viewProfile_str = "{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
-                                {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
-                                {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
-                                {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
-                                {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
-                                {$row['pinyin_upper_attempted']},{$row['rank']}";
             
-            echo $viewProfile_str;
+            // Obtain the profile information such as the (IDIOM_correct/Fill_correct/Pinyin_correct)
+            $viewProfile_str = "$viewProfile_str{$row['idiom_lower_correct']},{$row['idiom_lower_attempted']},
+                            {$row['idiom_upper_correct']},{$row['idiom_upper_attempted']},{$row['fill_lower_correct']},
+                            {$row['fill_lower_attempted']},{$row['fill_upper_correct']},
+                            {$row['fill_upper_attempted']},{$row['pinyin_lower_correct']},
+                            {$row['pinyin_lower_attempted']},{$row['pinyin_upper_correct']},
+                            {$row['pinyin_upper_attempted']}";
+
+            $view_studentId = $row['student_id'];
+
+            $sql_2 = "SELECT l.rank FROM leaderboard l WHERE account_id = ?";
+            $stmt_2 = $this->conn->prepare($sql_2);
+            if(
+               $stmt_2->bind_param('i', $view_studentId) &&
+               $stmt_2->execute()
+            ){
+                $result_2 = $stmt_2->get_result();
+                $num_rows = $result_2->num_rows;
+                
+                if ($num_rows > 0){
+                    $row_2 = $result_2->fetch_assoc();
+                    $viewProfile_str = "$viewProfile_str,{$row_2['rank']}";
+                }
+                else{
+                    $viewProfile_str = "$viewProfile_str,NO RECORD YET";
+                }   
+            }
             return $viewProfile_str;
         }
         else
