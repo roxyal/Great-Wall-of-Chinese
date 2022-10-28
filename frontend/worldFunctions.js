@@ -31,6 +31,11 @@ var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
 var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
 var assignmentModeCurrentQn = 0; 	// current question number, starts at 1
 
+var pvpProgress = 0; 	// progress in terms of percentage, starts at 0%
+var pvpModeQnCorrect = 0; 	// num of questions correct, starts at 0
+var pvpModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+var pvpModeCurrentQn = 1; 	// current question number, starts at 1
+
 var assignmentToAttempt; // details of assignment to display on the modal
 
 var questionQueue = [];
@@ -732,3 +737,7 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	// load first question here
 	await adventureModeLoadNextQuestion();
 })
+
+
+
+// PVP MODE
