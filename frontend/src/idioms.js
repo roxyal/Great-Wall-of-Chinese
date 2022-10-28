@@ -600,7 +600,7 @@ function showProfileModal(username){
                     view_username.innerHTML = username;
                     
                     // Split the string using (,)
-                    profile_Array = this.responseText.split(',');
+                    var profile_Array = this.responseText.split(',');
                     
                     console.log(profile_Array);
                     // Display Idioms_acc
