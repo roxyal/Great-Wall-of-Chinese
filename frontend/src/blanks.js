@@ -33,6 +33,66 @@ let config = {
 let game = new Phaser.Game(config);
 
 function preload() {
+    // Create loading progress bar
+    let progressBox = this.add.graphics();
+    let progressBar = this.add.graphics();
+    progressBox.fillStyle(0x222222, 0.8);
+    progressBox.fillRect(400, 275, 400, 50);
+    let width = this.cameras.main.width;
+    let height = this.cameras.main.height;
+    let loadingText = this.make.text({
+        x: width / 2,
+        y: height / 2 - 50,
+        text: 'Loading...',
+        style: {
+            font: '20px monospace',
+            fill: '#7DE5ED'
+        }
+    });
+    loadingText.setOrigin(0.5, 0.5);
+    let percentText = this.make.text({
+        x: width / 2,
+        y: height / 2 - 5,
+        text: '0%',
+        style: {
+            font: '18px monospace',
+            fill: '#3C4048'
+        }
+    });
+    percentText.setOrigin(0.5, 0.5);
+    let assetText = this.make.text({
+        x: width / 2,
+        y: height / 2 + 50,
+        text: '',
+        style: {
+            font: '18px monospace',
+            fill: '#7DE5ED'
+        }
+    });
+    assetText.setOrigin(0.5, 0.5);
+
+    // Fills the loading progress bar as files are loaded
+    this.load.on('progress', value => {
+        progressBar.clear();
+        progressBar.fillStyle(0x7DE5ED, 1);
+        progressBar.fillRect(410, 285, 380 * value, 30);
+        percentText.setText(parseInt(value * 100) + '%');
+    })
+
+    // Shows which asset is being loaded
+    this.load.on('fileprogress', file => {
+        assetText.setText('Loading asset: ' + file.key);
+    })
+
+    // Destroy progress bar stuff when done loading
+    this.load.on('complete', () => {
+        progressBar.destroy();
+        progressBox.destroy();
+        loadingText.destroy();
+        percentText.destroy();
+        assetText.destroy();
+    })
+
     // Load world assets
     this.load.image("greatWall", "assets/blanksWorld/great-wall.jpg");
     this.load.image("chest", "assets/blanksWorld/chest.png");

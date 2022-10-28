@@ -478,7 +478,7 @@ function assignmentModeSubmit(e){
 	if(assignmentModeProgress < 100){
 		assignmentModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
 	} else {
-        adventureModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+        assignmentModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
                                         Assignment completed!
                                       </div>`;
     }
@@ -688,6 +688,7 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	document.getElementById('adventureModeProgressBar').style.width = "0%"; // set width of progress bar to 0%
 	document.getElementById('adventureModeScore').innerHTML = "0/0" // set score to 0
 	document.getElementById('adventureModeQuestionNo').innerHTML = "Question 1" // set question number to 1
+    document.getElementById('adventureModeComplete').innerHTML = ""; // reset completion message
 
 	// when modal opens, get adventure based on selectedAdventureSection: lower pri/upper pri
 	// console.log(selectedAdventureSection);
