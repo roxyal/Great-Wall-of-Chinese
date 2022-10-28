@@ -666,13 +666,11 @@ function showProfileModal(username, characterType){
         default:
             console.log("Cannot detect characterType");
     }
-    
+    console.log(character_url);
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-
-                console.log(this.responseText);
-                console.log(this.responseText.length);
+                
 		if (this.responseText.length > 2){
                     
                     // Display Username
