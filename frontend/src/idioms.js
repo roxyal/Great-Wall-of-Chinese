@@ -494,7 +494,7 @@ function create() {
 
             // Add interactive for players
             this.otherPlayers[username]["sprite"].setInteractive();
-            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username));
+            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username, characterType));
 
             // Add username below player character
             this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
@@ -641,23 +641,45 @@ function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
 }
-function showProfileModal(username){
+function showProfileModal(username, characterType){
     var view_username = document.getElementById('username');
     var view_idioms_acc = document.getElementById('idioms_acc');
     var view_pinyin_acc = document.getElementById('pinyin_acc');
     var view_fill_acc = document.getElementById('fill_acc');
     var view_rank = document.getElementById('rank');
+    var view_character = document.getElementById('view_character');
+    var character_url;
     
+    switch (characterType) {
+        case "1":
+            character_url = "images/martialHero.png";
+            break;
+        case "2":
+            character_url = "images/huntress.png";
+            break;
+        case "3":
+            character_url = "images/heroKnight.png";
+            break;
+        case "4":
+            character_url = "images/wizard.png";
+            break;
+        default:
+            console.log("Cannot detect characterType");
+    }
+    console.log(character_url);
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-
-                console.log(this.responseText);
-                console.log(this.responseText.length);
+                
 		if (this.responseText.length > 2){
                     
                     // Display Username
                     view_username.innerHTML = username;
+                    
+                    // Display character image
+                    view_character.src = character_url;
+                    view_character.width = 180;
+                    view_character.height = 180;
                     
                     // Split the string using (,)
                     // profile_Array[0] - idiom_lower_correct // profile_Array[1] - idiom_lower_attempted
