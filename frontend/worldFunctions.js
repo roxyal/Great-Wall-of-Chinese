@@ -478,7 +478,7 @@ function assignmentModeSubmit(e){
 	if(assignmentModeProgress < 100){
 		assignmentModeNextQuestionBtn.className = "btn btn-success"; // make next question btn visible if progress is not 100
 	} else {
-        assignmentModeComplete.innerHTML = `<div class="alert alert-info text-center" role="alert">
+        document.getElementById('assignmentModeComplete').innerHTML = `<div class="alert alert-info text-center" role="alert">
                                         Assignment completed!
                                       </div>`;
     }
@@ -522,7 +522,7 @@ assignmentModeModal.addEventListener('show.bs.modal', async function (event){
 	assignmentModeProgressBar.style.width = "0%"; // set width of progress bar to 0%
 	assignmentModeScore.innerHTML = "0/0" // set score to 0
 	assignmentModeQuestionNo.innerHTML = "Question 1" // set question number to 1
-
+    document.getElementById("assignmentModeComplete").innerHTML = ""; // reset complete message
 
 	var character = assignmentModeModal.querySelector('#characterAvatarAssignment'); 
 	// Add player character based on characterID

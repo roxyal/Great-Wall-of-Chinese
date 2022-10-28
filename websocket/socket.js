@@ -184,11 +184,11 @@ generateSocketAuth().then(result => {
             }
             else if(answer[3] == "ass") {
                 assignmentModeQnAttempted += 1
-                if(answer[0]) assignmentModeQnCorrect += 1
+                if(answer[0] == "1") assignmentModeQnCorrect += 1
                 assignmentModeScore.innerHTML = assignmentModeQnCorrect + "/" + assignmentModeQnAttempted;
                 assignmentModeExplanation.innerHTML = `
-                    <div class="alert alert-${answer[0] ? "success" : "danger"}" role="alert">
-                    <h4 class="alert-heading">${answer[0] ? "Correct!" : "Incorrect!"}</h4>
+                    <div class="alert alert-${answer[0] == "1" ? "success" : "danger"}" role="alert">
+                    <h4 class="alert-heading">${answer[0] == "1" ? "Correct!" : "Incorrect!"}</h4>
                     <p>The answer is ${answer[1]}</p>
                     <hr>
                     <p class="mb-0">${answer[2]}</p>
