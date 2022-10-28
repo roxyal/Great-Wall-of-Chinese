@@ -475,19 +475,15 @@ function create() {
             switch (characterType) {
                 case "1":
                     this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "martialIdle").setScale(2);
-                    characterTypeSrc = "../images/martialHero.png";
                     break;
                 case "2":
                     this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "huntress").setScale(2.2);
-                    characterTypeSrc = "../images/huntress.png";
                     break;
                 case "3":
                     this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "heroKnight").setScale(1.7);
-                    characterTypeSrc = "../images/heroKnight.png";
                     break;
                 case "4":
                     this.otherPlayers[username]["sprite"] = this.physics.add.sprite(posX, posY, "wizard").setScale(1.3);
-                    characterTypeSrc = "../images/wizard.png";
                     break;
                 default:
                     console.log("Something went wrong in player creation in create()");
@@ -498,7 +494,7 @@ function create() {
 
             // Add interactive for players
             this.otherPlayers[username]["sprite"].setInteractive();
-            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username, characterTypeSrc));
+            this.otherPlayers[username]["sprite"].on("pointerdown", () => showProfileModal(username, characterType));
 
             // Add username below player character
             this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
@@ -645,13 +641,31 @@ function showStartAdventureModal(){
     var startAdventureModal = new bootstrap.Modal(document.getElementById('startAdventureMode-modal'), {});
 	startAdventureModal.show();
 }
-function showProfileModal(username, characterTypeSrc){
+function showProfileModal(username, characterType){
     var view_username = document.getElementById('username');
     var view_idioms_acc = document.getElementById('idioms_acc');
     var view_pinyin_acc = document.getElementById('pinyin_acc');
     var view_fill_acc = document.getElementById('fill_acc');
     var view_rank = document.getElementById('rank');
     var view_character = document.getElementById('view_character');
+    var character_url;
+    
+    switch (characterType) {
+        case "1":
+            character_url = "../images/martialHero.png";
+            break;
+        case "2":
+            character_url = "../images/huntress.png";
+            break;
+        case "3":
+            character_url = "../images/heroKnight.png";
+            break;
+        case "4":
+            character_url = "../images/wizard.png";
+            break;
+        default:
+            console.log("Cannot detect characterType");
+    }
     
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -665,7 +679,7 @@ function showProfileModal(username, characterTypeSrc){
                     view_username.innerHTML = username;
                     
                     // Display character image
-                    view_character.innerHTML = "src=" + characterTypeSrc + "alt=Generic placeholder image class=img-fluid style=width: 180px; border-radius: 10px;";
+                    view_character.innerHTML = "src=" + character_url + "alt=Generic placeholder image class=img-fluid style=width: 180px; border-radius: 10px;";
                     
                     // Split the string using (,)
                     // profile_Array[0] - idiom_lower_correct // profile_Array[1] - idiom_lower_attempted
