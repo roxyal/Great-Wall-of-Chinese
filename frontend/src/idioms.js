@@ -207,24 +207,28 @@ function create() {
 
     // need to add all custom level modal inputs, question type and difficulty
     const createCustomLevelQuestions = document.querySelectorAll("[name='questionType']");
-    createCustomLevelQuestions.addEventListener('focus', () => {
-        this.input.keyboard.enabled = false;
-        this.input.mouse.enabled = false;
-    });
-    createCustomLevelQuestions.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
-    });
+    for(let i = 0; i<createCustomLevelQuestions.length; i++){
+        createCustomLevelQuestions[i].addEventListener('focus', () => {
+            this.input.keyboard.enabled = false;
+            this.input.mouse.enabled = false;
+        });
+        createCustomLevelQuestions[i].addEventListener('focusout', () => {
+            this.input.keyboard.enabled = true;
+            this.input.mouse.enabled = true;
+        });
+    }
 
     const createCustomLevelDifficulty = document.querySelectorAll("[name='difficulty']");
-    createCustomLevelDifficulty.addEventListener('focus', () => {
-        this.input.keyboard.enabled = false;
-        this.input.mouse.enabled = false;
-    });
-    createCustomLevelDifficulty.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
-    });
+    for(let i = 0; i<createCustomLevelDifficulty.length; i++){
+        createCustomLevelDifficulty[i].addEventListener('focus', () => {
+            this.input.keyboard.enabled = false;
+            this.input.mouse.enabled = false;
+        });
+        createCustomLevelDifficulty[i].addEventListener('focusout', () => {
+            this.input.keyboard.enabled = true;
+            this.input.mouse.enabled = true;
+        });
+    }
 
 
     const viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
