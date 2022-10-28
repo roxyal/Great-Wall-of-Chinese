@@ -125,20 +125,27 @@ class Socket implements MessageComponentInterface {
 
         if(preg_match_all("/^\/exit (.+)$/", $msg, $matches)) {
             if(strtolower($matches[1][0]) == "adventure") {
-                $client->pvpStatus = ["Available", "", $time, 0];
+                $client->pvpStatus = ["Available", "", time(), 0];
 
             }
             elseif(strtolower($matches[1][0]) == "adventure") {
-                $client->pvpStatus = ["Available", "", $time, 0];
+                $client->pvpStatus = ["Available", "", time(), 0];
             }
             elseif(strtolower($matches[1][0]) == "pvp") {
                 foreach ($this->clients as $player) {
                     if(!strcasecmp($player->userinfoUsername, $client->pvpStatus[1])) {
-                        $player->pvpStatus = ["Available", "", $time, 0];
+                        $player->pvpStatus = ["Available", "", time(), 0];
+                        unset ($player->currentRoom);
+                        unset ($player->currentQuestion);
+                        unset ($player->slowpoke);
                         $player->send("[pvp] forfeit: Your opponent has forfeited.");
                     }
                 }
-                $client->pvpStatus = ["Available", "", $time, 0];
+                unset ($client->currentRoom);
+                unset ($client->currentQuestion);
+                unset ($client->slowpoke);
+                $client->pvpStatus = ["Available", "", time(), 0];
+                $client->send("[pvp] forfeit: You have forfeited the match.");
             }
         }
 
@@ -260,6 +267,8 @@ class Socket implements MessageComponentInterface {
 
         // Mark client's answer
         if(preg_match_all("/^\/answer (\d)/", $msg, $matches)) {
+            $time = time();
+
             // Check game mode 
             if(isset($client->currentRoom["type"]) && $client->currentRoom["type"] == "adv") {
                 $max_qns = 10;
@@ -276,7 +285,7 @@ class Socket implements MessageComponentInterface {
             }
             $answer = $matches[1][0]; 
             
-            \Amp\Loop::run(function() use ($client, $answer, $max_qns) {
+            \Amp\Loop::run(function() use ($client, $answer, $max_qns, $time) {
                 require "../../../secrets.php";
                 $config = \Amp\Mysql\ConnectionConfig::fromString(
                     "host=127.0.0.1 user=$username password=$password db=$db"
@@ -303,17 +312,34 @@ class Socket implements MessageComponentInterface {
                 if($client->currentRoom["type"] == "adv") {
                     $sql = "insert into adventure_tracking (adventure_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
                     $statement = yield $pool->prepare($sql);
-                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
+                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => $time]);
                 }
                 elseif($client->currentRoom["type"] == "ass") { 
                     $sql = "insert into assignments_log (assignment_id, account_id, question_id, answer, timestamp) values (:asid, :acc_id, :q_id, :ans, :time)"; 
                     $statement = yield $pool->prepare($sql);
-                    yield $statement->execute(['asid' => $client->currentRoom["asid"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
+                    yield $statement->execute(['asid' => $client->currentRoom["asid"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => $time]);
                 }
                 elseif($client->currentRoom["type"] == "pvp") {
                     $sql = "insert into pvp_tracking (pvp_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
                     $statement = yield $pool->prepare($sql);
-                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => time()]);
+                    yield $statement->execute(['rid' => $client->currentRoom["room"], 'acc_id' => $client->userinfoID, 'q_id' => $client->currentQuestion["question_id"], 'ans' => $answer, 'time' => $time]);
+
+                    // $client->lastAnswer = $time;
+
+                    foreach ($this->clients as $player) {
+                        if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                            // if(isset($player->lastAnswer) && $player->lastAnswer < $time) {
+                            
+                            // Send the client's timestamp to opponent
+                            $player->send("[time] $time");
+
+                            // Set var for the opponent that they are slowwww
+                            $player->slowpoke = true;
+
+                            // }
+                        }
+                    }
+
                 }
                 else {
                     echo "$client->userinfoUsername encountered an unknown error.";
@@ -395,23 +421,52 @@ class Socket implements MessageComponentInterface {
                         $result = yield $statement->execute(['name' => $client->currentRoom["asname"]]);
                     }
                     elseif($client->currentRoom["type"] == "pvp") {
-                        if(isset($client->customQuestionQueue)) {
-                            $sql = "select * from questions where question_type like :world and level like :level and question_id not in ($attempted) order by rand() limit 1";
-                            $statement = yield $pool->prepare($sql);
-                            $result = yield $statement->execute(['world' => $client->userinfoWorld, 'level' => $client->customQuestionQueue[0][1]]);
-                        }
-                        else {
-                            $sql = "select * from questions where question_type like :world and question_id not in ($attempted) order by rand() limit 1";
-                            $statement = yield $pool->prepare($sql);
-                            $result = yield $statement->execute(['world' => $client->userinfoWorld]);
+                        // Check if the opponent has already answered
+                        // if(isset($client->slowpoke) && $client->slowpoke) {
+                            // Get the next question from the opponent's variable
+                            // foreach ($this->clients as $player) {
+                            //     if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                            //         $client->currentQuestion = $player->currentQuestion;
+
+                            //         $client->send("[question] pvp: {$client->currentQuestion["question"]}, {$client->currentQuestion["choice1"]}, {$client->currentQuestion["choice2"]}, {$client->currentQuestion["choice3"]}, {$client->currentQuestion["choice4"]}");
+
+                            //         return;
+                            //     }
+                            // }
+                        // }
+                        if(!isset($client->slowpoke) || !$client->slowpoke) {
+                            // Generate new question
+                            if(isset($client->customQuestionQueue)) {
+                                $sql = "select * from questions where question_type like :world and level like :level and question_id not in ($attempted) order by rand() limit 1";
+                                $statement = yield $pool->prepare($sql);
+                                $result = yield $statement->execute(['world' => $client->userinfoWorld, 'level' => $client->customQuestionQueue[0][1]]);
+                            }
+                            else {
+                                $sql = "select * from questions where question_type like :world and question_id not in ($attempted) order by rand() limit 1";
+                                $statement = yield $pool->prepare($sql);
+                                $result = yield $statement->execute(['world' => $client->userinfoWorld]);
+                            }
                         }
                     }
                     
-                    yield $result->advance();
-                    $row = $result->getCurrent();
-                    $client->currentQuestion = $row; 
-                    $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
-                    $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                    if(isset($result)) {
+                        yield $result->advance();
+                        $row = $result->getCurrent();
+                        $client->currentQuestion = $row; 
+                        $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
+                        $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+    
+                        // Send the opponent at the same time even if opponent hasn't answered yet
+                        if($client->currentRoom["type"] == "pvp") {
+                            foreach ($this->clients as $player) {
+                                if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                                    $player->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
                 }
                 $pool->close();
             });
@@ -562,6 +617,7 @@ class Socket implements MessageComponentInterface {
                         yield $result->advance();
                         $row = $result->getCurrent();
                         $client->currentQuestion = $row; 
+                        $player->currentQuestion = $row;
                         $client->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
                         $player->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
 
@@ -707,7 +763,18 @@ class Socket implements MessageComponentInterface {
                 // Update all other players
                 foreach ($this->clients as $player) {
                     // Remove the pvp request from any players with a pending request from disconnected player
-                    if($player->pvpStatus[1] == $client->userinfoUsername) {
+                    if(!strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                        // Send message to the player
+                        if($player->pvpStatus[0] == "Sent") {
+                            $player->send("[pvp] sent: Your opponent has disconnected from the game.");
+                        }
+                        elseif($player->pvpStatus[0] == "Received") {
+                            $player->send("[pvp] received: Your opponent has disconnected from the game.");
+                        }
+                        elseif($player->pvpStatus[0] == "Playing") {
+                            $player->send("[pvp] forfeit: Your opponent has disconnected from the game.");
+                        }
+
                         $player->pvpStatus = ["Available", "", time()];
                     }
 

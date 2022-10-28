@@ -529,7 +529,7 @@ function assignmentModeLoadNextQuestion(){
             for(let i=1; i<=4; i++) {
                 document.getElementById('assignmentModeOption'+i).innerHTML = questionQueue[i];
             }
-          }
+        }
     });
 }
 let assignmentModeModal = document.getElementById('assignmentMode-modal')
@@ -741,3 +741,26 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 
 
 // PVP MODE
+function displayNextPvpQn(){
+    return new Promise(function(resolve) {
+        console.log("displaying next question");
+        
+        pvpModeCurrentQn++;
+        console.log(pvpModeCurrentQn);
+        document.getElementById('pvpModeQuestionNo').innerHTML = "Question " + pvpModeCurrentQn;
+        
+        // let loadQn = window.setInterval(function() {
+            if(questionQueue.length > 0) {
+                console.log("queue", questionQueue);
+                document.getElementById("pvpModeQuestion").innerHTML = questionQueue[0];
+                for(let i=1; i<=4; i++) {
+                    document.getElementById('pvpModeOption'+i).disabled = false;
+                    document.getElementById('pvpModeOption'+i).innerHTML = questionQueue[i];
+                }
+            }
+        // }, 100);
+        
+    });
+}
+
+        
