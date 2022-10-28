@@ -6,6 +6,8 @@ class CreateAccountTest extends TestCase{
     public function testCreateAccountSuccess(){
         //createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character)
         require('scripts\function_createAccount.php');
+        require("scripts\config.php");
+        require("scripts\functions_utility.php");
 
         // Outputs: int 0 on success
         $this -> assertEquals(0, createAccount("correctusername", "correct_name", "valid_email@email.com", "Cz3003234a@sdfasdf", 1, 1));
@@ -27,9 +29,20 @@ class CreateAccountTest extends TestCase{
         $this -> assertEquals(8, createAccount("correctusername", "correct_name", "valid_email@gmail.com", "wrong_password", 1, 1));  
 
         # Delete successful testcase after testing 
-        $sql = $conn->prepare("DELETE FROM `accounts` WHERE username = ?");
+        $sql = $conn->("SELECT `account_id` FROM `accounts` WHERE username = ?")
         $sql->bind_param('s', "correctusername");
         $sql->execute();
+        $sql->store_result();
+        $sql->bind_result($account_id);
+        $sql->fetch();
+
+        $sql2 = $conn->prepare("DELETE FROM `accounts` WHERE username = ?");
+        $sql2->bind_param('s', "correctusername");
+        $sql2->execute();
+
+        $sql3 = $conn->prepare("DELETE FROM `students` WHERE student_id = ?");
+        $sql3->bind_param('i', $account_id);
+        $sql3->execute();
     }
 }
 

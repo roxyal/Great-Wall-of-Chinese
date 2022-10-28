@@ -6,6 +6,8 @@ class ResetPasswordTest extends TestCase{
     public function testResetPasswordSuccess(){
         //resetPassword(string $password, string $token)
         require('scripts\function_resetPassword.php');
+        require("scripts\config.php");
+        require("scripts\functions_utility.php");
 
         // Insert test cases
         $username = "studentacc";

@@ -6,10 +6,12 @@ class LoginTest extends TestCase{
     public function testLoginSuccess(){
         //login(string $uname, string $pass)
         require('scripts\function_login.php');
+        require("scripts\config.php");
+        require("scripts\functions_utility.php");
 
         // Insert student test case
         $username = "studentacc";
-        $hash = password_hash("StudentPass123", PASSWORD_DEFAULT);
+        $password = "StudentPass123";
         $email = "valid_email@email.com";
         $name = "correct_name";
         $sql = $conn->prepare("INSERT INTO `accounts`(`account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?)");
@@ -23,11 +25,11 @@ class LoginTest extends TestCase{
 
         // Insert teacher test case
         $username2 = "teacheracc";
-        $hash2 = password_hash("TeacherPass123", PASSWORD_DEFAULT);
+        $password2 = "TeacherPass123";
         $email2 = "valid_email2@email.com";
         $name2 = "correct_name2";
         $sql2 = $conn->prepare("INSERT INTO `accounts`(`account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?)");
-        $sql2->bind_param('sssss', "Teacher", $username2, $hash2, $email2, $name2);
+        $sql2->bind_param('sssss', "Teacher", $username2, $password2, $email2, $name2);
         $sql2->execute();
 
         // Outputs: int 0 on success (student login)
