@@ -223,8 +223,9 @@ class Student
     }
     
     // Functions: Student to view other Players profiles
-    // Inputs: int $account_id
-    // Outputs: Upon success, will return a list of information of the player that you want view
+    // Inputs: int string $viewPlayerName
+    // Outputs: Upon success, will return a string of information of the player that you want view
+    // Example of Output: 0,0,0,0,0,0,0,0,0,0,0,0,NO RECORD YET (idiom.js got more information about it)
     //          int 1 on player that you want to view does not exists
     //          int 2 on database error
     public function viewProfile(string $viewPlayerName)
