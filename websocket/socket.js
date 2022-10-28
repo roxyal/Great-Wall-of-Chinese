@@ -209,21 +209,11 @@ generateSocketAuth().then(result => {
             var message = matches[3];
             
             if(type == "error") {
-                // error codes (so far) are: 
-                // 1: you cannot challenge yourself
-                // 2: the recipient was not found
-                // 3: the recipient is currently engaged in pvp
-                // switch(sender) {
-                //     case "1":
-                //         console.log("You cannot challenge yourself.");
-                //         break;
-                //     case "2":
-                //         console.log("The player was not found.");
-                //         break;
-                //     default: 
-                //         console.log("An unknown error occurred.");
-                //         break;
-                // }
+                var errorModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+                    keyboard: false
+                })
+                document.getElementById('reject-modal-title').innerHTML = matches[3];
+                errorModal.show();
             }
             else if(type == "connect") {
                 // [connect] username: characterType
@@ -274,9 +264,6 @@ generateSocketAuth().then(result => {
             else if(type == "challenge") {
                 // someone sent to me the challenge
                 // "Player (sender variable) sent you a challenge"
-                var challengeModal = new bootstrap.Modal(document.getElementById('invitationMessage-modal'), {
-                    keyboard: false
-                  })
                   document.getElementById('invitationMessageSender').innerHTML = sender + " sent you an pvp invitation";
                   challengeModal.show();
                   
@@ -285,26 +272,23 @@ generateSocketAuth().then(result => {
             }
             else if(type == "challenge sent") {
                 // you have sent to the player 
-                var rejectedModal = new bootstrap.Modal(document.getElementById('sentInvitation-modal'), {
-                    keyboard: false
-                  })
-                  document.getElementById('invitationMessageReceiver').innerHTML = "The invitation has been sent!";
-                
-                  rejectedModal.show();
+                document.getElementById('invitationMessageReceiver').innerHTML = "The invitation has been sent!";
+                sentModal.show();
             }
             else if(type == "challenge accepted") {
                 // just head to the pvp page
+                sentModal.hide();
+                pvpModal.show();
             }
             else if(type == "challenge rejected") {
                 if(!message.includes("sadface")) {
-                    
-                    document.getElementById("reject-modal-title").innerHTML = "You rejected "+sender+"'s request"; 
+                    document.getElementById("reject-modal-title").innerHTML = "You rejected the request"; 
                 }
-                var rejectedModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
-                    keyboard: false
-                  })
+                else {
+                    document.getElementById("reject-modal-title").innerHTML = sender+" rejected your request"; 
+                }
                 
-                  rejectedModal.show();
+                rejectedModal.show();
             }
         }
     }

@@ -1,10 +1,20 @@
 // script to be used by all 3 worlds: idiomsWorld.html, hanyuPinyinWorld.html, blanksWorld.html
 
 // to be commented
-//var pvpModal = new bootstrap.Modal(document.getElementById('pvpMode-modal'), {});
+var pvpModal = new bootstrap.Modal(document.getElementById('pvpMode-modal'), {});
 //pvpModal.show();
 // var adventureModal = new bootstrap.Modal(document.getElementById('adventureMode-modal'), {});
 // adventureModal.show();
+
+var rejectedModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+    keyboard: false
+})
+var sentModal = new bootstrap.Modal(document.getElementById('sentInvitation-modal'), {
+    keyboard: false
+})
+var challengeModal = new bootstrap.Modal(document.getElementById('invitationMessage-modal'), {
+    keyboard: false
+})
 
 // global variables
 var characterID; // character ID
