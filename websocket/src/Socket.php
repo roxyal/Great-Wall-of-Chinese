@@ -304,7 +304,7 @@ class Socket implements MessageComponentInterface {
                 $correct = $correct ? 1 : 0;
 
                 // Send the result and explanation
-                $client->send("[answer] $correct, {$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}, {$client->currentQuestion["explanation"]}, {$client->currentRoom["type"]}");
+                $client->send("[answer] $correct|{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}|{$client->currentQuestion["explanation"]}|{$client->currentRoom["type"]}");
 
                 // Send the next question if any
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
@@ -504,8 +504,17 @@ class Socket implements MessageComponentInterface {
                         $result = yield $statement->execute(['sender' => $player->userinfoID, 'recipient' => $client->userinfoID, 'status' => 1, 'time' => time(), 'custom' => $customRoomID]);
 
                         // get the first question
+                        if($customRoomID > 0) {
+                            $sql = "select * from custom_levels where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                        }
+                        else {
+                            $sql = "select * from custom_levels where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                        }
+                        $statement = yield $pool->prepare($sql);
+                        $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
+                        yield $result->advance();
+                        $row = $result->getCurrent();
                         
-
                         $pool->close();
                     });
 
