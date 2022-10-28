@@ -82,6 +82,19 @@ function getLoggedInAccountType(): string {
     else return "undefined"; 
 }
 
+function getCharacterFromUsername($uname): int {
+    require "config.php";
+    $sql = $conn->prepare("select character_type from students join accounts on students.student_id = accounts.account_id where username = ?");
+    $sql->bind_param("s", $uname);
+    $sql->execute();
+    $sql->store_result();
+    if($sql->num_rows > 0) {
+        $result = $sql->fetch_array(MYSQLI_ASSOC);
+        return $result["character_type"];
+    }
+    else return 0; // or some other default character id
+}
+
 // Helper function to convert the questions stringToArray format
 function stringToArray($questions, $delimiter){
     $delimiter = $delimiter;
@@ -106,12 +119,15 @@ function convertIntToDate($int_date){
 }
 
 if(isset($_GET["func"])) {
-    try {
-        echo call_user_func("getLoggedIn{$_GET["func"]}");
-    }
-    catch (Exception $e) {
-        // if($debug_mode) echo "Something went wrong.\n";
-        echo -1;
+    if($_GET["func"] == "getCharacterFromUsername") echo getCharacterFromUsername($_GET['uname']);
+    else {
+        try {
+            echo call_user_func("getLoggedIn{$_GET["func"]}");
+        }
+        catch (Exception $e) {
+            // if($debug_mode) echo "Something went wrong.\n";
+            echo -1;
+        }
     }
 }
 ?>

@@ -117,7 +117,7 @@
               </div>
             </div>
           </div>
-          <div id="response"></div>
+          <div id="createCustomLevelresponse"></div>
         </div>
         <div class="modal-footer justify-content-center">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -147,7 +147,7 @@
               </tbody>
             </table>
           </div>
-          <div id="response"></div>
+          <div id="viewCustomresponse"></div>
         </div>
         <div class="modal-footer justify-content-center">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -201,7 +201,7 @@
                   </div>
                 </div>
                 <div class="col" style="margin-right: 5%;" id="characterAvatarUserPVP">
-                  <img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>
+                  <img class = "img-responsive" width = "100%" id="pvpPlayerAvatar" src="images/martialHero.png"/>
                 </div>
               </div>
               <!--For showing questions-->
@@ -212,7 +212,7 @@
                   </div>
                   <div class="col-8" style="margin-top: 1%;" >
                     <div class="progress">
-                      <div id="adventureModeProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label, start at 0% -->
+                      <div id="pvpProgressBar" class="progress-bar" style="width: 0%;">0%</div> <!--width to update progress bar, inner html to update label, start at 0% -->
                     </div>
                   </div>
                 </div>
@@ -262,7 +262,7 @@
                   </div>
                 </div>
                 <div class="col-auto" style="margin-left: 5%;" id="characterAvatarOpponentPVP">
-                  <img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>
+                  <img class = "img-responsive" width = "100%" id="pvpOpponentAvatar" src="images/martialHero.png"/>
                 </div>
               </div>
             </div>
@@ -321,7 +321,7 @@
         </div>
       </div>
     </div>
-    <!--sentInvitation Modal ends here-->
+    <!--rejectInvitation Modal ends here-->
     
     <!--Assignment mode Modal starts here-->
     <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -615,7 +615,7 @@
     </div>
     <!--ViewProfileModal ends here-->
   
-  <script type="module" src="src/hanyuPinyin.js"></script>
+    <script type="module" src="src/hanyuPinyin.js"></script>
 </body>
 <script src="worldFunctions.js"></script>
 <script>
