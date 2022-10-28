@@ -53,10 +53,12 @@ function updateAssignmentNotification(){
                 document.getElementById('assignmentNotification').style.color = "#ff0000";
             }
             if(this.responseText.length === 1 && this.responseText === "1"){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                // document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
+                console.log('Account_id cannot be detected!');
             }
             if(this.responseText.length === 1 && this.responseText === "2"){
-                document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+               // document.getElementById('response').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
+               console.log('A server error occurred');
             }
         }   
     };
@@ -284,7 +286,7 @@ function saveCustomLevel(){
             question_type_difficulty = question_type_difficulty + '|';
     }
     if(emptyFields){
-  		document.getElementById('response').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
+  		document.getElementById('createCustomLevelresponse').innerHTML = `<div class="alert alert-danger my-2" role="alert">Please fill in all the fields!</div>`
     }else{
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function(){
