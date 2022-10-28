@@ -304,7 +304,7 @@ class Socket implements MessageComponentInterface {
                 $correct = $correct ? 1 : 0;
 
                 // Send the result and explanation
-                $client->send("[answer] $correct|{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}|{$client->currentQuestion["explanation"]}|{$client->currentRoom["type"]}");
+                $client->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["explanation"]}!!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}");
 
                 // Send the next question if any
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
@@ -505,15 +505,26 @@ class Socket implements MessageComponentInterface {
 
                         // get the first question
                         if($customRoomID > 0) {
-                            $sql = "select * from custom_levels where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                            $sql = "select * from custom_levels where custom_game_id = :custom and account_id = :acid";
+                            $statement = yield $pool->prepare($sql);
+                            $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
+                            yield $result->advance();
+                            $row = $result->getCurrent();
+                            $client->customQuestionQueue = [];
+                            $temp = explode('|', $row["question_type_difficulty"]);
+                            for($i = 0; $i < count($temp); $i++) {
+
+                            }
                         }
                         else {
-                            $sql = "select * from custom_levels where question_type like :world and section like :section and level = 'Hard' order by rand() limit 1";
+                            $sql = "select * from questions where question_type like :world order by rand() limit 1";
+                            $statement = yield $pool->prepare($sql);
+                            $result = yield $statement->execute(['world' => $client->userinfoWorld]);
                         }
-                        $statement = yield $pool->prepare($sql);
-                        $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
                         yield $result->advance();
                         $row = $result->getCurrent();
+                        $client->currentQuestion = $row; 
+                        $client->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
                         
                         $pool->close();
                     });

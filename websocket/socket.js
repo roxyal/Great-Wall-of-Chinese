@@ -168,7 +168,7 @@ generateSocketAuth().then(result => {
         }
 
         if(/^\[answer\] (.+)/.test(e.data)) {
-            var answer = e.data.match(/^\[answer\] (.+)/)[1].split("|");
+            var answer = e.data.match(/^\[answer\] (.+)/)[1].split("!!!I LOVE CHINESEEE!!!");
             // [correct 1|0, correct answer, explanation, mode]
             console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
             console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
