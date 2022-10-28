@@ -28,7 +28,7 @@ class CreateAccountTest extends TestCase{
         //          int 8 on invalid password format
         $this -> assertEquals(8, createAccount("correctusername", "correct_name", "valid_email@gmail.com", "wrong_password", 1, 1));  
 
-        # Delete successful testcase after testing 
+        # Delete test cases 
         $sql = $conn->("SELECT `account_id` FROM `accounts` WHERE username = ?")
         $sql->bind_param('s', "correctusername");
         $sql->execute();
