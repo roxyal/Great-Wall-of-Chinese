@@ -202,6 +202,28 @@ function create() {
         this.input.mouse.enabled = true;
     });
 
+    // need to add all custom level modal inputs, question type and difficulty
+    const createCustomLevelQuestions = document.querySelectorAll("[name='questionType']");
+    createCustomLevelQuestions.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    createCustomLevelQuestions.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+    const createCustomLevelDifficulty = document.querySelectorAll("[name='difficulty']");
+    createCustomLevelDifficulty.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    createCustomLevelDifficulty.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+
     const viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
     viewCustomLevelModal.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
