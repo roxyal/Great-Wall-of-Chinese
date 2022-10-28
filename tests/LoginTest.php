@@ -10,26 +10,13 @@ class LoginTest extends TestCase{
         require("scripts\functions_utility.php");
 
         // Insert student test case
-        $username = "studentacc";
-        $password = "StudentPass123";
-        $email = "valid_email@email.com";
-        $name = "correct_name";
-        $sql = $conn->prepare("INSERT INTO `accounts`(`account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?)");
-        $sql->bind_param('sssss', "Student", $username, $hash, $email, $name);
+        $sql = $conn->prepare("INSERT INTO `accounts`(`account_id`, `account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?, ?)");
+        $sql->bind_param('isssss', 9999, "Student", "studentacc", "StudentPass123", "valid_email@email.com", "correct_name");
         $sql->execute();
 
-        $account_id = $conn->insert_id;
-        $students_insert = $conn->prepare("INSERT INTO `students`(`student_id`, `character_type`, `teacher_account_id`) VALUES (?, ?, ?)");
-        $students_insert->bind_param('iii', $account_id, 1, 1);
-        $students_insert->execute();
-
         // Insert teacher test case
-        $username2 = "teacheracc";
-        $password2 = "TeacherPass123";
-        $email2 = "valid_email2@email.com";
-        $name2 = "correct_name2";
-        $sql2 = $conn->prepare("INSERT INTO `accounts`(`account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?)");
-        $sql2->bind_param('sssss', "Teacher", $username2, $password2, $email2, $name2);
+        $sql2 = $conn->prepare("INSERT INTO `accounts`(`account_id`, `account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?, ?)");
+        $sql2->bind_param('isssss', 9998, "Teacher", "teacheracc", "TeacherPass123", "valid_email2@email.com", "correct_name2");
         $sql2->execute();
 
         // Outputs: int 0 on success (student login)
@@ -49,16 +36,12 @@ class LoginTest extends TestCase{
 
         # Delete test cases 
         $sql3 = $conn->prepare("DELETE FROM `accounts` WHERE username = ?");
-        $sql3->bind_param('s', $username);
+        $sql3->bind_param('s', "studentacc");
         $sql3->execute();
 
         $sql4 = $conn->prepare("DELETE FROM `accounts` WHERE username = ?");
-        $sql4->bind_param('s', $username2);
+        $sql4->bind_param('s', "teacheracc");
         $sql4->execute();
-
-        $sql5 = $conn->prepare("DELETE FROM `students` WHERE student_id = ?");
-        $sql5->bind_param('i', $account_id);
-        $sql5->execute();
     }
 }
 

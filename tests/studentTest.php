@@ -8,6 +8,7 @@ class studentTest extends PHPUnit\Framework\TestCase{
 
         require("scripts\config.php");
         require("scripts\functions_utility.php");
+        require("scripts\student.php");
         
         // Insert student test case
         $sql = $conn->prepare("INSERT INTO `students`(`student_id`, `character_type`, `teacher_account_id`) VALUES (?, ?, ?)");
