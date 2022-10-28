@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Great Wall of Chinese</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
-    <!-- <script type="module" src="src/idioms.js"></script> -->
 
     <!-- Booststrap (CSS) assets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -31,7 +30,7 @@
           <form class="form-inline">
               <button id="teacherLogOut" class="btn btn-danger mx-2" type="button" data-bs-toggle="modal" data-bs-target="#logout-modal">Log out</button>
           </form>
-      </nav>
+    </nav>
     <div id="idiomWorld" style="height: 95%;"></div>
 
     <!--Create custom level Modal starts here-->
@@ -233,7 +232,7 @@
         </div>
       </div>
     </div>
-    <!--sentInvitation Modal ends here-->
+    <!--rejectInvitation Modal ends here-->
 
     <!--Assignment mode Modal starts here-->
     <div class="modal fade" id="assignmentMode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -614,8 +613,9 @@
     <!--ViewProfileModal ends here-->
     
     <script type="module" src="src/idioms.js"></script>
+    <script src="worldFunctions.js"></script>
 </body>
-<script src="worldFunctions.js"></script>
+<!-- <script src="worldFunctions.js"></script> -->
 <script>
   var socket;
   var spawn; 
