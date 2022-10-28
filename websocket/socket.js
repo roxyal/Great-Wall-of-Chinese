@@ -171,6 +171,8 @@ generateSocketAuth().then(result => {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split(", ");
             // [correct 1|0, correct answer, explanation, mode]
             if(answer[3] == "adv") {
+                console.log("Updating adventure modal score and explanation") // for testing purpose
+
                 adventureModeQnAttempted += 1
                 if(answer[0] == "1") adventureModeQnCorrect += 1
                 document.getElementById('adventureModeScore').innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;

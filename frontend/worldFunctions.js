@@ -589,17 +589,17 @@ function selectAdventureSection(e){
   }
 
 // get all the components in the adventure mode modal
-var adventureModeProgressBar = document.getElementById('adventureModeProgressBar');
-var adventureModeScore = document.getElementById('adventureModeScore');
-var adventureModeQuestionNo = document.getElementById('adventureModeQuestionNo');
-var adventureModeQuestion = document.getElementById('adventureModeQuestion');
-var adventureModeOption1 = document.getElementById('adventureModeOption1');
-var adventureModeOption2 = document.getElementById('adventureModeOption2');
-var adventureModeOption3 = document.getElementById('adventureModeOption3');
-var adventureModeOption4 = document.getElementById('adventureModeOption4');
-var adventureModeExplanation = document.getElementById('adventureModeExplanation');
-var adventureModeNextQuestionBtn = document.getElementById('adventureModeNextQuestion');
-var adventureModeComplete = document.getElementById('adventureModeComplete');
+// var adventureModeProgressBar = document.getElementById('adventureModeProgressBar');
+// var adventureModeScore = document.getElementById('adventureModeScore');
+// var adventureModeQuestionNo = document.getElementById('adventureModeQuestionNo');
+// var adventureModeQuestion = document.getElementById('adventureModeQuestion');
+// var adventureModeOption1 = document.getElementById('adventureModeOption1');
+// var adventureModeOption2 = document.getElementById('adventureModeOption2');
+// var adventureModeOption3 = document.getElementById('adventureModeOption3');
+// var adventureModeOption4 = document.getElementById('adventureModeOption4');
+// var adventureModeExplanation = document.getElementById('adventureModeExplanation');
+// var adventureModeNextQuestionBtn = document.getElementById('adventureModeNextQuestion');
+// var adventureModeComplete = document.getElementById('adventureModeComplete');
 
 // function for option buttons to submit answer
 function adventureModeSubmit(e){
@@ -609,7 +609,7 @@ function adventureModeSubmit(e){
   // disable all option buttons after submitting
 
   var selectedAnswer = e.srcElement.value; //selected answer
-  console.log(selectedAnswer);
+  //console.log(selectedAnswer);
 
   socket.send("/answer "+selectedAnswer);
 
@@ -694,8 +694,6 @@ function adventureModeLoadNextQuestion(){
 }
 let adventureModeModal = document.getElementById('adventureMode-modal');
 adventureModeModal.addEventListener('show.bs.modal', async function (event){
-    console.log('OPENING ADVENTURE MODE MODAL')
-
 	// set starting values
 	adventureModeProgress = 0; // progress in terms of percentage, starts at 0
 	adventureModeQnCorrect = 0; // num of questions correct, starts at 0
@@ -714,7 +712,6 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 	// console.log(selectedAdventureSection);
 
 	// Add player character based on characterID
-	var character = adventureModeModal.querySelector('#characterAvatarAdventure'); 
 	switch (characterID) {
 	case "1":
 	    adventureModeModal.querySelector('#characterAvatarAdventure').innerHTML = '<img class = "img-responsive" width = "100%"  src="images/martialHero.png"/>';
