@@ -677,7 +677,9 @@ function showProfileModal(username, characterType){
                     view_username.innerHTML = username;
                     
                     // Display character image
-                    view_character.innerHTML = "src=" + character_url + "width=180" + " height=180";
+                    view_character.src = character_url;
+                    view_character.width = 180;
+                    view_character.height = 180;
                     
                     // Split the string using (,)
                     // profile_Array[0] - idiom_lower_correct // profile_Array[1] - idiom_lower_attempted
