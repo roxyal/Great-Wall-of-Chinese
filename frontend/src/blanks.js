@@ -664,18 +664,18 @@ function showProfileModal(username){
                     var profile_Array = this.responseText.split(',');
                     
                     // Display Idioms_acc
-                    var idiom_total_correct = profile_Array[0] + profile_Array[2];
-                    var idiom_total_attempted = profile_Array[1] + profile_Array[3];
+                    var idiom_total_correct = parseInt(profile_Array[0]) + parseInt(profile_Array[2]);
+                    var idiom_total_attempted = parseInt(profile_Array[1]) + parseInt(profile_Array[3]);
                     (idiom_total_attempted > 0 ) ? view_idioms_acc.innerHTML = (Math.round(100*idiom_total_correct/idiom_total_attempted)).toFixed(2) + "%":view_idioms_acc.innerHTML = "0%";
                     
                     // Display fill_acc
-                    var fill_total_correct = profile_Array[4] + profile_Array[6];
-                    var fill_total_attempted = profile_Array[5] + profile_Array[7];
+                    var fill_total_correct = parseInt(profile_Array[4]) + parseInt(profile_Array[6]);
+                    var fill_total_attempted = parseInt(profile_Array[5]) + parseInt(profile_Array[7]);
                     (fill_total_attempted > 0 ) ? view_fill_acc.innerHTML = (Math.round(100*fill_total_correct/fill_total_attempted)).toFixed(2) + "%":view_fill_acc.innerHTML = "0%";
                     
                     // Display Pinyin_acc
-                    var pinyin_total_correct = profile_Array[8] + profile_Array[10];
-                    var pinyin_total_attempted = profile_Array[9] + profile_Array[11];
+                    var pinyin_total_correct = parseInt(profile_Array[8]) + parseInt(profile_Array[10]);
+                    var pinyin_total_attempted = parseInt(profile_Array[9]) + parseInt(profile_Array[11]);
                     (pinyin_total_attempted > 0 ) ? view_pinyin_acc.innerHTML = (Math.round(100*pinyin_total_correct/pinyin_total_attempted)).toFixed(2) + "%":view_pinyin_acc.innerHTML = "0%";
                     
                     // Display Rank
