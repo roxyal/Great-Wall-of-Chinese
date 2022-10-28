@@ -652,16 +652,16 @@ function showProfileModal(username, characterType){
     
     switch (characterType) {
         case "1":
-            character_url = "../images/martialHero.png";
+            character_url = "images/martialHero.png";
             break;
         case "2":
-            character_url = "../images/huntress.png";
+            character_url = "images/huntress.png";
             break;
         case "3":
-            character_url = "../images/heroKnight.png";
+            character_url = "images/heroKnight.png";
             break;
         case "4":
-            character_url = "../images/wizard.png";
+            character_url = "images/wizard.png";
             break;
         default:
             console.log("Cannot detect characterType");
@@ -677,7 +677,7 @@ function showProfileModal(username, characterType){
                     view_username.innerHTML = username;
                     
                     // Display character image
-                    view_character.innerHTML = "src=" + character_url + "alt=Generic placeholder image class=img-fluid style=width: 180px; border-radius: 10px;";
+                    view_character.innerHTML = "src=" + character_url + "width=180" + " height=180";
                     
                     // Split the string using (,)
                     // profile_Array[0] - idiom_lower_correct // profile_Array[1] - idiom_lower_attempted
