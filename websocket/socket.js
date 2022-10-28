@@ -162,7 +162,16 @@ generateSocketAuth().then(result => {
                 questionQueue = e.data.match(pattern)[2].split(", ");
             }
             else if(mode == "pvp") {
-                
+                console.log(pvpModeCurrentQn);
+                if(pvpModeCurrentQn == 1 && document.getElementById('pvpModeOption1').disabled !== "true") {
+                    let question = e.data.match(pattern)[2].split(", ");
+                    document.getElementById('pvpModeQuestion').innerHTML = question[0];
+                    for(let i=1; i<=4; i++) {
+                        document.getElementById('pvpModeOption'+i).innerHTML = question[i];
+                    }
+                    return;
+                }
+                questionQueue = e.data.match(pattern)[2].split(", ");
             }
             return;
         }
