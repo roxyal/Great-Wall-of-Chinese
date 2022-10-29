@@ -194,23 +194,23 @@ generateSocketAuth().then(result => {
         //     }
         // }
 
-        if(/^\[slowpoke\] you are(.+)/.test(e.data)) {
-            // just a very workaround way bc idk what else to do :)
-            slowpoke.push(true);
-            console.log("opponent answered first, awaiting your answer");
-            // }
-            // else {
-            //     // opponent answered 2nd, display the next qn
-            //     slowpoke.push(false);
-            //     console.log("you answered first and your opponent just finished answering");
-            //     await displayNextPvpQn();
-            // }
-        }
-        if(/^\[slowpoke\] your opponent(.+)/.test(e.data)) {
-            slowpoke.push(false);
-            console.log("you answered first, awaiting opponent's answer");
-            // await displayNextPvpQn();
-        }
+        // if(/^\[slowpoke\] you are(.+)/.test(e.data)) {
+        //     // just a very workaround way bc idk what else to do :)
+        //     slowpoke.push(true);
+        //     console.log("opponent answered first, awaiting your answer");
+        //     // }
+        //     // else {
+        //     //     // opponent answered 2nd, display the next qn
+        //     //     slowpoke.push(false);
+        //     //     console.log("you answered first and your opponent just finished answering");
+        //     //     await displayNextPvpQn();
+        //     // }
+        // }
+        // if(/^\[slowpoke\] your opponent(.+)/.test(e.data)) {
+        //     slowpoke.push(false);
+        //     console.log("you answered first, awaiting opponent's answer");
+        //     // await displayNextPvpQn();
+        // }
 
         if(/^\[pvp\] sent: Your opponent(.+)/.test(e.data)) {
             // forfeit message
@@ -298,6 +298,7 @@ generateSocketAuth().then(result => {
             else if(answer[3] == "pvp") {
                 if(answer[4] == "first") {
                     // the user was first
+
                 }
                 else {
                     // the user was second
