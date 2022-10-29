@@ -315,6 +315,12 @@ generateSocketAuth().then(result => {
             errorModal.show();
         }
 
+        if(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
+            let scores = e.data.match(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/);
+            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]+"/"+pvpModeCurrentQn; 
+            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
+        }
+
         if(/^\[answer\] (.+)/.test(e.data)) {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split("!!!I LOVE CHINESEEE!!!");
             // [correct 1|0, correct answer, explanation, mode]

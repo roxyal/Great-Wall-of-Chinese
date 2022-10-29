@@ -548,6 +548,10 @@ class Socket implements MessageComponentInterface {
                                     }
 
                                     $player->send("[answer] {$opponentCorrect}!!!I LOVE CHINESEEE!!!{$roww["answer2"]}!!!I LOVE CHINESEEE!!! !!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}!!!I LOVE CHINESEEE!!!first");
+
+                                    $client->send("[pvp score] ".count($client->currentRoom["sessionAttempted"])." ".$client->pvpScore." ".count($player->currentRoom["sessionAttempted"])." ".$player->pvpScore);
+                                    $player->send("[pvp score] ".count($player->currentRoom["sessionAttempted"])." ".$player->pvpScore." ".count($client->currentRoom["sessionAttempted"])." ". $client->pvpScore);
+
                                     break;
                                 }
                             }
