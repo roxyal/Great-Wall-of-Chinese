@@ -30,7 +30,7 @@ function viewLeaderBoard()
     // lower question will be awarded 1 points if correct, upper will be awarded 2 points
     // This is to differentiate between players
     // First sort will be based on number_adventure_points, second will be based on their accuracy
-    $sql_1 = "SELECT a.name, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
+    $sql_1 = "SELECT a.username, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
             . "2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct) "
             . "AS adv_score, 100*((s.idiom_lower_correct+s.fill_lower_correct+"
             . "s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+"
@@ -53,8 +53,9 @@ function viewLeaderBoard()
         while ($row = $result->fetch_assoc())
         {
             $position = $count +1;
-            // Concatenate the top-20 highest ADVENTURE_mode accuracy player information (position, name, accuracy)
-            $leaderboard_str = $leaderboard_str.$position.$comma.$row['name'].$comma.$row['accuracy'];
+            // Concatenate the top-20 highest ADVENTURE_mode accuracy player information (position, username,adv_score ,accuracy)
+            $leaderboard_str = $leaderboard_str.$position.$comma.$row['username'].$comma.
+                                $row['adv_score'].$comma.$row['accuracy'];
 
             if ($count+1 != $num_rows)
                 $leaderboard_str = $leaderboard_str.'|';
@@ -67,7 +68,7 @@ function viewLeaderBoard()
         $leaderboard_str = $leaderboard_str.'*';
         
         // Another SQL statement that sort and calculates the accuracy but for PVP MODE
-        $sql_2 = "SELECT a.name, l.rank, l.rank_points FROM leaderboard l INNER JOIN accounts a
+        $sql_2 = "SELECT a.username, l.rank, l.rank_points FROM leaderboard l INNER JOIN accounts a
             WHERE l.account_id = a.account_id AND l.rank_points > 0 ORDER BY rank_points DESC LIMIT 20";
         
         $stmt_2 = $conn->prepare($sql_2);
@@ -80,7 +81,7 @@ function viewLeaderBoard()
             {
                 $position = $count +1;
                 // Concatenate the top-20 highest PVP_mode accuracy player information (position, name, rank, rank points)
-                $leaderboard_str = $leaderboard_str.$position.$comma.$row['name'].$comma.$row['rank'].
+                $leaderboard_str = $leaderboard_str.$position.$comma.$row['username'].$comma.$row['rank'].
                         $comma.$row['rank_points'];
 
                 if ($count+1 != $num_rows)
