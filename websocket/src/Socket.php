@@ -522,6 +522,9 @@ class Socket implements MessageComponentInterface {
                                 $sql = "select * from questions where question_type like :world and level like :level and question_id not in ($attempted) order by rand() limit 1";
                                 $statement = yield $pool->prepare($sql);
                                 $result = yield $statement->execute(['world' => $client->userinfoWorld, 'level' => $client->customQuestionQueue[0][1]]);
+                                $arr = $client->customQuestionQueue;
+                                array_shift($arr);
+                                $client->customQuestionQueue = $arr;
                             }
                             else {
                                 $sql = "select * from questions where question_type like :world and question_id not in ($attempted) order by rand() limit 1";
@@ -629,7 +632,7 @@ class Socket implements MessageComponentInterface {
         echo "Client $client->resourceId said $msg\n";
 
         // /challenge <player_username> <customroom_id>: create a new challenge record in db
-        if(preg_match_all("/^\/challenge (.+) ?(.*)$/", $msg, $matches)) {
+        if(preg_match_all("/^\/challenge ([^ ]+) ?(.*)$/", $msg, $matches)) {
             $recipientUsername = $matches[1][0];
             if(!strcasecmp($client->userinfoUsername, $recipientUsername)) {
                 $client->send("[error] 1: You cannot challenge yourself!");
@@ -641,7 +644,7 @@ class Socket implements MessageComponentInterface {
                 return;
             }
             $customRoomID = 0;
-            if(isset($matches[2][0])) $customRoomID = $matches[2][0];  
+            if(isset($matches[2][0])) $customRoomID = intval($matches[2][0]);  
 
             \Amp\Loop::run(function() use ($client, $recipientUsername, $customRoomID) {
                 require "../../../secrets.php";
@@ -654,6 +657,12 @@ class Socket implements MessageComponentInterface {
                 if($customRoomID > 1) {
                     $statement = yield $pool->prepare("select count(*) as count from custom_levels where custom_game_id = :custom and account_id = :acid");
                     $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
+                    // $s = yield $pool->query("select count(*) as count from custom_levels where custom_game_id = $customRoomID and account_id = $client->userinfoID");
+                    // while (yield $s->advance()) {
+                    //     \var_dump($s->getCurrent());
+                    // }
+                    // yield $s->advance();
+                    // $r = $s->getCurrent();
                     yield $result->advance();
                     $row = $result->getCurrent();
                     if($row["count"] < 1) {
@@ -745,21 +754,30 @@ class Socket implements MessageComponentInterface {
 
                         // get the first question
                         if($customRoomID > 0) {
-                            $sql = "select * from custom_levels where custom_game_id = :custom and account_id = :acid";
-                            $statement = yield $pool->prepare($sql);
-                            $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $client->userinfoID]);
+                            $statement = yield $pool->prepare("select * from custom_levels where custom_game_id = :custom and account_id = :acid");
+                            $result = yield $statement->execute(['custom' => $customRoomID, 'acid' => $player->userinfoID]);
+                            // var_dump($customRoomID);
                             yield $result->advance();
                             $row = $result->getCurrent();
-                            $client->customQuestionQueue = [];
+                            // var_dump($row);
+                            // $s = yield $pool->query("select * from custom_levels where custom_game_id = $customRoomID and account_id = $player->userinfoID");
+                            // while (yield $s->advance()) {
+                            //     \var_dump($s->getCurrent());
+                            // }
+                            // yield $s->advance();
+                            // $row = $s->getCurrent();
+                            
+                            $arr = [];
                             $temp = explode('|', $row["question_type_difficulty"]);
                             for($i = 0; $i < count($temp); $i++) {
-                                $client->customQuestionQueue[] = explode(',', $temp[$i]);
+                                $arr[] = explode(',', $temp[$i]);
                             }
-                            var_dump($client->customQuestionQueue);
 
                             $statement = yield $pool->prepare("select * from questions where question_type like :type and level like :level order by rand() limit 1");
-                            $result = yield $statement->execute(['type' => $client->customQuestionQueue[0][0], 'level' => $client->customQuestionQueue[0][1]]);
-                            array_shift($client->customQuestionQueue);
+                            $result = yield $statement->execute(['type' => $arr[0][0], 'level' => $arr[0][1]]);
+                            array_shift($arr);
+                            $client->customQuestionQueue = $arr;
+                            // var_dump($client->customQuestionQueue);
                         }
                         else {
                             $sql = "select * from questions where question_type like :world order by rand() limit 1";
