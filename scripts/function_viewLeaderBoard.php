@@ -9,7 +9,7 @@ if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewLeaderBoard
 // Inputs: no argument needed
 // Outputs: string of information that contain Adventure as well as PVP leaderboards information
 // Example of Output string:
-// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143*1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
+// 1,vinvin,22,55.0000|2,diedforoursyntax,21,30.0000|3,testa,20,22.2222*1,diedforoursyntax,Bling Bling,1000|2,Kelvi,Bronze,50
 //          int 1 on account_id does not exists
 //          int 2 on server error.
 function viewLeaderBoard()
@@ -17,11 +17,11 @@ function viewLeaderBoard()
     require_once "config.php";
     require_once "functions_utility.php";
     
-    // Get the account_id
-    $account_id = getLoggedInAccountId();
-    
-    // Check if account_id exists
-    if(!checkAccountIdExists($account_id)) return 1;
+//    // Get the account_id
+//    $account_id = getLoggedInAccountId();
+//    
+//    // Check if account_id exists
+//    if(!checkAccountIdExists($account_id)) return 1;
     
     $leaderboard_str = "";
     $comma = ',';
@@ -29,18 +29,16 @@ function viewLeaderBoard()
     // SQL statement that sort and calculates the accuracy for ADVENTURE MODE
     // lower question will be awarded 1 points if correct, upper will be awarded 2 points
     // This is to differentiate between players
-    // First sort will be based on number_adventure_points, second will be based on their accuracy
-    $sql_1 = "SELECT a.username, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
-            . "2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct) "
-            . "AS adv_score, 100*((s.idiom_lower_correct+s.fill_lower_correct+"
-            . "s.pinyin_lower_correct)+ 2*(s.idiom_upper_correct+s.fill_upper_correct+"
-            . "s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+"
-            . "s.pinyin_lower_attempted)+2*(s.idiom_upper_attempted+s.fill_upper_attempted+"
-            . "s.pinyin_upper_attempted)) AS accuracy FROM students s INNER JOIN accounts a"
-            . " WHERE s.student_id = a.account_id AND a.account_type = 'Student' AND"
-            . " 100*((s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+"
-            . " 2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct))/((s.idiom_lower_attempted+s.fill_lower_attempted+s.pinyin_lower_attempted)+"
-            . "2*(s.idiom_upper_attempted+s.fill_upper_attempted+s.pinyin_upper_attempted)) > 0 ORDER BY adv_score DESC, accuracy DESC LIMIT 20";
+    // First sort will be based on adventure_points, second will be based on their accuracy
+    $sql_1 = "SELECT a.username, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct) AS adv_score, 100*(s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct+s.idiom_upper_correct+s.fill_upper_correct+
+            s.pinyin_upper_correct)/(s.idiom_lower_attempted+s.fill_lower_attempted+
+            s.pinyin_lower_attempted+s.idiom_upper_attempted+s.fill_upper_attempted+
+            s.pinyin_upper_attempted) AS accuracy FROM students s INNER JOIN accounts a
+            WHERE s.student_id = a.account_id AND a.account_type = 'Student' AND
+            100*(s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct+s.idiom_upper_correct+s.fill_upper_correct+
+            s.pinyin_upper_correct)/(s.idiom_lower_attempted+s.fill_lower_attempted+
+            s.pinyin_lower_attempted+s.idiom_upper_attempted+s.fill_upper_attempted+
+            s.pinyin_upper_attempted) > 0 ORDER BY adv_score DESC, accuracy DESC LIMIT 20";
     
     $stmt_1 = $conn->prepare($sql_1);
     
