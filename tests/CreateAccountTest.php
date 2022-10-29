@@ -3,7 +3,7 @@ session_start();
 use PHPUnit\Framework\TestCase;
 
 class CreateAccountTest extends TestCase{
-    public function testCreateAccountSuccess(){
+    public function CreateAccountTest(){
         //createAccount(string $username, string $name, string $email, string $password, int $teacher_id, int $character)
         require('scripts\function_createAccount.php');
         require("scripts\config.php");

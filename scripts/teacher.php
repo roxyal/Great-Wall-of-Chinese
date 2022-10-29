@@ -184,6 +184,9 @@ class Teacher{
     {
         // Check to see if account_id exists
         if (!checkAccountIdExists($teacher_account_id)) return 1;
+
+        // Check if AssignmentName exists
+        if(!$this->checkAssignmentNameExists($teacher_account_id, $assignmentName)) return 3;
         
         // Delete the Assignment from the table, based on account_id and assignmentName
         $sql_1 = "DELETE FROM assignments WHERE account_id = ? AND assignment_name = ?";

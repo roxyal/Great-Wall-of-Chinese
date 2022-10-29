@@ -3,7 +3,7 @@ session_start();
 use PHPUnit\Framework\TestCase;
 
 class LoginTest extends TestCase{
-    public function testLoginSuccess(){
+    public function LoginTest(){
         //login(string $uname, string $pass)
         require('scripts\function_login.php');
         require("scripts\config.php");
