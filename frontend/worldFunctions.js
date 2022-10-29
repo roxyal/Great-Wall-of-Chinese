@@ -77,30 +77,6 @@ function updateAssignmentNotification(){
     xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
 }
 
-//var profile_detail = document.getElementById('profile_detail');
-//var info = "";
-//
-//function viewProfile(){
-//    var xmlhttp = new XMLHttpRequest();
-//	xmlhttp.onreadystatechange = function() {
-//            if (this.readyState === 4 && this.status === 200) {
-//                console.log("NANI");
-//		if (this.responseText.length > 2){
-//                }
-//                if (this.responseText.length === 1 && this.responseText === "1"){
-//                    console.log("Account_id cannot be detected!");
-//                }
-//                if (this.responseText.length === 1 && this.responseText === "2"){
-//                    console.log("A server error occurred</div>");
-//                }
-//            }
-//	};
-//	xmlhttp.open("POST", "../scripts/student", true);
-//        // Request headers required for a POST request
-//        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//        xmlhttp.send(`username=${username}&function_name=viewProfile`);
-//}
-
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
@@ -168,7 +144,7 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 			if (this.responseText.length > 2){
 				
 				// This is an example of the string of information for Adventure/PVP leaderboard
-				// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143*1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
+				// 1,vinvin,22,55.0000|2,diedforoursyntax,21,30.0000|3,testa,20,22.2222*1,diedforoursyntax,Bling Bling,1000|2,testa,Bronze,50
 				
 				// We then split the string into an array
 				// WE use (*) to spit the leaderboard to Adventure and PVP
@@ -177,15 +153,15 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 				leaderBoardArray = this.responseText.split("*");
 				adventureLeaderBoard = leaderBoardArray[0];
 				pvpLeaderBoard = leaderBoardArray[1];
-				
+			
 				// Printing Adventure on the HTML
 				// Example of adventureLeaderBoard string
-				// 1,Kelvin,85.0000|2,Kelly,67.5000|3,kyrin,55.7143
+				// 1,vinvin,22,55.0000|2,diedforoursyntax,21,30.0000|3,testa,20,22.2222
 				
 				// We use (|) to split the individual's information
 				// Therefore, you can see that each element of the array is a player's info
 				// Example of adventureLeaderBoardArray
-				// ['1,Kelvin,85.0000', '2,Kelly,67.5000', '3,kyrin,55.7143']
+				// ['1,vinvin,22,55.0000', '2,diedforoursyntax,21,30.0000', '3,testa,20,22.2222']
 				// Check to see if the adventureLeaderBoard is an empty list
                                 if (adventureLeaderBoard.length !== 0){
                                     adventureLeaderBoardArray = adventureLeaderBoard.split("|");
@@ -193,41 +169,33 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 					// rowAdventure = '<tr>';
 					
 					// We use (,) to split again, to obtain respestive columns player's information
-					// [Position, Name, Accuracy]
-					// ['1', 'Kelvin', '85.0000']
+					// [Position, Username, Adventure Points, Accuracy]
+					// ['1','vinvin','22','55.0000']
 					student_info = adventureLeaderBoardArray[i].split(",");
-					let rank = student_info[0];
-					let name = student_info[1];
-					let accuracy = (Math.round(student_info[2] * 100) / 100).toFixed(2)
+					let position = student_info[0];
+					let username = student_info[1];
+                                        let adv_points = student_info[2];
+					let accuracy = (Math.round(student_info[3] * 100) / 100).toFixed(2);
 
 					rowAdventure += `<tr>
-										<td>` + rank + `</td>
-										<td>` + name + `</td>
+										<td>` + position + `</td>
+										<td>` + username + `</td>
+                                                                                <td>` + adv_points + `</td>
 										<td>` + accuracy + `</td>
-									</tr>`
-					
-					// for(j=0;j<student_info.length;j++){
-					// 	if (j===student_info.length-1){
-					// 		rowAdventure += '<td>' + (Math.round(student_info[j] * 100) / 100).toFixed(2) + '%' + '</td>';
-					// 	}
-					// 	else {
-					// 		rowAdventure += '<td>' + student_info[j] + '</td>';
-					// 	}
-					// }
-					// rowAdventure += '</tr>';
+									</tr>`;
                                     }
                                     adventureMode.innerHTML  = rowAdventure; //set innerhtml code
                                 }
 				
 				// Printing PVP on the HTML
 				// Example of pvpLeaderBoard string
-				// 1,kyrin,Bling Bling,1000|2,Kelvin,Bronze,50|3,Kelly,Bronze,50
+				// 1,diedforoursyntax,Bling Bling,1000|2,testa,Bronze,50
 				
 				// Similar to adventureMode's LeaderBoard we use 
 				// We use (|) to split the individual's information
 				// Therefore, you can see that each element of the array is a player's info
 				// Example of pvpLeaderBoardArray
-				// ['1,kyrin,Bling Bling,1000', '2,Kelvin,Bronze,50', '3,Kelly,Bronze,50\n']
+				// ['1,diedforoursyntax,Bling Bling,1000', '2,testa,Bronze,50']
 				// Check to see if the pvpLeaderBoard is an empty list
                                 if (pvpLeaderBoard.length !== 0){
                                     pvpLeaderBoardArray = pvpLeaderBoard.split("|");
@@ -235,8 +203,8 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 					rowPvp = rowPvp + '<tr>';
 					
 					// We use (,) to split again, to obtain respestive columns player's information
-					// [Position, Name, Rank, Rank Points]
-					// ['1', 'kyrin', 'Bling Bling', '1000']
+					// [Position, Username, Rank, Rank Points]
+					// ['1', 'diedforoursyntax', 'Bling Bling', '1000']
 					student_info = pvpLeaderBoardArray[i].split(",");
 					for(j=0;j<student_info.length;j++){
 						rowPvp += '<td>' + student_info[j] + '</td>';
@@ -246,10 +214,10 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
                                     pvpMode.innerHTML  = rowPvp; //set innerhtml code
                                 }
                         }
-			if(this.responseText === 1 && this.responseText === "1"){
+			if(this.responseText.length === 1 && this.responseText === "1"){
 				console.log("Account_id cannot be detected!");
 			}
-			if(this.responseText === 1 && this.responseText === "2"){
+			if(this.responseText.length === 1 && this.responseText === "2"){
 				console.log("A server error occurred</div>");
 			}
 		}   
@@ -364,10 +332,10 @@ viewCustomLevelModal.addEventListener('show.bs.modal', function (event){
                     }
                     table.innerHTML = rowsHTML; //set innerhtml code
                 }
-                if(this.responseText === 1 && this.responseText === "1"){
+                if(this.responseText.length === 1 && this.responseText === "1"){
                     document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">Account_id cannot be detected!</div>`;
                 }
-                if(this.responseText === 1 && this.responseText === "2"){
+                if(this.responseText.length === 1 && this.responseText === "2"){
                     document.getElementById('viewCustomresponse').innerHTML = `<div class="alert alert-danger" role="alert">A server error occurred</div>`;
                 }
             }   
