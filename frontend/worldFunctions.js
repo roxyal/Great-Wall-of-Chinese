@@ -741,9 +741,20 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 
 
 // PVP MODE
+function submitPvpAns(answer) {
+    socket.send('/answer ' + answer);
+
+    // disable buttons while waiting for opponent's reply
+    console.log("disabling pvp buttons");
+    document.getElementById("pvpModeOption1").disabled = true;
+    document.getElementById("pvpModeOption2").disabled = true;
+    document.getElementById("pvpModeOption3").disabled = true;
+    document.getElementById("pvpModeOption4").disabled = true;
+}
 function displayNextPvpQn(){
     return new Promise(function(resolve) {
         console.log("displaying next question");
+        console.log(questionQueue);
         
         pvpModeCurrentQn++;
         console.log(pvpModeCurrentQn);
@@ -751,7 +762,7 @@ function displayNextPvpQn(){
         
         // let loadQn = window.setInterval(function() {
             if(questionQueue.length > 0) {
-                console.log("queue", questionQueue);
+                // console.log("queue", questionQueue);
                 document.getElementById("pvpModeQuestion").innerHTML = questionQueue[0];
                 for(let i=1; i<=4; i++) {
                     document.getElementById('pvpModeOption'+i).disabled = false;
@@ -762,5 +773,3 @@ function displayNextPvpQn(){
         
     });
 }
-
-        

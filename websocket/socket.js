@@ -50,7 +50,7 @@ var token;
 var world;
 var updateLoop;
 var moves = {};
-var slowpoke = false;
+var slowpoke = [];
 // // Set an interval to check the movement queue
 // var moveQueue = window.setInterval(function() {
 //     // If movement queue has any items
@@ -110,7 +110,7 @@ generateSocketAuth().then(result => {
                     // Check if the player's last move location is equal to their current location
                     let player = moves[key];
                     let concat = `${player[player.length-1][0]}-${player[player.length-1][1]}-${player[player.length-1][2]}`;
-                    console.log(key, value, concat);
+                    // console.log(key, value, concat);
 
                     // Save the player's last updated location
                     moves[key].push(concat.split("-"));
@@ -138,7 +138,7 @@ generateSocketAuth().then(result => {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
             let mode = e.data.match(pattern)[1];
             if(mode == "adv") {
-                console.log(adventureModeCurrentQn);
+                console.log("question "+adventureModeCurrentQn);
                 if(adventureModeCurrentQn == 1 && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
                     let question = e.data.match(pattern)[2].split(", ");
                     document.getElementById('adventureModeQuestion').innerHTML = question[0];
@@ -164,7 +164,7 @@ generateSocketAuth().then(result => {
             }
             else if(mode == "pvp") {
                 console.log("pvpmodecurrentqn", pvpModeCurrentQn);
-                if(!slowpoke && pvpModeCurrentQn == 1 && document.getElementById('pvpModeOption1').disabled !== true) {
+                if(pvpModeCurrentQn == 1 && document.getElementById('pvpModeOption1').disabled !== true) {
                     let question = e.data.match(pattern)[2].split(", ");
                     document.getElementById('pvpModeQuestion').innerHTML = question[0];
                     for(let i=1; i<=4; i++) {
@@ -177,21 +177,39 @@ generateSocketAuth().then(result => {
             return;
         }
 
-        if(/^\[time\] (\d+)/.test(e.data)) {
-            // receive the timestamp of opponent's answer
-            // let time = parseInt(e.data.match(/^\[time\] (\d+)/)[1]);
+        // if(/^\[time\] (\d+)/.test(e.data)) {
+        //     // receive the timestamp of opponent's answer
+        //     // let time = parseInt(e.data.match(/^\[time\] (\d+)/)[1]);
 
-            // the client's answer buttons are not disabled i.e. opponent answered first
-            if(document.getElementById('pvpModeOption1').disabled == false) {
-                slowpoke = true;
-                console.log("opponent answered first, awaiting your answer");
-            }
-            else {
-                // opponent answered 2nd, display the next qn
-                slowpoke = false;
-                console.log("you answered first and your opponent just finished answering");
-                await displayNextPvpQn();
-            }
+        //     // the client's answer buttons are not disabled i.e. opponent answered first
+        //     if(document.getElementById('pvpModeOption1').disabled == false) {
+        //         slowpoke.push(true);
+        //         console.log("opponent answered first, awaiting your answer");
+        //     }
+        //     else {
+        //         // opponent answered 2nd, display the next qn
+        //         slowpoke.push(false);
+        //         console.log("you answered first and your opponent just finished answering");
+        //         await displayNextPvpQn();
+        //     }
+        // }
+
+        if(/^\[slowpoke\] you are(.+)/.test(e.data)) {
+            // just a very workaround way bc idk what else to do :)
+            slowpoke.push(true);
+            console.log("opponent answered first, awaiting your answer");
+            // }
+            // else {
+            //     // opponent answered 2nd, display the next qn
+            //     slowpoke.push(false);
+            //     console.log("you answered first and your opponent just finished answering");
+            //     await displayNextPvpQn();
+            // }
+        }
+        if(/^\[slowpoke\] your opponent(.+)/.test(e.data)) {
+            slowpoke.push(false);
+            console.log("you answered first, awaiting opponent's answer");
+            // await displayNextPvpQn();
         }
 
         if(/^\[pvp\] sent: Your opponent(.+)/.test(e.data)) {
@@ -244,10 +262,10 @@ generateSocketAuth().then(result => {
         if(/^\[answer\] (.+)/.test(e.data)) {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split("!!!I LOVE CHINESEEE!!!");
             // [correct 1|0, correct answer, explanation, mode]
-            console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
-            console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
-            console.log("2TESTING BEFORE IF STATEMENT " + answer[2])
-            console.log("3TESTING BEFORE IF STATEMENT " + answer[3])
+            // console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
+            // console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
+            // console.log("2TESTING BEFORE IF STATEMENT " + answer[2])
+            // console.log("3TESTING BEFORE IF STATEMENT " + answer[3])
 
             if(answer[3] == "adv") {
                 console.log("Updating adventure modal score and explanation") // for testing purpose
@@ -278,16 +296,20 @@ generateSocketAuth().then(result => {
                 `;
             }
             else if(answer[3] == "pvp") {
-                // disable buttons while waiting for opponent's reply
-                document.getElementById("pvpModeOption1").disabled = true;
-                document.getElementById("pvpModeOption2").disabled = true;
-                document.getElementById("pvpModeOption3").disabled = true;
-                document.getElementById("pvpModeOption4").disabled = true;
-                if(slowpoke) {
-                    // display the next qn
-                    console.log("you answered second and your opponent was waiting for you");
-                    await displayNextPvpQn();
+                if(answer[4] == "first") {
+                    // the user was first
                 }
+                else {
+                    // the user was second
+                }
+
+                await displayNextPvpQn();
+                // console.log(slowpoke);
+                // if(slowpoke.length <= pvpModeCurrentQn) {
+                    // display the next qn
+                    // console.log("you answered second and your opponent was waiting for you");
+                    // await displayNextPvpQn();
+                // }
             }
         }
 

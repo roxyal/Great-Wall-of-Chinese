@@ -266,7 +266,11 @@ class Socket implements MessageComponentInterface {
         }
 
         // Mark client's answer
-        if(preg_match_all("/^\/answer (\d)/", $msg, $matches)) {
+        if(preg_match_all("/^\/answer (.+)/", $msg, $matches)) {
+
+            // if(isset($client->slowpoke)) unset($client->slowpoke);
+            // if(isset($player->slowpoke)) unset($player->slowpoke);
+
             $time = time();
 
             // Check game mode 
@@ -308,6 +312,8 @@ class Socket implements MessageComponentInterface {
                 $client->currentRoom = $roomObject;
                 unset($roomObject);
 
+                echo $client->currentQuestion["question_id"]; 
+
                 // Record in database
                 if($client->currentRoom["type"] == "adv") {
                     $sql = "insert into adventure_tracking (adventure_room_id, account_id, question_id, answer, timestamp) values (:rid, :acc_id, :q_id, :ans, :time)";
@@ -326,19 +332,33 @@ class Socket implements MessageComponentInterface {
 
                     // $client->lastAnswer = $time;
 
-                    foreach ($this->clients as $player) {
-                        if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                    // foreach ($this->clients as $player) {
+                    //     if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
                             // if(isset($player->lastAnswer) && $player->lastAnswer < $time) {
                             
                             // Send the client's timestamp to opponent
-                            $player->send("[time] $time");
+                            // $player->send("[time] $time");
 
-                            // Set var for the opponent that they are slowwww
-                            $player->slowpoke = true;
+                            // Check if the opponent has already completed the question
+                            // echo $player->userinfoUsername." ".count($player->currentRoom["sessionAttempted"]);
+                            // echo $client->userinfoUsername." ".count($client->currentRoom["sessionAttempted"]);
+                            // if(count($player->currentRoom["sessionAttempted"]) == count($client->currentRoom["sessionAttempted"])) {
+                            //     echo "$player->userinfoUsername is slow\n";
+                            //     // Set var for the opponent that they are slowwww
+                            //     $parr = $player->slowpoke;
+                            //     $carr = $client->slowpoke;
+                            //     array_push($parr, false);
+                            //     array_push($carr, true);
+                            //     $player->slowpoke = $parr;
+                            //     $client->slowpoke = $carr;
+                            //     // $client->send("[slowpoke] you are slow");
+                            //     // $player->send("[slowpoke] your opponent is slow");
+                            // }
+                            // break;
 
                             // }
-                        }
-                    }
+                    //     }
+                    // }
 
                 }
                 else {
@@ -349,7 +369,9 @@ class Socket implements MessageComponentInterface {
                 $correct = $correct ? 1 : 0;
 
                 // Send the result and explanation
-                $client->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["explanation"]}!!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}");
+                if($client->currentRoom["type"] !== "pvp") {
+                    $client->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["explanation"]}!!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}");
+                }
 
                 // Send the next question if any
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
@@ -421,8 +443,16 @@ class Socket implements MessageComponentInterface {
                         $result = yield $statement->execute(['name' => $client->currentRoom["asname"]]);
                     }
                     elseif($client->currentRoom["type"] == "pvp") {
-                        // Check if the opponent has already answered
-                        // if(isset($client->slowpoke) && $client->slowpoke) {
+
+                        var_dump($attempted);
+                        // Get opponent's answer records
+                        $stmt = yield $pool->prepare("select count(*) as count, pvp_tracking.answer as answer1, questions.answer as answer2 from pvp_tracking join questions on questions.question_id = pvp_tracking.question_id where pvp_room_id = :rid and account_id = (select account_id from accounts where username like :uname) and pvp_tracking.question_id = :qid and timestamp < :time");
+                        $res = yield $stmt->execute(['rid' => $client->currentRoom["room"], 'uname' => $client->pvpStatus[1], 'qid' => $client->currentQuestion["question_id"], 'time' => $time]);
+                        yield $res->advance();
+                        $roww = $res->getCurrent();
+                        var_dump($roww);
+
+                        if($roww["count"] > 0) {
                             // Get the next question from the opponent's variable
                             // foreach ($this->clients as $player) {
                             //     if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
@@ -430,11 +460,11 @@ class Socket implements MessageComponentInterface {
 
                             //         $client->send("[question] pvp: {$client->currentQuestion["question"]}, {$client->currentQuestion["choice1"]}, {$client->currentQuestion["choice2"]}, {$client->currentQuestion["choice3"]}, {$client->currentQuestion["choice4"]}");
 
-                            //         return;
+                            //         break;
                             //     }
                             // }
                         // }
-                        if(!isset($client->slowpoke) || !$client->slowpoke) {
+                        // else {
                             // Generate new question
                             if(isset($client->customQuestionQueue)) {
                                 $sql = "select * from questions where question_type like :world and level like :level and question_id not in ($attempted) order by rand() limit 1";
@@ -446,7 +476,51 @@ class Socket implements MessageComponentInterface {
                                 $statement = yield $pool->prepare($sql);
                                 $result = yield $statement->execute(['world' => $client->userinfoWorld]);
                             }
+
+                            yield $result->advance();
+                            $row = $result->getCurrent();
+                            $client->currentQuestion = $row; 
+                            echo "sending client question\n";
+                            $client->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                            
+                            $client->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["explanation"]}!!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}");
+
+                            foreach ($this->clients as $player) {
+                                if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+
+                                    $player->currentQuestion = $row;
+                                    $player->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                                    echo "sending player question\n";
+
+                                    $correct = $roww["answer1"] == $roww["answer2"] ? 1 : 0;
+                                    $player->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$roww["answer2"]}!!!I LOVE CHINESEEE!!! !!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}!!!I LOVE CHINESEEE!!!first");
+                                    break;
+                                }
+                            }
                         }
+
+                        // if(isset($client->slowpoke) && $client->slowpoke == true) {
+                        // if($client->currentRoom["type"] == "pvp") {
+                        //     foreach ($this->clients as $player) {
+                        //         if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                        //             if(count($player->currentRoom["sessionAttempted"]) < count($client->currentRoom["sessionAttempted"])) {
+                            // Get the next question from the opponent's variable
+                            // foreach ($this->clients as $player) {
+                            //     if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                            //         $client->currentQuestion = $player->currentQuestion;
+
+                            //         $client->send("[question] pvp: {$client->currentQuestion["question"]}, {$client->currentQuestion["choice1"]}, {$client->currentQuestion["choice2"]}, {$client->currentQuestion["choice3"]}, {$client->currentQuestion["choice4"]}");
+
+                            //         return;
+                            //     }
+                            // }
+                        // }
+                        // else { 
+                            
+                                // }
+                            // }
+                        // }
+                        return;
                     }
                     
                     if(isset($result)) {
@@ -455,16 +529,20 @@ class Socket implements MessageComponentInterface {
                         $client->currentQuestion = $row; 
                         $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
                         $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
-    
+
+                        // var_dump($row);
                         // Send the opponent at the same time even if opponent hasn't answered yet
-                        if($client->currentRoom["type"] == "pvp") {
-                            foreach ($this->clients as $player) {
-                                if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
-                                    $player->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
-                                    break;
-                                }
-                            }
-                        }
+                        // if($client->currentRoom["type"] == "pvp") {
+                        //     foreach ($this->clients as $player) {
+                        //         if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+
+                        //             $player->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                        //             break;
+                        //         }
+                        //     }
+                        //     // if(isset($client->slowpoke)) unset($client->slowpoke);
+                        //     // if(isset($player->slowpoke)) unset($player->slowpoke);
+                        // }
                     }
                     
                 }
@@ -616,7 +694,7 @@ class Socket implements MessageComponentInterface {
                         }
                         yield $result->advance();
                         $row = $result->getCurrent();
-                        $client->currentQuestion = $row; 
+                        $client->currentQuestion = $row;
                         $player->currentQuestion = $row;
                         $client->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
                         $player->send("[question] pvp: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
@@ -627,6 +705,8 @@ class Socket implements MessageComponentInterface {
                     // Assign players to a new room
                     $client->currentRoom = array("room" => $pvpRoomId, "type" => "pvp", "sessionCorrect" => [], "sessionAttempted" => []);
                     $player->currentRoom = array("room" => $pvpRoomId, "type" => "pvp", "sessionCorrect" => [], "sessionAttempted" => []);
+                    $client->slowpoke = [];
+                    $player->slowpoke = [];
 
                     // echo "$client->userinfoUsername challenged user {$recipientUsername}!\n";
                     return;
