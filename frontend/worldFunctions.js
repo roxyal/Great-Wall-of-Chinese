@@ -697,6 +697,7 @@ function adventureModeLoadNextQuestion(){
         if(questionQueue.length > 0) {
             console.log("queue", questionQueue);
             document.getElementById('adventureModeQuestion').innerHTML = questionQueue[0];
+            document.getElementById('adventureModeQuestionNo').innerHTML += ` [${questionQueue[5]}]`;
         for(let i=1; i<=4; i++) {
             document.getElementById('adventureModeOption'+i).innerHTML = questionQueue[i];
         }
