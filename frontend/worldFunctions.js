@@ -776,3 +776,12 @@ function displayNextPvpQn(){
         
     });
 }
+function exitPvp() {
+    socket.send("/exit pvp");
+    document.getElementById("pvpProgressBar").style.width = "0%";
+    document.getElementById('pvpModeComplete').innerHTML = "";
+    document.getElementById('pvpModeOption1').disabled = false;
+    document.getElementById('pvpModeOption2').disabled = false;
+    document.getElementById('pvpModeOption3').disabled = false;
+    document.getElementById('pvpModeOption4').disabled = false;
+}

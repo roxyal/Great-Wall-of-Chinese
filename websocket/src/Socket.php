@@ -136,20 +136,24 @@ class Socket implements MessageComponentInterface {
                 $client->pvpStatus = ["Available", "", time(), 0];
             }
             elseif(strtolower($matches[1][0]) == "pvp") {
-                foreach ($this->clients as $player) {
-                    if(!strcasecmp($player->userinfoUsername, $client->pvpStatus[1])) {
-                        $player->pvpStatus = ["Available", "", time(), 0];
-                        unset ($player->currentRoom);
-                        unset ($player->currentQuestion);
-                        unset ($player->slowpoke);
-                        $player->send("[pvp] forfeit: Your opponent has forfeited.");
-                    }
+                if($client->pvpStatus[0] !== "Playing") {
+                    unset ($client->currentRoom);
+                    unset ($client->currentQuestion);
                 }
-                unset ($client->currentRoom);
-                unset ($client->currentQuestion);
-                unset ($client->slowpoke);
+                else {
+                    foreach ($this->clients as $player) {
+                        if(!strcasecmp($player->userinfoUsername, $client->pvpStatus[1])) {
+                            $player->pvpStatus = ["Available", "", time(), 0];
+                            unset ($player->currentRoom);
+                            unset ($player->currentQuestion);
+                            // unset ($player->slowpoke);
+                            $player->send("[pvp] forfeit: Your opponent has forfeited.");
+                        }
+                    }
+                    // unset ($client->slowpoke);
+                    $client->send("[pvp] forfeit: You have forfeited the match.");
+                }
                 $client->pvpStatus = ["Available", "", time(), 0];
-                $client->send("[pvp] forfeit: You have forfeited the match.");
             }
         }
 
@@ -489,11 +493,16 @@ class Socket implements MessageComponentInterface {
 
                         var_dump($attempted);
                         // Get opponent's answer records
-                        $stmt = yield $pool->prepare("select count(*) as count, pvp_tracking.answer as answer1, questions.answer as answer2 from pvp_tracking join questions on questions.question_id = pvp_tracking.question_id where pvp_room_id = :rid and account_id = (select account_id from accounts where username like :uname) and pvp_tracking.question_id = :qid and timestamp < :time");
+                        $stmt = yield $pool->prepare("select count(*) as count, pvp_tracking.answer as answer1, questions.answer as answer2 from pvp_tracking join questions on questions.question_id = pvp_tracking.question_id where pvp_room_id = :rid and account_id = (select account_id from accounts where username like :uname) and pvp_tracking.question_id = :qid and timestamp <= :time");
                         $res = yield $stmt->execute(['rid' => $client->currentRoom["room"], 'uname' => $client->pvpStatus[1], 'qid' => $client->currentQuestion["question_id"], 'time' => $time]);
                         yield $res->advance();
                         $roww = $res->getCurrent();
                         var_dump($roww);
+
+                        echo $client->currentRoom["room"];
+                        echo $client->pvpStatus[1];
+                        echo $client->currentQuestion["question_id"];
+                        echo $time;
 
                         if($roww["count"] > 0) {
                             // Get the next question from the opponent's variable
