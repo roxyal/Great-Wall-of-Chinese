@@ -45,6 +45,12 @@
               <div class="row text-center">
                 <div class="col auto">
                   <select type="text" name="questionType" class="form-control my-3" >
+                    <option value="" selected disabled>Question 1</option>
+                    <option value="Idiom">Idioms</option>
+                    <option value="Pinyin">Hanyu Pinyin</option>
+                    <option value="Fill">Fill in the blanks</option>
+                  </select>
+                  <select type="text" name="questionType" class="form-control my-3" >
                     <option value="" selected disabled>Question 2</option>
                     <option value="Idiom">Idioms</option>
                     <option value="Pinyin">Hanyu Pinyin</option>
@@ -312,7 +318,7 @@
               </div>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit assignment</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="socket.send('/exit assignment');updateAssignmentNotification()">Exit assignment</button>
             </div>
           </div>
         </div>
