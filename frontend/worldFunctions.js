@@ -77,6 +77,17 @@ function updateAssignmentNotification(){
     xmlhttp.send(`function_name=${"viewAssignedAssignment"}`);
 }
 
+// shows a modal to allow user to select CUSTOMGAME or Randomize Game
+function sendPVPNotification(e){
+
+	let sendPVP = document.getElementById('sendPVPInvitation-modal')
+	sendPVP.addEventListener('show.bs.modal', function (event){
+	})
+
+	var sendPVPModal = new bootstrap.Modal(document.getElementById('sendPVPInvitation-modal'), {});
+	sendPVPModal.show();
+}
+
 function getLoggedInCharacter() {
   return new Promise(function(resolve) {
 	  var xmlhttp = new XMLHttpRequest();
