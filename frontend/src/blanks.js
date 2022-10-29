@@ -754,7 +754,7 @@ function showProfileModal(username, characterType){
                     
                     // Display character image
                     view_character.src = character_url;
-                    view_character.width = 180;
+                    view_character.width = 150;
                     view_character.height = 180;
                     
                     // Split the string using (,)
