@@ -52,7 +52,10 @@ function updateAssignmentNotification(){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){
-            if (this.responseText.length === 0) document.getElementById('assignmentNotification').innerHTML = "Assignment";
+            if (this.responseText.length === 0){
+                document.getElementById('assignmentNotification').innerHTML = "Assignment";
+                document.getElementById('assignmentNotification').style.color = "#ffffff8c"; // set color to default color if no assignment
+            }
             if (this.responseText.length > 1){
                 var assignmentsArray = this.responseText.split("|");
                 document.getElementById('assignmentNotification').innerHTML = "Assignment [" + assignmentsArray.length + "]";
