@@ -50,6 +50,7 @@ var token;
 var world;
 var updateLoop;
 var moves = {};
+var slowpoke = [];
 // // Set an interval to check the movement queue
 // var moveQueue = window.setInterval(function() {
 //     // If movement queue has any items
@@ -109,7 +110,7 @@ generateSocketAuth().then(result => {
                     // Check if the player's last move location is equal to their current location
                     let player = moves[key];
                     let concat = `${player[player.length-1][0]}-${player[player.length-1][1]}-${player[player.length-1][2]}`;
-                    console.log(key, value, concat);
+                    // console.log(key, value, concat);
 
                     // Save the player's last updated location
                     moves[key].push(concat.split("-"));
@@ -137,7 +138,7 @@ generateSocketAuth().then(result => {
             // [question text, choice1, choice2, choice3, choice4, level lower|upper]
             let mode = e.data.match(pattern)[1];
             if(mode == "adv") {
-                console.log(adventureModeCurrentQn);
+                console.log("question "+adventureModeCurrentQn);
                 if(adventureModeCurrentQn == 1 && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
                     let question = e.data.match(pattern)[2].split(", ");
                     document.getElementById('adventureModeQuestion').innerHTML = question[0];
@@ -162,15 +163,113 @@ generateSocketAuth().then(result => {
                 questionQueue = e.data.match(pattern)[2].split(", ");
             }
             else if(mode == "pvp") {
-                
+                console.log("pvpmodecurrentqn", pvpModeCurrentQn);
+                if(pvpModeCurrentQn == 1 && document.getElementById('pvpModeOption1').disabled !== true) {
+                    let question = e.data.match(pattern)[2].split(", ");
+                    document.getElementById('pvpModeQuestion').innerHTML = question[0];
+                    for(let i=1; i<=4; i++) {
+                        document.getElementById('pvpModeOption'+i).innerHTML = question[i];
+                    }
+                    return;
+                }
+                questionQueue = e.data.match(pattern)[2].split(", ");
             }
             return;
         }
 
+        // if(/^\[time\] (\d+)/.test(e.data)) {
+        //     // receive the timestamp of opponent's answer
+        //     // let time = parseInt(e.data.match(/^\[time\] (\d+)/)[1]);
+
+        //     // the client's answer buttons are not disabled i.e. opponent answered first
+        //     if(document.getElementById('pvpModeOption1').disabled == false) {
+        //         slowpoke.push(true);
+        //         console.log("opponent answered first, awaiting your answer");
+        //     }
+        //     else {
+        //         // opponent answered 2nd, display the next qn
+        //         slowpoke.push(false);
+        //         console.log("you answered first and your opponent just finished answering");
+        //         await displayNextPvpQn();
+        //     }
+        // }
+
+        if(/^\[slowpoke\] you are(.+)/.test(e.data)) {
+            // just a very workaround way bc idk what else to do :)
+            slowpoke.push(true);
+            console.log("opponent answered first, awaiting your answer");
+            // }
+            // else {
+            //     // opponent answered 2nd, display the next qn
+            //     slowpoke.push(false);
+            //     console.log("you answered first and your opponent just finished answering");
+            //     await displayNextPvpQn();
+            // }
+        }
+        if(/^\[slowpoke\] your opponent(.+)/.test(e.data)) {
+            slowpoke.push(false);
+            console.log("you answered first, awaiting opponent's answer");
+            // await displayNextPvpQn();
+        }
+
+        if(/^\[pvp\] sent: Your opponent(.+)/.test(e.data)) {
+            // forfeit message
+            sentModal.hide();
+            var errorModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+                keyboard: false
+            })
+            document.getElementById('pvpModeOption1').disabled = false;
+            document.getElementById('pvpModeOption2').disabled = false;
+            document.getElementById('pvpModeOption3').disabled = false;
+            document.getElementById('pvpModeOption4').disabled = false;
+            document.getElementById('reject-modal-title').innerHTML = "Your opponent has disconnected.";
+            errorModal.show();
+        }
+
+        if(/^\[pvp\] received: Your opponent(.+)/.test(e.data)) {
+            // forfeit message
+            challengeModal.hide();
+        }
+
+        if(/^\[pvp\] forfeit: Your opponent(.+)/.test(e.data)) {
+            // forfeit message
+            pvpModal.hide();
+            var errorModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+                keyboard: false
+            })
+            document.getElementById('pvpModeOption1').disabled = false;
+            document.getElementById('pvpModeOption2').disabled = false;
+            document.getElementById('pvpModeOption3').disabled = false;
+            document.getElementById('pvpModeOption4').disabled = false;
+            document.getElementById('reject-modal-title').innerHTML = "Your opponent has forfeited.";
+            errorModal.show();
+        }
+
+        if(/^\[pvp\] forfeit: You have(.+)/.test(e.data)) {
+            // forfeit message
+            // pvpModal.hide();
+            var errorModal = new bootstrap.Modal(document.getElementById('rejectInvitation-modal'), {
+                keyboard: false
+            })
+            document.getElementById('pvpModeOption1').disabled = false;
+            document.getElementById('pvpModeOption2').disabled = false;
+            document.getElementById('pvpModeOption3').disabled = false;
+            document.getElementById('pvpModeOption4').disabled = false;
+            document.getElementById('reject-modal-title').innerHTML = "You have forfeited the match.";
+            errorModal.show();
+        }
+
         if(/^\[answer\] (.+)/.test(e.data)) {
-            var answer = e.data.match(/^\[answer\] (.+)/)[1].split(", ");
+            var answer = e.data.match(/^\[answer\] (.+)/)[1].split("!!!I LOVE CHINESEEE!!!");
             // [correct 1|0, correct answer, explanation, mode]
+            // console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
+            // console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
+            // console.log("2TESTING BEFORE IF STATEMENT " + answer[2])
+            // console.log("3TESTING BEFORE IF STATEMENT " + answer[3])
+
             if(answer[3] == "adv") {
+                console.log("Updating adventure modal score and explanation") // for testing purpose
+
                 adventureModeQnAttempted += 1
                 if(answer[0] == "1") adventureModeQnCorrect += 1
                 document.getElementById('adventureModeScore').innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
@@ -197,7 +296,20 @@ generateSocketAuth().then(result => {
                 `;
             }
             else if(answer[3] == "pvp") {
-                
+                if(answer[4] == "first") {
+                    // the user was first
+                }
+                else {
+                    // the user was second
+                }
+
+                await displayNextPvpQn();
+                // console.log(slowpoke);
+                // if(slowpoke.length <= pvpModeCurrentQn) {
+                    // display the next qn
+                    // console.log("you answered second and your opponent was waiting for you");
+                    // await displayNextPvpQn();
+                // }
             }
         }
 
@@ -284,6 +396,7 @@ generateSocketAuth().then(result => {
                 // get player character's id
                 let playerCharacter = await getLoggedInCharacter();
                 let opponentCharacter = await getCharacterFromUsername(sender);
+                console.log(playerCharacter, opponentCharacter);
                 let playerSprite = "";
                 let opponentSprite = "";
                 switch(playerCharacter) {

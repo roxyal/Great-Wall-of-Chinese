@@ -183,6 +183,60 @@ function create() {
     }
 
     // handling keyboard inputs when modals open/close
+    const invitationMessageModal = document.getElementById('invitationMessage-modal');
+    invitationMessageModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    invitationMessageModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+    const sentInvitationModal = document.getElementById('sentInvitation-modal');
+    sentInvitationModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    sentInvitationModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+    const rejectInvitationModal = document.getElementById('rejectInvitation-modal');
+    rejectInvitationModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    rejectInvitationModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+    const pvpModeModal = document.getElementById('pvpMode-modal');
+    pvpModeModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    pvpModeModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+    const viewProfileModal = document.getElementById('viewProfile-modal');
+    viewProfileModal.addEventListener('focus', () => {
+        this.input.keyboard.enabled = false;
+        this.input.mouse.enabled = false;
+    });
+    viewProfileModal.addEventListener('focusout', () => {
+        this.input.keyboard.enabled = true;
+        this.input.mouse.enabled = true;
+    });
+
+
+
+
+
     const customLevelName = document.getElementById('customLevelName');
     customLevelName.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;

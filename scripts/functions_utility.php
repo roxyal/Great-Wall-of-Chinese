@@ -87,10 +87,10 @@ function getCharacterFromUsername($uname): int {
     $sql = $conn->prepare("select character_type from students join accounts on students.student_id = accounts.account_id where username = ?");
     $sql->bind_param("s", $uname);
     $sql->execute();
-    $sql->store_result();
-    if($sql->num_rows > 0) {
-        $result = $sql->fetch_array(MYSQLI_ASSOC);
-        return $result["character_type"];
+    $result = $sql->get_result();
+    if($result->num_rows > 0) {
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        return $row["character_type"];
     }
     else return 0; // or some other default character id
 }
