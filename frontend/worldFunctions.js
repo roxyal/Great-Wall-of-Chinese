@@ -467,7 +467,7 @@ function openAssignment(e){
 
 	// get assignment based on assignmentName, then assign it to assignmentToAttempt global variable
 
-    socket.send("/assignment "+assignmentName);
+    socket.send("/assignment " + assignmentName);
 }
 
 // get all the components in the assignment mode modal
@@ -485,9 +485,9 @@ var assignmentModeNextQuestionBtn = document.getElementById('assignmentModeNextQ
 // submit answer for assignment mode
 function assignmentModeSubmit(e){
 	var selectedAnswer = e.srcElement.value; //selected answer
-	console.log(selectedAnswer);
+	console.log("ASSIGNMENT answer: " + selectedAnswer);
 
-	socket.send("/answer "+selectedAnswer);
+	socket.send("/answer " + selectedAnswer);
 
 	//disabling all option buttons
 	assignmentModeOption1.disabled = true;
@@ -496,7 +496,9 @@ function assignmentModeSubmit(e){
 	assignmentModeOption4.disabled = true;
 
     let max_qns = assignmentModeProgressBar.value; 
+    console.log("max_qns: " + max_qns)
 	assignmentModeProgress += (1/max_qns)*100;
+    console.log("assignmentModeProgress: " + assignmentModeProgress)
 	assignmentModeProgressBar.innerHTML = assignmentModeProgress + "%"; // update label of progress bar
 	assignmentModeProgressBar.style.width = assignmentModeProgress + "%"; // update width of progress bar
 
