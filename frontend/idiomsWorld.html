@@ -318,7 +318,7 @@
               </div>
             </div>
             <div class="modal-footer justify-content-center">
-              <button onclick="updateAssignmentNotification()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit assignment</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="socket.send('/exit assignment');updateAssignmentNotification()">Exit assignment</button>
             </div>
           </div>
         </div>
