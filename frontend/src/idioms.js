@@ -101,7 +101,7 @@ function preload() {
     this.load.image("field", "assets/idiomsWorld/field.jpg");
     this.load.spritesheet("stranger", "assets/idiomsWorld/stranger.png", {frameWidth: 32, frameHeight: 32});
     this.load.image("rock", "assets/idiomsWorld/rock.png");
-    this.load.audio("idioms_music", "assets/idiomsWorld/field_theme_2.wav");
+    this.load.audio("idioms_music", "assets/idiomsWorld/field_theme_2.mp3");
     this.load.audio("yo", "assets/idiomsWorld/yo.wav");
 
     // Load common assets

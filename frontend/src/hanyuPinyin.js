@@ -99,7 +99,7 @@ function preload(){
     this.load.image("box", "assets/hanyuPinyinWorld/box.png");
     this.load.spritesheet("shadyGuy", "assets/hanyuPinyinWorld/shady_guy.png", {frameWidth: 34, frameHeight: 34});
     this.load.spritesheet("torch", "assets/hanyuPinyinWorld/torch.png", {frameWidth: 64, frameHeight: 64});
-    this.load.audio("hanyu_music", "assets/hanyuPinyinWorld/night_theme_2.wav");
+    this.load.audio("hanyu_music", "assets/hanyuPinyinWorld/night_theme_2.mp3");
     this.load.audio("ahem", "assets/hanyuPinyinWorld/ahem.wav");
 
     // Load common assets
