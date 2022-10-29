@@ -54,6 +54,16 @@ function sendRandomized(recipient){
     socket.send('/challenge ' + recipient);
 }
 
+// selecting custom levels
+function selectCustomLevel(e){
+    let rowElements = e.srcElement.parentElement.parentElement; // row elements refer to both level name and actions
+    let customLevelName = rowElements.firstChild.innerHTML;
+
+    recipient = document.getElementById('openSelectCustomLevelModal').value;
+
+    socket.send('/challenge ' + recipient + ' ' + customLevelName);
+}
+
 function updateAssignmentNotification(){
     console.log("Updating assignment notification")
     var xmlhttp = new XMLHttpRequest();
@@ -92,6 +102,7 @@ function sendPVPNotification(e){
 	})
 
 	var sendPVPModal = new bootstrap.Modal(document.getElementById('sendPVPInvitation-modal'), {});
+    document.getElementById('openSelectCustomLevelModal').value = document.getElementById('username').innerHTML;
     document.getElementById('sendRandomized').value = document.getElementById('username').innerHTML;
 	sendPVPModal.show();
 }
@@ -325,6 +336,40 @@ function saveCustomLevel(){
         xmlhttp.send(`customLevelName=${customLevelName}&question_type_difficulty=${question_type_difficulty}&function_name=${"createCustomGame"}`);
     }
 }
+
+// opening Select Custom Level modal
+function openSelectCustomLevelModal(username){
+	var selectCustomLevel = new bootstrap.Modal(document.getElementById('selectCustomLevel-modal'), {
+        keyboard: false
+    });
+    selectCustomLevel.show();
+
+    //document.getElementById('selectCustomresponse').innerHTML = "" // empty response div whenever modal is opened
+    var table = document.getElementById("selectCustomLevelTable-modal");
+    var rowsHTML = ""; // initialise empty var to hold html of all the rows
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                if (this.responseText.length > 1){
+                        // Split the string into an array
+                        customNameArray = this.responseText.split(",");
+                        rowsHTML += '<tr><th scope="col">Level Name</th><th scope = "col">Actions</th></tr>' 
+                        for(i=0;i<customNameArray.length;i++){
+                            var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="selectCustomLevel(event)"class="btn btn-primary">Select</button></td></tr>';
+                            rowsHTML += row; // add in html code
+                        }
+                        table.innerHTML = rowsHTML; //set innerhtml code
+                    }                    
+            }   
+        };
+    xmlhttp.open("POST", "../scripts/student", true);
+    // Request headers required for a POST request
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(`function_name=${"viewAllCustomGame"}`);
+    
+}
+
 
 // viewing custom level
 let viewCustomLevelModal = document.getElementById('viewCustomLevel-modal');
