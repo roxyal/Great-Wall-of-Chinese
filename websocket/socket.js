@@ -162,6 +162,7 @@ generateSocketAuth().then(result => {
                 console.log("question "+adventureModeCurrentQn);
                 if(adventureModeCurrentQn == 1 && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
                     let question = e.data.match(pattern)[2].split(", ");
+                    document.getElementById('adventureModeQuestionNo').innerHTML = "Question 1";
                     document.getElementById('adventureModeQuestion').innerHTML = question[0];
                     document.getElementById('adventureModeQuestionNo').innerHTML += ` [${question[5]}]`;
                     for(let i=1; i<=4; i++) {
