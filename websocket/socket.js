@@ -234,11 +234,36 @@ generateSocketAuth().then(result => {
         //     // await displayNextPvpQn();
         // }
 
-        if(/^\[result\] (\d) 5 (\d+) (1|0)/.test(e.data)) {
-            // [result] correct_qns total_qns score winner(1|0)
-            var res = e.data.match(/^\[result\] (\d) 5 (\d+) (1|0)/);
-            if(res[3] == "1") {
+        if(/^\[result\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
+            // [result] your_correct_qns your_score opponent_correct_qns opponent_score
+            var res = e.data.match(/^\[result\] (\d) (\d+) (\d) (\d+)/);
+            if(res[2] > res[4]) {
+                // client won
+                document.getElementById('pvpModeComplete').innerHTML = `
+                    <div class="alert alert-info text-center" role="alert">
+                        Congratulations, you won!<br/><br/>
 
+                        Your Score: ${res[2]}<br/>
+                        Correct Questions: ${res[1]}/5<br/><br/>
+
+                        Opponent's Score: ${res[4]}<br/>
+                        Correct Questions: ${res[3]}/5
+                    </div>
+                `;
+            }
+            else {
+                // client lost
+                document.getElementById('pvpModeComplete').innerHTML = `
+                    <div class="alert alert-info text-center" role="alert">
+                        You lost, maybe next time...<br/><br/>
+
+                        Your Score: ${res[2]}<br/>
+                        Correct Questions: ${res[1]}/5<br/><br/>
+
+                        Opponent's Score: ${res[4]}<br/>
+                        Correct Questions: ${res[3]}/5
+                    </div>
+                `;
             }
         }
 

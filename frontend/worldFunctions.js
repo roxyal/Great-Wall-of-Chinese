@@ -31,7 +31,7 @@ var assignmentModeQnCorrect = 0; 	// num of questions correct, starts at 0
 var assignmentModeQnAttempted = 0; 	// num of questions attempted, starts at 0
 var assignmentModeCurrentQn = 0; 	// current question number, starts at 1
 
-var pvpProgress = 0; 	// progress in terms of percentage, starts at 0%
+var pvpModeProgress = 0; 	// progress in terms of percentage, starts at 0%
 var pvpModeQnCorrect = 0; 	// num of questions correct, starts at 0
 var pvpModeQnAttempted = 0; 	// num of questions attempted, starts at 0
 var pvpModeCurrentQn = 1; 	// current question number, starts at 1
@@ -718,6 +718,19 @@ adventureModeModal.addEventListener('show.bs.modal', async function (event){
 // PVP MODE
 function submitPvpAns(answer) {
     socket.send('/answer ' + answer);
+
+
+    pvpModeProgress += 20;
+    document.getElementById('pvpProgressBar').innerHTML = pvpModeProgress + "%"; // update label of progress bar
+    document.getElementById('pvpProgressBar').style.width = pvpModeProgress + "%"; // update width of progress bar
+
+    // if(pvpModeProgress < 100){
+
+    // }else{
+    //     document.getElementById('pvpModeComplete').innerHTML = `<div class="alert alert-info text-center" role="alert">
+    //                                         PVP mode completed!
+    //                                     </div>`;
+    // }
 
     // disable buttons while waiting for opponent's reply
     console.log("disabling pvp buttons");

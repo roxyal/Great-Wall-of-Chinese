@@ -430,11 +430,11 @@ class Socket implements MessageComponentInterface {
                             if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
                                 if(count($player->currentRoom["sessionAttempted"]) >= $max_qns) {
                                     // Send result
-                                    $clientWon = $client->pvpScore > $player->pvpScore ? 1 : 0;
+                                    // $clientWon = $client->pvpScore > $player->pvpScore ? 1 : 0;
 
-                                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"])." ".$client->pvpScore." ".$clientWon);
+                                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
 
-                                    $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".count($player->currentRoom["sessionAttempted"])." ".$player->pvpScore." ".($clientWon ? 0 : 1));
+                                    $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore);
 
                                     unset($client->currentQuestion);
                                     unset($client->currentRoom);
