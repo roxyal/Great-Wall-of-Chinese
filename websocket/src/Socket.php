@@ -379,9 +379,14 @@ class Socket implements MessageComponentInterface {
 
                 // Send the next question if any
                 if(count($client->currentRoom["sessionAttempted"]) >= $max_qns) {
-                    // Send result
-                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".count($client->currentRoom["sessionAttempted"])." ".$client->pvpScore);
-                    // send to the opponent too?? 
+                    // Make sure opponent has finished before sending the result
+                    // $stmt = yield $pool->prepare("select count(*) as count, pvp_tracking.answer as answer1, questions.answer as answer2 from pvp_tracking join questions on questions.question_id = pvp_tracking.question_id where pvp_room_id = :rid and account_id = (select account_id from accounts where username like :uname) and pvp_tracking.question_id = :qid and timestamp < :time");
+                    // $res = yield $stmt->execute(['rid' => $client->currentRoom["room"], 'uname' => $client->pvpStatus[1], 'qid' => $client->currentQuestion["question_id"], 'time' => $time]);
+                    // yield $res->advance();
+                    // $roww = $res->getCurrent();
+                    // var_dump($roww);
+
+                    // if($roww["count"] > 0) {
                     
                     // echo "HELLO";
 
@@ -420,12 +425,33 @@ class Socket implements MessageComponentInterface {
                             $statement = yield $pool->prepare("update pvp_session set status = 2, opponent_score = :score where pvp_room_id = :rid");
                             $result = yield $statement->execute(['score' => $client->pvpScore, 'rid' => $client->currentRoom["room"]]);
                         }
+
+                        foreach ($this->clients as $player) {
+                            if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                                if(count($player->currentRoom["sessionAttempted"]) >= $max_qns) {
+                                    // Send result
+                                    // $clientWon = $client->pvpScore > $player->pvpScore ? 1 : 0;
+
+                                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
+
+                                    $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore);
+
+                                    unset($client->currentQuestion);
+                                    unset($client->currentRoom);
+                                    unset($player->currentQuestion);
+                                    unset($player->currentRoom);
+                                    
+                                    // Make the player available for pvp
+                                    $client->pvpStatus = ["Available", "", time(), 0];
+                                    $player->pvpStatus = ["Available", "", time(), 0];
+                                    $client->pvpScore = 0;
+                                    $player->pvpScore = 0;
+                                    
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    unset($client->currentQuestion);
-                    unset($client->currentRoom);
-                    
-                    // Make the player available for pvp
-                    $client->pvpStatus = ["Available", "", time(), 0];
                 }
                 else {
                     // Get array of attempted questions within this session
