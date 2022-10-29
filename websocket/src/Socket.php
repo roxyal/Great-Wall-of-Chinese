@@ -121,6 +121,9 @@ class Socket implements MessageComponentInterface {
 
             // Send the client the data of all logged in users
             $client->send(json_encode($allPlayers));
+
+            // TODO: Also refresh assignments 
+
             return;
         }
 
@@ -552,8 +555,15 @@ class Socket implements MessageComponentInterface {
                         yield $result->advance();
                         $row = $result->getCurrent();
                         $client->currentQuestion = $row; 
-                        $type = $client->currentRoom["type"] == "ass" ? $client->currentRoom["type"]."-$max_qns" : $client->currentRoom["type"];
-                        $client->send("[question] {$type}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                        if($client->currentRoom["type"] == "adv") {
+                            $client->send("[question] adv: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}, {$row["level"]}");
+                        }
+                        elseif($client->currentRoom["type"] == "ass") {
+                            $client->send("[question] {$client->currentRoom["type"]}-$max_qns: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                        }
+                        else {
+                            $client->send("[question] {$client->currentRoom["type"]}: {$row["question"]}, {$row["choice1"]}, {$row["choice2"]}, {$row["choice3"]}, {$row["choice4"]}");
+                        }
 
                         // var_dump($row);
                         // Send the opponent at the same time even if opponent hasn't answered yet

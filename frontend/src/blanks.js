@@ -98,7 +98,7 @@ function preload() {
     this.load.image("chest", "assets/blanksWorld/chest.png");
     this.load.image("barrel", "assets/blanksWorld/barrel.png");
     this.load.spritesheet("merchant", "assets/blanksWorld/merchant.png", {frameWidth: 32, frameHeight: 32});
-    this.load.audio("blanks_music", "assets/blanksWorld/prairie.wav");
+    this.load.audio("blanks_music", "assets/blanksWorld/prairie.mp3");
     this.load.audio("hello", "assets/blanksWorld/hello.wav");
 
     // Load common assets
