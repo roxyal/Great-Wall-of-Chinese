@@ -50,6 +50,9 @@ function acceptInvitation(sender){
 function rejectInvitation(sender){
     socket.send('/reject ' + sender);
 }
+function sendRandomized(recipient){
+    socket.send('/challenge ' + recipient);
+}
 
 function updateAssignmentNotification(){
     console.log("Updating assignment notification")
@@ -89,6 +92,7 @@ function sendPVPNotification(e){
 	})
 
 	var sendPVPModal = new bootstrap.Modal(document.getElementById('sendPVPInvitation-modal'), {});
+    document.getElementById('sendRandomized').value = document.getElementById('username').innerHTML;
 	sendPVPModal.show();
 }
 

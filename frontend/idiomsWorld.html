@@ -624,10 +624,9 @@
             <div class="modal-body text-center">
               <h5>Select which game mode TO challenge</h5>
               <button onclick="selectPvpGame(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">CustomGame</button>
-              <button onclick="selectPvpGame(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Randomized</button>
+              <button onclick="sendRandomized(this.value)" id = "sendRandomized" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Randomized</button>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Confirm</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
