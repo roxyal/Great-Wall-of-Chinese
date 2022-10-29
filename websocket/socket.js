@@ -50,7 +50,7 @@ var token;
 var world;
 var updateLoop;
 var moves = {};
-var slowpoke = [];
+// var slowpoke = [];
 // // Set an interval to check the movement queue
 // var moveQueue = window.setInterval(function() {
 //     // If movement queue has any items
@@ -72,6 +72,18 @@ generateSocketAuth().then(result => {
     clearInterval(updateLoop);
     updateLoop = window.setInterval(function() {
         socket.send("/update");
+        updateAssignmentNotification();
+
+        // add the players to chat window
+        recipients.forEach(player => {
+            if(!document.body.contains(document.getElementById("message_"+player))) {
+                const newRecipient = document.createElement('option');
+                newRecipient.innerHTML = `Say to ${player}`;
+                newRecipient.id = "message_"+player;
+                newRecipient.value = player;
+                document.getElementById("chat-type").append(newRecipient);
+            }
+        });
     }, 5000); 
 
     function transmitMessage() {
@@ -88,10 +100,19 @@ generateSocketAuth().then(result => {
             // Do the initial load to fetch already logged in players
             if(players.hasOwnProperty("firstload") && players["firstload"] == 0) {
                 console.log("initial loading...");
+
                 window.setTimeout(function() {
                     loadPlayers(players);
                 }, 3000); 
                 delete players["firstload"];
+
+                // add the players to chat window
+                for (var player of Object.keys(players)) {
+                    console.log("player "+player);
+                    if(recipients.indexOf(player) === -1) {
+                        recipients.push(player);
+                    }
+                }
             }
             // console.log(players);
 
@@ -213,6 +234,14 @@ generateSocketAuth().then(result => {
         //     // await displayNextPvpQn();
         // }
 
+        if(/^\[result\] (\d) 5 (\d+) (1|0)/.test(e.data)) {
+            // [result] correct_qns total_qns score winner(1|0)
+            var res = e.data.match(/^\[result\] (\d) 5 (\d+) (1|0)/);
+            if(res[3] == "1") {
+
+            }
+        }
+
         if(/^\[pvp\] sent: Your opponent(.+)/.test(e.data)) {
             // forfeit message
             sentModal.hide();
@@ -333,10 +362,28 @@ generateSocketAuth().then(result => {
             else if(type == "connect") {
                 // [connect] username: characterType
                 spawnPlayer(sender, message, 200, 400);
+                // Add sender to PM recipient list
+                if(recipients.indexOf(sender) === -1) {
+                    recipients.push(sender);
+                    const newRecipient = document.createElement('option');
+                    newRecipient.innerHTML = `Say to ${sender}`;
+                    newRecipient.id = "message_"+sender;
+                    newRecipient.value = sender;
+                    document.getElementById("chat-type").append(newRecipient);
+                }
             }
             else if(type == "disconnect") {
                 destroyPlayer(sender);
                 if(moves.hasOwnProperty(sender)) delete moves[sender];
+                // Remove sender from PM recipient list
+                if(recipients.indexOf(sender) !== -1) {
+                    for(var i = 0; i<recipients.length; i++){ 
+                        if (recipients[i] == sender) { 
+                            recipients.splice(i, 1); 
+                        }
+                    }
+                    document.getElementById("message_"+sender).remove();
+                }
             }
             else if(type == "move") {
                 // [move] username: c1 x200 y400 t0
@@ -429,8 +476,8 @@ generateSocketAuth().then(result => {
                         opponentSprite = "images/martialHero.png";
                         break;
                 }
-                document.getElementById("pvpPlayerAvatar").src = playerSprite;
-                document.getElementById("pvpOpponentAvatar").src = opponentSprite;
+                document.getElementById("characterAvatarUserPVP").src = playerSprite;
+                document.getElementById("characterAvatarOpponentPVP").src = opponentSprite;
             }
             else if(type == "challenge rejected") {
                 if(!message.includes("sadface")) {

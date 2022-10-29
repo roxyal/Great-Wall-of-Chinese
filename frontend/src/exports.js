@@ -25,14 +25,14 @@ export function addMessageElement(chatSetting, sender, message) {
     const chatList = document.getElementById("messages");
     const chatTypeSelect = document.getElementById("chat-type");
 
-    // Add sender to PM recipient list
-    if(userName !== sender && recipients.indexOf(sender) === -1) {
-        recipients.push(sender);
-        const newRecipient = document.createElement('option');
-        newRecipient.innerHTML = `Say to ${sender}`;
-        newRecipient.value = sender;
-        chatTypeSelect.append(newRecipient);
-    }
+    // // Add sender to PM recipient list
+    // if(userName !== sender && recipients.indexOf(sender) === -1) {
+    //     recipients.push(sender);
+    //     const newRecipient = document.createElement('option');
+    //     newRecipient.innerHTML = `Say to ${sender}`;
+    //     newRecipient.value = sender;
+    //     chatTypeSelect.append(newRecipient);
+    // }
 
     const chatType = document.createElement('span');
     chatType.textContent = chatSetting === "World" ? "[World] " : `[${chatSetting}] `;
