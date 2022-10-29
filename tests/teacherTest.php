@@ -43,6 +43,67 @@ class teacherTest extends PHPUnit\Framework\TestCase{
         $sql4->execute();
     }
 
+    public function DeleteAssignmentTest(){
+        //deleteAssignment(int $teacher_account_id, string $assignmentName)
+        require("scripts\config.php");
+        require("scripts\functions_utility.php");
+        require("scripts\teacher.php");
+        
+        // Insert assignment test cases
+        $time = time();
+        $sql = $conn->prepare("INSERT INTO `accounts`(`account_id`, `account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?, ?)");
+        $sql->bind_param('isssss', 9999, "Teacher", "teacheracc", "TeacherPass123", "valid_email@email.com", "correct_name");
+        $sql->execute();
+
+        $teacher->createAssignment("existingassignment", 9999, $time, $time, "qn,ans1,ans2,ans3,ans4,ans,explain")
+
+        // Outputs: int 0 on success (1 qn)
+        $this->assertEquals(0, $teacher->deleteAssignment(9999, "existingassignment");
+        //          int 1 on non existing teacher id
+        $this->assertEquals(1, $teacher->deleteAssignment(1111, "existingassignment"));
+        //          int 2 on server error
+        $this->assertEquals(2, $teacher->deleteAssignment(999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999, "testassignment"));
+        //          int 3 on non existing assignment
+        $this->assertEquals(3, $teacher->deleteAssignment(9999, "nonexistingassignment"));
+
+        # Delete test cases 
+        $sql2 = $conn->prepare("DELETE FROM `accounts` WHERE `account_id` = ?");
+        $sql2->bind_param('i', 9999);
+        $sql2->execute();
+    }
+
+    public function ViewAllAssignmentTest(){
+        //viewAllAssignment(int $teacher_account_id)
+        require("scripts\config.php");
+        require("scripts\functions_utility.php");
+        require("scripts\teacher.php");
+        
+        // Insert teacher test cases
+        $time = time();
+        $sql = $conn->prepare("INSERT INTO `accounts`(`account_id`, `account_type`, `username`, `password`, `email`, `name`) VALUES (?, ?, ?, ?, ?, ?)");
+        $sql->bind_param('isssss', 9999, "Teacher", "teacheracc", "TeacherPass123", "valid_email@email.com", "correct_name");
+        $sql->execute();
+
+        $teacher->createAssignment("existingassignment", 9999, $time, $time, "qn,ans1,ans2,ans3,ans4,ans,explain")
+
+        $comma = ',';
+        $expectedAssignmentName = "existingassignment".$comma.convertIntToDate($time).$comma.convertIntToDate($time);
+
+        // Outputs: int 0 on success (1 qn)
+        $this->assertEquals($expectedAssignmentName, $teacher->viewAllAssignment(9999));
+        //          int 1 on non existing teacher
+        $this->assertEquals(1, $teacher->viewAllAssignment(1111));
+        //          int 2 on server error
+        $this->assertEquals(2, $teacher->viewAllAssignment(999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999));
+
+        # Delete test cases 
+        deleteAssignment(9999, "existingassignment");
+
+        $sql2 = $conn->prepare("DELETE FROM `accounts` WHERE `account_id` = ?");
+        $sql2->bind_param('i', 9999);
+        $sql2->execute();
+    }
+
     public function ViewSummaryReportTest(){
         require("scripts\config.php");
         require("scripts\functions_utility.php");
