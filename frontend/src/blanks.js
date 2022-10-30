@@ -225,19 +225,11 @@ function create() {
         this.input.keyboard.enabled = false;
         this.input.mouse.enabled = false;
     });
-    pvpModeModal.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
-    });
 
     const pvpModeOption2 = document.getElementById('pvpModeOption2');
     pvpModeOption2.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
         this.input.mouse.enabled = false;
-    });
-    pvpModeOption2.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
     });
 
     const pvpModeOption3 = document.getElementById('pvpModeOption3');
@@ -245,19 +237,11 @@ function create() {
         this.input.keyboard.enabled = false;
         this.input.mouse.enabled = false;
     });
-    pvpModeOption3.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
-    });
-
+    
     const pvpModeOption4 = document.getElementById('pvpModeOption4');
     pvpModeOption4.addEventListener('focus', () => {
         this.input.keyboard.enabled = false;
         this.input.mouse.enabled = false;
-    });
-    pvpModeOption4.addEventListener('focusout', () => {
-        this.input.keyboard.enabled = true;
-        this.input.mouse.enabled = true;
     });
 
     const viewProfileModal = document.getElementById('viewProfile-modal');
