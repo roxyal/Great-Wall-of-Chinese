@@ -355,9 +355,14 @@ function openSelectCustomLevelModal(username){
                         // Split the string into an array
                         customNameArray = this.responseText.split(",");
                         rowsHTML += '<tr><th scope="col">Level Name</th><th scope = "col">Actions</th></tr>' 
-                        for(i=0;i<customNameArray.length;i++){
+                        if (customNameArray.length != 0){
+                            for(i=0;i<customNameArray.length;i++){
                             var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="selectCustomLevel(event)"class="btn btn-primary">Select</button></td></tr>';
                             rowsHTML += row; // add in html code
+                            }
+                        }
+                        else{
+                            rowsHTML = '<p><center>NO CUSTOM GAME FOUND!<br><br>PLEASE CREATE FIRST BEFORE CHOOSING THIS SELECTION</centre></p>';
                         }
                         table.innerHTML = rowsHTML; //set innerhtml code
                     }                    
