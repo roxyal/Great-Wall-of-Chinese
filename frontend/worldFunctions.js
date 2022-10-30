@@ -355,24 +355,23 @@ function openSelectCustomLevelModal(username){
                         // Split the string into an array
                         customNameArray = this.responseText.split(",");
                         rowsHTML += '<tr><th scope="col">Level Name</th><th scope = "col">Actions</th></tr>' 
-                        if (customNameArray.length != 0){
-                            for(i=0;i<customNameArray.length;i++){
+                        
+                        for(i=0;i<customNameArray.length;i++){
                             var row = '<tr><td>' + customNameArray[i] + '</td><td><button onclick="selectCustomLevel(event)"class="btn btn-primary">Select</button></td></tr>';
                             rowsHTML += row; // add in html code
-                            }
-                        }
-                        else{
-                            rowsHTML = '<p><center>NO CUSTOM GAME FOUND!<br><br>PLEASE CREATE FIRST BEFORE CHOOSING THIS SELECTION</centre></p>';
                         }
                         table.innerHTML = rowsHTML; //set innerhtml code
-                    }                    
-            }   
+                }
+                if (this.responseText.length == 0){
+                    rowsHTML = '<p><center>NO CUSTOM GAME FOUND!<br><br>PLEASE CREATE FIRST BEFORE CHOOSING THIS SELECTION</centre></p>';
+                    table.innerHTML = rowsHTML; //set innerhtml code
+                }
+            }
         };
     xmlhttp.open("POST", "../scripts/student", true);
     // Request headers required for a POST request
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send(`function_name=${"viewAllCustomGame"}`);
-    
 }
 
 
