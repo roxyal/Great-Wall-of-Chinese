@@ -561,7 +561,7 @@ class Socket implements MessageComponentInterface {
                                         for ($x=0; $x < count($new_rank_list); $x++)
                                         {
                                             $rank_points = $new_rank_list[$x];
-                                            switch ($rank_points) {
+                                            switch (true) {
                                             case $rank_points >= 100 && $rank_points < 300:
                                                 $new_rank_list[$x] = "Silver";
                                                 break;

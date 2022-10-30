@@ -521,6 +521,9 @@ generateSocketAuth().then(result => {
                 // teacher view assignment result
                 // handle same result for pvp
                 // add your rank in leaderboard
+                // adventure mode score/assignment score
+                // graphic display of correct ans for pvp
+                // pvp waiting for opponent
                 document.getElementById("characterAvatarUserPVP").src = playerSprite;
                 document.getElementById("characterAvatarOpponentPVP").src = opponentSprite;
             }
