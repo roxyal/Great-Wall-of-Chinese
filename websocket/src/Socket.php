@@ -487,6 +487,7 @@ class Socket implements MessageComponentInterface {
 
                                         if ($player->pvpScore > $client->pvpScore) {
                                             // Player won
+                                            echo "player $player->userinfoUsername won!\n";
 
                                             // Check player's multiplier, award high multiplier if the winner's rank is lower than loser's
                                             $player_multi = $player_rank < $client_rank ? $multiplier[$player_rank][$client_rank] : 200-$multiplier[$player_rank][$client_rank];
@@ -497,6 +498,7 @@ class Socket implements MessageComponentInterface {
                                         }
                                         elseif ($client->pvpScore > $player->pvpScore) {
                                             // Client won
+                                            echo "client $client->userinfoUsername won!\n";
 
                                             $client_multi = $client_rank < $player_rank ? $multiplier[$client_rank][$player_rank] : 200-$multiplier[$client_rank][$player_rank];
                                             $player_multi = 200-$client_multi;
@@ -506,11 +508,11 @@ class Socket implements MessageComponentInterface {
                                         }
                                         else {
                                             // Tie
-                                            echo "This error shouldn't be occurring";
+                                            echo "This error shouldn't be occurring\n";
                                         }
 
-                                        echo "\nplayer multi: $player_multi\n";
-                                        echo "\nclient multi: $client_multi\n";
+                                        echo "player multi: $player_multi\n";
+                                        echo "client multi: $client_multi\n";
                                         
                                         // If player's rank_points become negative - score, it will still be 0
                                         if  ($player_new_rp < 0) $player_new_rp = 0;
@@ -861,7 +863,7 @@ class Socket implements MessageComponentInterface {
 
                         // get the first question
                         if($customRoom !== "") {
-                            $statement = yield $pool->prepare("select * from custom_levels where customLevelName = :custom and account_id = :acid");
+                            $statement = yield $pool->prepare("select * from custom_levels where customLevelName = `:custom` and account_id = :acid");
                             $result = yield $statement->execute(['custom' => $customRoom, 'acid' => $player->userinfoID]);
                             // var_dump($customRoom);
                             yield $result->advance();

@@ -520,6 +520,7 @@ generateSocketAuth().then(result => {
                 // individual qn overview for teachers?
                 // teacher view assignment result
                 // handle same result for pvp
+                // add your rank in leaderboard
                 document.getElementById("characterAvatarUserPVP").src = playerSprite;
                 document.getElementById("characterAvatarOpponentPVP").src = opponentSprite;
             }
