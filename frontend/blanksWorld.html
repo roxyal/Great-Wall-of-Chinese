@@ -269,7 +269,7 @@
             </div>
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit PVP</button>
+            <button type="button" class="btn btn-secondary" onclick="exitPvp();" data-bs-dismiss="modal">Exit PVP</button>
           </div>
         </div>
       </div>
@@ -314,7 +314,7 @@
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header justify-content-center">
-            <h4 class="modal-title" id="modal-title">Your invitation got rejected :(</h4>
+            <h4 class="modal-title" id="reject-modal-title">Your invitation got rejected :(</h4>
           </div>
           <div class="modal-footer justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -548,7 +548,7 @@
             
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit adventure mode</button>
+            <button type="button" class="btn btn-secondary" onclick="socket.send('/exit adventure')" data-bs-dismiss="modal">Exit adventure mode</button>
           </div>
         </div>
       </div>
@@ -620,6 +620,23 @@
     </div>
     <!--ViewProfileModal ends here-->
     
+    <!--Send PVP Invitation Modal starts here-->
+    <div class="modal fade" id="sendPVPInvitation-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <h5>Select which game mode TO challenge</h5>
+            <button onclick="openSelectCustomLevelModal(this.value)" id="openSelectCustomLevelModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Custom Game</button>
+            <button onclick="sendRandomized(this.value)" id = "sendRandomized" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Randomized</button>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--Send PVP Invitation Modal ends here-->
+  
     <script type="module" src="src/blanks.js"></script>
 </body>
 <script src="worldFunctions.js"></script>

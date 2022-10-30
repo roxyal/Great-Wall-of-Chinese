@@ -162,6 +162,7 @@ generateSocketAuth().then(result => {
                 console.log("question "+adventureModeCurrentQn);
                 if(adventureModeCurrentQn == 1 && document.getElementById('adventureModeNextQuestionBtn').classList.contains("invisible")) {
                     let question = e.data.match(pattern)[2].split(", ");
+                    document.getElementById('adventureModeQuestionNo').innerHTML = "Question 1";
                     document.getElementById('adventureModeQuestion').innerHTML = question[0];
                     document.getElementById('adventureModeQuestionNo').innerHTML += ` [${question[5]}]`;
                     for(let i=1; i<=4; i++) {
@@ -237,7 +238,7 @@ generateSocketAuth().then(result => {
         if(/^\[result\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
             // [result] your_correct_qns your_score opponent_correct_qns opponent_score
             var res = e.data.match(/^\[result\] (\d) (\d+) (\d) (\d+)/);
-            if(res[2] > res[4]) {
+            if(parseInt(res[2]) > parseInt(res[4])) {
                 // client won
                 document.getElementById('pvpModeComplete').innerHTML = `
                     <div class="alert alert-info text-center" role="alert">
@@ -265,6 +266,10 @@ generateSocketAuth().then(result => {
                     </div>
                 `;
             }
+            pvpModeProgress = 0; 	// progress in terms of percentage, starts at 0%
+            pvpModeQnCorrect = 0; 	// num of questions correct, starts at 0
+            pvpModeQnAttempted = 0; 	// num of questions attempted, starts at 0
+            pvpModeCurrentQn = 1; 	// current question number, starts at 1
         }
 
         if(/^\[pvp\] sent: Your opponent(.+)/.test(e.data)) {
@@ -314,13 +319,19 @@ generateSocketAuth().then(result => {
             errorModal.show();
         }
 
+        if(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
+            let scores = e.data.match(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/);
+            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]+"/"+pvpModeCurrentQn; 
+            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
+        }
+
         if(/^\[answer\] (.+)/.test(e.data)) {
             var answer = e.data.match(/^\[answer\] (.+)/)[1].split("!!!I LOVE CHINESEEE!!!");
             // [correct 1|0, correct answer, explanation, mode]
-            console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
-            console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
-            console.log("2TESTING BEFORE IF STATEMENT " + answer[2])
-            console.log("3TESTING BEFORE IF STATEMENT " + answer[3])
+            // console.log("0TESTING BEFORE IF STATEMENT " + answer[0])
+            // console.log("1TESTING BEFORE IF STATEMENT " + answer[1])
+            // console.log("2TESTING BEFORE IF STATEMENT " + answer[2])
+            // console.log("3TESTING BEFORE IF STATEMENT " + answer[3])
 
             if(answer[3] == "adv") {
                 console.log("Updating adventure modal score and explanation") // for testing purpose
@@ -510,6 +521,7 @@ generateSocketAuth().then(result => {
                 }
                 else {
                     document.getElementById("reject-modal-title").innerHTML = sender+" rejected your request"; 
+                    sentModal.hide();
                 }
                 
                 rejectedModal.show();

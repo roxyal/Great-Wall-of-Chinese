@@ -157,6 +157,35 @@
     </div>
     <!--View custom level Modal ends here-->
 
+    <!--Select custom level Modal starts here-->
+    <div class="modal fade" id="selectCustomLevel-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h4 class="modal-title" id="modal-title">Select custom level</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <table class="table table-bordered table-light" id = "selectCustomLevelTable-modal">
+                <thead>
+                  <tr>
+                    <th scope="col">Level name</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="selectCustomLevel">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Select custom level Modal ends here-->
+
     <!--View assignment Modal starts here-->
     <div class="modal fade" id="viewAssignment-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -457,7 +486,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit adventure mode</button>
+              <button type="button" class="btn btn-secondary" onclick="socket.send('/exit adventure')" data-bs-dismiss="modal">Exit adventure mode</button>
             </div>
           </div>
         </div>
@@ -623,16 +652,16 @@
           <div class="modal-content">
             <div class="modal-body text-center">
               <h5>Select which game mode TO challenge</h5>
-              <button onclick="selectPvpGame(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">CustomGame</button>
-              <button onclick="selectPvpGame(event)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Randomized</button>
+              <button onclick="openSelectCustomLevelModal(this.value)" id="openSelectCustomLevelModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Custom Game</button>
+              <button onclick="sendRandomized(this.value)" id = "sendRandomized" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Randomized</button>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Confirm</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
     </div>
+    <!--Send PVP Invitation Modal ends here-->
     
     <script type="module" src="src/idioms.js"></script>
     <script src="worldFunctions.js"></script>
