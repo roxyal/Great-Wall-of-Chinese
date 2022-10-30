@@ -629,6 +629,8 @@ class Socket implements MessageComponentInterface {
                             // Generate new question
                             if(isset($client->customQuestionQueue)) {
                                 $sql = "select * from questions where question_type like :world and level like :level and question_id not in ($attempted) order by rand() limit 1";
+                                echo "world: $client->userinfoWorld\n";
+                                echo "level: {$client->customQuestionQueue[0][1]}\n";
                                 $statement = yield $pool->prepare($sql);
                                 $result = yield $statement->execute(['world' => $client->userinfoWorld, 'level' => $client->customQuestionQueue[0][1]]);
                                 $arr = $client->customQuestionQueue;
