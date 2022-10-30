@@ -34,6 +34,10 @@ if(isset($_POST["function_name"]) && $_POST["function_name"] == "viewAllAssignme
     echo $teacher->viewAllAssignment($account_id);
 }
 
+if(isset($_POST["assignmentSubmissions"]) && $_POST["assignmentSubmissions"] !== "") {
+    echo $teacher->viewAssignmentSubmissions($account_id, $_POST["assignmentSubmissions"]);
+}
+
 
 // A Teacher class that holds all the function needed for teacher
 class Teacher{
@@ -251,7 +255,7 @@ class Teacher{
                 // Concatenate all the AssignmentName created by the user into a string format
                 $assignmentName_str = $assignmentName_str.$row['assignment_name'].$comma.
                 convertIntToDate($row['created_timestamp']).$comma.
-                convertIntToDate($row['due_timestamp']);;
+                convertIntToDate($row['due_timestamp']);
 
                 if ($count+1 != $num_rows)
                     $assignmentName_str = $assignmentName_str.'|';
@@ -313,6 +317,43 @@ class Teacher{
                 $count = $count + 1;
             }
             return $students_summary_str;
+        }
+        else
+        {
+            if($debug_mode) echo $this->conn->error;
+                return 3; // ERROR with database SQL
+        }       
+    }
+
+    public function viewAssignmentSubmissions($teacher_account_id, $assignment_name)
+    {
+        // Check to see if account_id exist
+        if (!checkTeacherExists($teacher_account_id)) return 1;
+
+        // Check to see if teacher has students
+        if (!$this->checkTeacherHasStudentExists($teacher_account_id)) return 2;
+        
+        $sql = "SELECT accounts.username, max(assignments_log.timestamp) as submittedtime, questions_bank.answer = assignments_log.answer as correct FROM `assignments_log` JOIN questions_bank on questions_bank.question_id = assignments_log.question_id JOIN accounts on assignments_log.account_id = accounts.account_id WHERE `assignment_id`= (SELECT assignment_id from assignments where assignment_name = ?) GROUP BY accounts.username";
+        
+        $stmt = $this->conn->prepare($sql);
+        $output = "";
+
+        if (
+                $stmt->bind_param('s', $assignment_name) &&
+                $stmt->execute()
+        ){
+            $result = $stmt->get_result();
+            $num_rows = $result->num_rows;
+            $count = 0;
+            while ($row = $result->fetch_assoc())
+            {
+                $output .= $row["username"].",".convertIntToDate($row["submittedtime"]).",".$row["correct"];
+
+                if ($count+1 != $num_rows)
+                    $output .= '|';
+                $count++;
+            }
+            return $output;
         }
         else
         {

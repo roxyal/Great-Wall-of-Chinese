@@ -98,6 +98,37 @@
     </div>
     <!--Leaderboard Modal ends here-->
 
+    <!--Submissions Modal starts here-->
+    <div class="modal fade" id="viewSubmissions-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h3 class="modal-title" id="submissions-modal-title">Assignment Submissions</h3>
+          </div>
+          <div class="modal-body">
+            <div class="container text-left">
+              <h4>Assignment Title</h4>
+              <table class="table table-bordered table-light">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Time Submitted</th>
+                    <th scope="col">Score</th>
+                  </tr>
+                </thead>
+                <tbody id="viewSubmissionsRows">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Submissions Modal ends here-->
+
     <!--Log out Modal starts here-->
     <div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog">

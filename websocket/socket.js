@@ -582,10 +582,6 @@ generateSocketAuth().then(result => {
                 }
                 console.log(playerSprite);
                 console.log(opponentSprite);
-                // individual qn overview for teachers?
-                // teacher view assignment result
-                // add your rank in leaderboard
-                // pvp waiting for opponent
                 document.getElementById("characterAvatarUserPVP").getElementsByTagName("img")[0].src = playerSprite;
                 document.getElementById("characterAvatarOpponentPVP").getElementsByTagName("img")[0].src = opponentSprite;
             }

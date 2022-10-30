@@ -25,6 +25,45 @@ function sendAssignmentNotification(e){
 	assignmentModal.show();
 }
 
+// opens a view modal
+function viewAssignmentSubmissions(e){
+	let assignmentToView = e.srcElement.parentElement.parentElement.children[0].innerHTML;
+	console.log(assignmentToView);
+
+	let viewSubmissions = document.getElementById('viewSubmissions-modal')
+	viewSubmissions.addEventListener('show.bs.modal', function (event){
+
+		var xmlhttp = new XMLHttpRequest();
+      	xmlhttp.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+				console.log(this.responseText);
+				if(this.responseText.length > 0) {
+					let students = this.responseText.split('|');
+					for(let i=0; i<students.length; i++) {
+						let student = students[i].split(",");
+						let submissionsHTML = `<tr>
+							<td>${student[0]}</td>
+							<td>${student[1]}</td>
+							<td>${student[2]}</td>
+						</tr>`;
+						console.log(submissionsHTML);
+
+						document.getElementById("viewSubmissionsRows").innerHTML += submissionsHTML;
+					}
+				}
+			}
+		}
+
+		xmlhttp.open("POST", "../scripts/teacher", true);
+        // Request headers required for a POST request
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(`assignmentSubmissions=${assignmentToView}`);
+	})
+
+	var submissionsModal = new bootstrap.Modal(document.getElementById('viewSubmissions-modal'), {});
+	submissionsModal.show();
+}
+
 // link backend script here to send assignment using assignmentToSend, then display modal if successful
 function sendAssignment(){
 
@@ -159,7 +198,7 @@ var xmlhttp = new XMLHttpRequest();
                         row += '<td>' + assignmentNameArray[0] + '</td>' + 
 								'<td>' + assignmentNameArray[1] + '</td>' +
 								'<td>' + assignmentNameArray[2] + '</td>' + 
-                                '<td><button onclick = sendAssignmentNotification(event) class="btn btn-primary mx-1 text-nowrap" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send">Send</button><button onclick = deleteRowNotification(event) class="btn btn-secondary mx-1" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">Delete</button></td>';
+                                '<td><button onclick = sendAssignmentNotification(event) class="btn btn-primary mx-1 text-nowrap" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send">Send</button><button onclick = viewAssignmentSubmissions(event) class="btn btn-success mx-1 text-nowrap" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Send">View Submissions</button><button onclick = deleteRowNotification(event) class="btn btn-secondary mx-1" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">Delete</button></td>';
                         row += '</tr>';
                         rowsHTML += row; // add in html code
                     }
@@ -177,8 +216,6 @@ var xmlhttp = new XMLHttpRequest();
         // Request headers required for a POST request
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send(`function_name=${"viewAllAssignment"}`);
-
-
 
 // LEADER BOARD
 
