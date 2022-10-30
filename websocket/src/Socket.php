@@ -418,19 +418,54 @@ class Socket implements MessageComponentInterface {
 
                     }
                     elseif($client->currentRoom["type"] == "pvp") {
+                        // mark last question
+                        // Get opponent's answer records
+                        $stmt = yield $pool->prepare("select count(*) as count, pvp_tracking.answer as answer1, questions.answer as answer2 from pvp_tracking join questions on questions.question_id = pvp_tracking.question_id where pvp_room_id = :rid and account_id = (select account_id from accounts where username like :uname) and pvp_tracking.question_id = :qid and timestamp <= :time");
+                        $res = yield $stmt->execute(['rid' => $client->currentRoom["room"], 'uname' => $client->pvpStatus[1], 'qid' => $client->currentQuestion["question_id"], 'time' => $time]);
+                        yield $res->advance();
+                        $roww = $res->getCurrent();
+                        var_dump($roww);
+
+                        if($roww["count"] > 0) {           
+                            $client->send("[answer] {$correct}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["choice{$client->currentQuestion["answer"]}"]}!!!I LOVE CHINESEEE!!!{$client->currentQuestion["explanation"]}!!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}");
+
+                            foreach ($this->clients as $player) {
+                                if($player->pvpStatus[0] == "Playing" && !strcasecmp($player->pvpStatus[1], $client->userinfoUsername)) {
+                                    $opponentCorrect = $roww["answer1"] == $roww["answer2"] ? 1 : 0;
+
+                                    // case where client submitted the answer after the player
+                                    if($opponentCorrect) {
+                                        $player->pvpScore += 50;
+                                        $client->pvpScore += $correct ? 25 : 0;
+                                    }
+                                    else {
+                                        $player->pvpScore += 0;
+                                        $client->pvpScore += $correct ? 50 : 0;
+                                    }
+
+                                    $player->send("[answer] {$opponentCorrect}!!!I LOVE CHINESEEE!!!{$roww["answer2"]}!!!I LOVE CHINESEEE!!! !!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}!!!I LOVE CHINESEEE!!!first");
+
+                                    $client->send("[pvp score] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
+                                    $player->send("[pvp score] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ". $client->pvpScore);
+
+                                    break;
+                                }
+                            }
+                        }
+
                         $statement = yield $pool->prepare("select requester_id, opponent_id from pvp_session where pvp_room_id = :rid");
                         $result = yield $statement->execute(['rid' => $client->currentRoom["room"]]);
                         yield $result->advance();
                         $row = $result->getCurrent();
 
                         if($row["requester_id"] == $client->userinfoID) {
-                            echo "test";
+                            // echo "test";
                             // $statement = yield $pool->prepare("update pvp_session set status = 2, requester_score = :score where pvp_room_id = :rid");
                             // $result = yield $statement->execute(['score' => $client->pvpScore, 'rid' => $client->currentRoom["room"]]);
                             $statement = yield $pool->query("update pvp_session set status = 2, requester_score = {$client->pvpScore} where pvp_room_id = {$client->currentRoom["room"]}");
                         }
                         elseif($row["opponent_id"] == $client->userinfoID) {
-                            echo "test2";
+                            // echo "test2";
                             // $statement = yield $pool->prepare("update pvp_session set status = 2, opponent_score = :score where pvp_room_id = :rid");
                             // $result = yield $statement->execute(['score' => $client->pvpScore, 'rid' => $client->currentRoom["room"]]);
                             $statement = yield $pool->query("update pvp_session set status = 2, opponent_score = {$client->pvpScore} where pvp_room_id = {$client->currentRoom["room"]}");
@@ -676,8 +711,8 @@ class Socket implements MessageComponentInterface {
 
                                     $player->send("[answer] {$opponentCorrect}!!!I LOVE CHINESEEE!!!{$roww["answer2"]}!!!I LOVE CHINESEEE!!! !!!I LOVE CHINESEEE!!!{$client->currentRoom["type"]}!!!I LOVE CHINESEEE!!!first");
 
-                                    $client->send("[pvp score] ".count($client->currentRoom["sessionAttempted"])." ".$client->pvpScore." ".count($player->currentRoom["sessionAttempted"])." ".$player->pvpScore);
-                                    $player->send("[pvp score] ".count($player->currentRoom["sessionAttempted"])." ".$player->pvpScore." ".count($client->currentRoom["sessionAttempted"])." ". $client->pvpScore);
+                                    $client->send("[pvp score] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
+                                    $player->send("[pvp score] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ". $client->pvpScore);
 
                                     break;
                                 }
