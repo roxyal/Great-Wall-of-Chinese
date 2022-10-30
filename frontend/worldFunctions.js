@@ -250,14 +250,14 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 						rowPvp += '<td>' + student_info[j] + '</td>';
 					}
 					rowPvp += '</tr>';
+                    
+                                    }
 					student_info = pvpLeaderBoardArray[pvpLeaderBoardArray.length-1].split(",");
                     rowPvp += `<tr style="font-weight:bold">`;
                     for(j=0;j<student_info.length;j++){
 						rowPvp += '<td style="background:#ccc">' + student_info[j] + '</td>';
 					}
                     rowPvp += `</tr>`;
-                    
-                                    }
                                     pvpMode.innerHTML  = rowPvp; //set innerhtml code
                                 }
                         }
