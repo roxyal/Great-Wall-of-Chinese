@@ -67,45 +67,62 @@ function createAccount(string $uname, string $name, string $email, string $pass,
             $students_insert->execute()
         ) {
             // Successfully created student profile. 
+            
+            // For every newly created account, they will have pvp rank points of 0 and rank Bronze
+            $rank = 'Bronze';
+            $rank_points = 0;
+            $pvpLeaderBoard_insert = $conn->prepare("INSERT INTO `leaderboard`(`account_id`, `rank`, `rank_points`) VALUES (?, ?, ?)");
+            
+            if(
+                $pvpLeaderBoard_insert &&
+                $pvpLeaderBoard_insert->bind_param('isi', $account_id, $rank, $rank_points) &&
+                $pvpLeaderBoard_insert->execute()
+            ){
+                // Successfully created the newly account's leaderboard profile
+                // Send a welcome email
 
-            // Send a welcome email
+                // Require composer
+                require "../vendor/autoload.php";
 
-            // Require composer
-            require "../vendor/autoload.php";
+                $mail = new PHPMailer(true);
+                try {
+                    //Server settings
+                    // $mail->SMTPDebug  = SMTP::DEBUG_SERVER;
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = $email_username;
+                    $mail->Password   = $email_password; 
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
 
-            $mail = new PHPMailer(true);
-            try {
-                //Server settings
-                // $mail->SMTPDebug  = SMTP::DEBUG_SERVER;
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = $email_username;
-                $mail->Password   = $email_password; 
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
+                    //Recipients
+                    $mail->setFrom('qinshihuang@ilovefriedorc.com', 'Qin Shi Huang');
+                    $mail->addAddress($email);
 
-                //Recipients
-                $mail->setFrom('qinshihuang@ilovefriedorc.com', 'Qin Shi Huang');
-                $mail->addAddress($email);
-
-                //Content
-                $mail->isHTML(true);
-                $mail->Subject = "Welcome to Great Wall of Chinese!";
-                $mail->Body    = "Dear Peasant $uname,<br/><br/>
-                                You have successfully registered an account at  
-                                <a href='https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/'>Great Wall of Chinese!</a><br/><br/>
-                                You are now hereby decreed to start construction of the Great Wall immediately.";
-                $mail->AltBody = "Dear Peasant $uname,
-                                You have successfully registered an account at  
-                                Great Wall of Chinese! Visit the website: https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/<br/><br/>
-                                You are now hereby decreed to start construction of the Great Wall immediately.";
-                $mail->send();
-            } catch (Exception $e) {
-                if($debug_mode) echo $mail->ErrorInfo;
+                    //Content
+                    $mail->isHTML(true);
+                    $mail->Subject = "Welcome to Great Wall of Chinese!";
+                    $mail->Body    = "Dear Peasant $uname,<br/><br/>
+                                    You have successfully registered an account at  
+                                    <a href='https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/'>Great Wall of Chinese!</a><br/><br/>
+                                    You are now hereby decreed to start construction of the Great Wall immediately.";
+                    $mail->AltBody = "Dear Peasant $uname,
+                                    You have successfully registered an account at  
+                                    Great Wall of Chinese! Visit the website: https://chinese.ilovefriedorc.com/Great-Wall-of-Chinese/<br/><br/>
+                                    You are now hereby decreed to start construction of the Great Wall immediately.";
+                    $mail->send();
+                } 
+                catch (Exception $e) {
+                    if($debug_mode) echo $mail->ErrorInfo;
+                }
+                return 0;
             }
-
-            return 0;
+            else{
+                // Database error
+                if($debug_mode) echo $conn->error;
+                return 5;
+            }
         }
         else {
             // Database error
