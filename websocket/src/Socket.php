@@ -139,6 +139,7 @@ class Socket implements MessageComponentInterface {
                 if($client->pvpStatus[0] !== "Playing") {
                     unset ($client->currentRoom);
                     unset ($client->currentQuestion);
+                    if(isset($client->customQuestionQueue)) unset($client->currentQuestionQueue);
                 }
                 else {
                     foreach ($this->clients as $player) {
@@ -146,6 +147,7 @@ class Socket implements MessageComponentInterface {
                             $player->pvpStatus = ["Available", "", time(), 0];
                             unset ($player->currentRoom);
                             unset ($player->currentQuestion);
+                            if(isset($player->customQuestionQueue)) unset($player->currentQuestionQueue);
                             // unset ($player->slowpoke);
                             $player->send("[pvp] forfeit: Your opponent has forfeited.");
                         }
