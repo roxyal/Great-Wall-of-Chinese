@@ -333,7 +333,7 @@ class Teacher{
         // Check to see if teacher has students
         if (!$this->checkTeacherHasStudentExists($teacher_account_id)) return 2;
         
-        $sql = "SELECT accounts.username, max(assignments_log.timestamp) as submittedtime, questions_bank.answer = assignments_log.answer as correct FROM `assignments_log` JOIN questions_bank on questions_bank.question_id = assignments_log.question_id JOIN accounts on assignments_log.account_id = accounts.account_id WHERE `assignment_id`= (SELECT assignment_id from assignments where assignment_name = ?) GROUP BY accounts.username";
+        $sql = "SELECT accounts.username, max(assignments_log.timestamp) as submittedtime, questions_bank.answer = assignments_log.answer as correct FROM `assignments_log` JOIN questions_bank on questions_bank.question_id = assignments_log.question_id JOIN accounts on assignments_log.account_id = accounts.account_id WHERE `assignments_log`.`assignment_id`= (SELECT assignment_id from assignments where assignment_name = ?) GROUP BY accounts.username";
         
         $stmt = $this->conn->prepare($sql);
         $output = "";
