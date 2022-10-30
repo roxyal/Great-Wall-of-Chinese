@@ -207,12 +207,22 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
                                         let adv_points = student_info[2];
 					let accuracy = (Math.round(student_info[3] * 100) / 100).toFixed(2);
 
-					rowAdventure += `<tr>
+                    if(position.includes("user")) {
+                        rowAdventure += `<tr style="font-weight:bold">
+										<td style="background:#ccc">` + position + `</td>
+										<td style="background:#ccc">` + username + `</td>
+                                        <td style="background:#ccc">` + adv_points + `</td>
+										<td style="background:#ccc">` + accuracy + `</td>
+									</tr>`;
+                    }
+                    else {
+					    rowAdventure += `<tr>
 										<td>` + position + `</td>
 										<td>` + username + `</td>
-                                                                                <td>` + adv_points + `</td>
+                                        <td>` + adv_points + `</td>
 										<td>` + accuracy + `</td>
 									</tr>`;
+                    }
                                     }
                                     adventureMode.innerHTML  = rowAdventure; //set innerhtml code
                                 }
@@ -229,7 +239,7 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 				// Check to see if the pvpLeaderBoard is an empty list
                                 if (pvpLeaderBoard.length !== 0){
                                     pvpLeaderBoardArray = pvpLeaderBoard.split("|");
-                                    for(i=0;i<pvpLeaderBoardArray.length;i++){
+                                    for(i=0;i<pvpLeaderBoardArray.length-1;i++){
 					rowPvp = rowPvp + '<tr>';
 					
 					// We use (,) to split again, to obtain respestive columns player's information
@@ -240,6 +250,13 @@ leaderBoardModal.addEventListener('show.bs.modal', function (event){
 						rowPvp += '<td>' + student_info[j] + '</td>';
 					}
 					rowPvp += '</tr>';
+					student_info = pvpLeaderBoardArray[pvpLeaderBoardArray.length-1].split(",");
+                    rowPvp += `<tr style="font-weight:bold">`;
+                    for(j=0;j<student_info.length;j++){
+						rowPvp += '<td style="background:#ccc">' + student_info[j] + '</td>';
+					}
+                    rowPvp += `</tr>`;
+                    
                                     }
                                     pvpMode.innerHTML  = rowPvp; //set innerhtml code
                                 }

@@ -59,6 +59,14 @@ function viewLeaderBoard()
                 $leaderboard_str = $leaderboard_str.'|';
             $count = $count + 1;
         }
+        $stmt_3 = $conn->query("SELECT a.username, (s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct)+2*(s.idiom_upper_correct+s.fill_upper_correct+s.pinyin_upper_correct) AS adv_score, 100*(s.idiom_lower_correct+s.fill_lower_correct+s.pinyin_lower_correct+s.idiom_upper_correct+s.fill_upper_correct+
+        s.pinyin_upper_correct)/(s.idiom_lower_attempted+s.fill_lower_attempted+
+        s.pinyin_lower_attempted+s.idiom_upper_attempted+s.fill_upper_attempted+
+        s.pinyin_upper_attempted) AS accuracy FROM students s INNER JOIN accounts a
+        WHERE s.student_id = a.account_id AND a.account_id = {$_SESSION["account_id"]}");
+        $row_3 = $stmt_3->fetch_array(MYSQLI_ASSOC);
+        $leaderboard_str .= "|<i class=\"fa-solid fa-user\"></i>,".$row_3["username"].",".$row_3["adv_score"].",".$row_3["accuracy"];
+        
         // reset the count so that we can use for below again
         $count = 0;
         
@@ -86,6 +94,10 @@ function viewLeaderBoard()
                     $leaderboard_str = $leaderboard_str.'|';
                 $count = $count + 1;
             }
+            $stmt_3 = $conn->query("SELECT a.username, l.rank, l.rank_points FROM leaderboard l INNER JOIN accounts a on l.account_id = a.account_id where a.account_id = {$_SESSION['account_id']}");
+            $row_3 = $stmt_3->fetch_array(MYSQLI_ASSOC);
+            $leaderboard_str .= "|<i class=\"fa-solid fa-user\"></i>,".$row_3["username"].",".$row_3["rank"].",".$row_3["rank_points"];
+
             return $leaderboard_str;
         }
         else
