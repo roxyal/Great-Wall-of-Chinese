@@ -477,79 +477,82 @@ class Socket implements MessageComponentInterface {
                                     // Send result
                                     // $clientWon = $client->pvpScore > $player->pvpScore ? 1 : 0;
                                     
+                                    // Retrieve player and client's rank points
+                                    $result_player = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$player->userinfoID}");
+                                    echo "\nplayer id $player->userinfoID\n";
+                                    // $result_player = yield $statement->execute();
+                                    yield $result_player->advance();
+                                    $row_player = $result_player->getCurrent();
+                                    //$player_rank = $row_player['rank'];
+                                    $player_rank_points = $row_player['rank_points'];
+                                    switch($row_player['rank']) {
+                                        case "Silver":
+                                            $player_rank = 1; break;
+                                        case "Gold":
+                                            $player_rank = 2; break;
+                                        case "Bling Bling":
+                                            $player_rank = 3; break;
+                                        default:
+                                            $player_rank = 0; break;
+                                    }
+
+                                    $result_client = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$client->userinfoID}");
+                                    // $result_client = yield $statement->execute();
+                                    yield $result_client->advance();
+                                    $row_client = $result_client->getCurrent();
+                                    //$client_rank = $row_client['rank'];
+                                    $client_rank_points = $row_client['rank_points'];switch($row_client['rank']) {
+                                        case "Silver":
+                                            $client_rank = 1; break;
+                                        case "Gold":
+                                            $client_rank = 2; break;
+                                        case "Bling Bling":
+                                            $client_rank = 3; break;
+                                        default:
+                                            $client_rank = 0; break;
+                                    }
+
+                                    // The rank points multiplier matrix
+                                    $multiplier = [
+                                        [100, 125, 150, 200],
+                                        [125, 100, 125, 150],
+                                        [150, 125, 100, 125],
+                                        [200, 150, 125, 100]
+                                    ];
+
+                                    if ($player->pvpScore > $client->pvpScore) {
+                                        // Player won
+                                        echo "player $player->userinfoUsername won!\n";
+
+                                        // Check player's multiplier, award high multiplier if the winner's rank is lower than loser's
+                                        $player_multi = $player_rank < $client_rank ? $multiplier[$player_rank][$client_rank] : 200-$multiplier[$player_rank][$client_rank];
+                                        $client_multi = 200-$player_multi;
+
+                                        $player_new_rp = $player_rank_points + 25*($player_multi/100);
+                                        $client_new_rp = $client_rank_points - 25*($client_multi/100);
+                                    }
+                                    elseif ($client->pvpScore > $player->pvpScore) {
+                                        // Client won
+                                        echo "client $client->userinfoUsername won!\n";
+
+                                        $client_multi = $client_rank < $player_rank ? $multiplier[$client_rank][$player_rank] : 200-$multiplier[$client_rank][$player_rank];
+                                        $player_multi = 200-$client_multi;
+
+                                        $player_new_rp = $player_rank_points - 25*($player_multi/100);
+                                        $client_new_rp = $client_rank_points + 25*($client_multi/100);
+                                    }
+                                    else {
+                                        // Tie
+                                        // echo "This error shouldn't be occurring\n";
+                                        $player_new_rp = $player_rank_points;
+                                        $client_new_rp = $client_rank_points;
+                                    }
+
+                                    echo "player multi: $player_multi\n";
+                                    echo "client multi: $client_multi\n";
+
                                     // Check if the scores didn't tie
                                     if($client->pvpScore !== $player->pvpScore) {
-                                        // Retrieve player and client's rank points
-                                        $result_player = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$player->userinfoID}");
-                                        echo "\nplayer id $player->userinfoID\n";
-                                        // $result_player = yield $statement->execute();
-                                        yield $result_player->advance();
-                                        $row_player = $result_player->getCurrent();
-                                        //$player_rank = $row_player['rank'];
-                                        $player_rank_points = $row_player['rank_points'];
-                                        switch($row_player['rank']) {
-                                            case "Silver":
-                                                $player_rank = 1; break;
-                                            case "Gold":
-                                                $player_rank = 2; break;
-                                            case "Bling Bling":
-                                                $player_rank = 3; break;
-                                            default:
-                                                $player_rank = 0; break;
-                                        }
-
-                                        $result_client = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$client->userinfoID}");
-                                        // $result_client = yield $statement->execute();
-                                        yield $result_client->advance();
-                                        $row_client = $result_client->getCurrent();
-                                        //$client_rank = $row_client['rank'];
-                                        $client_rank_points = $row_client['rank_points'];switch($row_client['rank']) {
-                                            case "Silver":
-                                                $client_rank = 1; break;
-                                            case "Gold":
-                                                $client_rank = 2; break;
-                                            case "Bling Bling":
-                                                $client_rank = 3; break;
-                                            default:
-                                                $client_rank = 0; break;
-                                        }
-
-                                        // The rank points multiplier matrix
-                                        $multiplier = [
-                                            [100, 125, 150, 200],
-                                            [125, 100, 125, 150],
-                                            [150, 125, 100, 125],
-                                            [200, 150, 125, 100]
-                                        ];
-
-                                        if ($player->pvpScore > $client->pvpScore) {
-                                            // Player won
-                                            echo "player $player->userinfoUsername won!\n";
-
-                                            // Check player's multiplier, award high multiplier if the winner's rank is lower than loser's
-                                            $player_multi = $player_rank < $client_rank ? $multiplier[$player_rank][$client_rank] : 200-$multiplier[$player_rank][$client_rank];
-                                            $client_multi = 200-$player_multi;
-
-                                            $player_new_rp = $player_rank_points + 25*($player_multi/100);
-                                            $client_new_rp = $client_rank_points - 25*($client_multi/100);
-                                        }
-                                        elseif ($client->pvpScore > $player->pvpScore) {
-                                            // Client won
-                                            echo "client $client->userinfoUsername won!\n";
-
-                                            $client_multi = $client_rank < $player_rank ? $multiplier[$client_rank][$player_rank] : 200-$multiplier[$client_rank][$player_rank];
-                                            $player_multi = 200-$client_multi;
-
-                                            $player_new_rp = $player_rank_points - 25*($player_multi/100);
-                                            $client_new_rp = $client_rank_points + 25*($client_multi/100);
-                                        }
-                                        else {
-                                            // Tie
-                                            echo "This error shouldn't be occurring\n";
-                                        }
-
-                                        echo "player multi: $player_multi\n";
-                                        echo "client multi: $client_multi\n";
                                         
                                         // If player's rank_points become negative - score, it will still be 0
                                         if  ($player_new_rp < 0) $player_new_rp = 0;
@@ -583,9 +586,9 @@ class Socket implements MessageComponentInterface {
                                         yield $pool->query($client_sql);
                                     }
 
-                                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
+                                    $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." $client_new_rp $player_new_rp");
 
-                                    $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore);
+                                    $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." $player_new_rp $client_new_rp");
                                     
                                     unset($client->currentQuestion);
                                     unset($client->currentRoom);

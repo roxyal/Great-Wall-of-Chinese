@@ -235,34 +235,54 @@ generateSocketAuth().then(result => {
         //     // await displayNextPvpQn();
         // }
 
-        if(/^\[result\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
+        if(/^\[result\] (\d) (\d+) (\d) (\d+) (\d+) (\d+)/.test(e.data)) {
             // [result] your_correct_qns your_score opponent_correct_qns opponent_score
-            var res = e.data.match(/^\[result\] (\d) (\d+) (\d) (\d+)/);
+            var res = e.data.match(/^\[result\] (\d) (\d+) (\d) (\d+) (\d+) (\d+)/);
             if(parseInt(res[2]) > parseInt(res[4])) {
                 // client won
                 document.getElementById('pvpModeComplete').innerHTML = `
                     <div class="alert alert-info text-center" role="alert">
-                        Congratulations, you won!<br/><br/>
+                        <i class="fa-solid fa-trophy"></i> Congratulations, you won!<br/><br/>
 
                         Your Score: ${res[2]}<br/>
-                        Correct Questions: ${res[1]}/5<br/><br/>
+                        Correct Questions: ${res[1]}/5<br/>
+                        Rank points: <span style="color:forestgreen;text-shadow:0 0 10px green">${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
-                        Correct Questions: ${res[3]}/5
+                        Correct Questions: ${res[3]}/5<br/>
+                        Rank points: <span style="color:red">${res[6]}</span>
                     </div>
                 `;
             }
-            else {
+            else if(parseInt(res[2]) < parseInt(res[4])) {
                 // client lost
                 document.getElementById('pvpModeComplete').innerHTML = `
                     <div class="alert alert-info text-center" role="alert">
                         You lost, maybe next time...<br/><br/>
 
                         Your Score: ${res[2]}<br/>
-                        Correct Questions: ${res[1]}/5<br/><br/>
+                        Correct Questions: ${res[1]}/5<br/>
+                        Rank points: <span style="color:red;text-shadow:0 0 10px red">${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
-                        Correct Questions: ${res[3]}/5
+                        Correct Questions: ${res[3]}/5<br/>
+                        Rank points: <span style="color:forestgreen">${res[6]}</span>
+                    </div>
+                `;
+            }
+            else {
+                // tied
+                document.getElementById('pvpModeComplete').innerHTML = `
+                    <div class="alert alert-info text-center" role="alert">
+                        The match was a draw<br/><br/>
+
+                        Your Score: ${res[2]}<br/>
+                        Correct Questions: ${res[1]}/5<br/>
+                        Rank points: ${res[5]}<br/><br/>
+
+                        Opponent's Score: ${res[4]}<br/>
+                        Correct Questions: ${res[3]}/5<br/>
+                        Rank points: ${res[6]}
                     </div>
                 `;
             }
@@ -321,8 +341,8 @@ generateSocketAuth().then(result => {
 
         if(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
             let scores = e.data.match(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/);
-            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]+"/"+pvpModeCurrentQn; 
-            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
+            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"/"+((pvpModeCurrentQn-1)*50)+"<br/>Questions Correct: "+scores[1]+"/"+(pvpModeCurrentQn-1); 
+            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"/"+((pvpModeCurrentQn-1)*50)+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
         }
 
         if(/^\[answer\] (.+)/.test(e.data)) {
@@ -337,7 +357,17 @@ generateSocketAuth().then(result => {
                 console.log("Updating adventure modal score and explanation") // for testing purpose
 
                 adventureModeQnAttempted += 1
-                if(answer[0] == "1") adventureModeQnCorrect += 1
+                if(answer[0] == "1") {
+                    adventureModeQnCorrect += 1;
+                    document.getElementById("adventureModeScore").style.textShadow = "0 0 10px #27AC31";
+                }
+                else {
+                    document.getElementById("adventureModeScore").style.textShadow = "0 0 10px red";
+                }
+                window.setTimeout(function() {
+                    document.getElementById("adventureModeScore").style.textShadow = "";
+                }, 1000);
+
                 document.getElementById('adventureModeScore').innerHTML = adventureModeQnCorrect + "/" + adventureModeQnAttempted;
                 document.getElementById('adventureModeExplanation').innerHTML = `
                     <div class="alert alert-${answer[0] == "1" ? "success" : "danger"}" role="alert">
@@ -350,7 +380,18 @@ generateSocketAuth().then(result => {
             }
             else if(answer[3] == "ass") {
                 assignmentModeQnAttempted += 1
-                if(answer[0] == "1") assignmentModeQnCorrect += 1
+                if(answer[0] == "1") {
+                    assignmentModeQnCorrect += 1;
+                    document.getElementById("assignmentModeScore").style.textShadow = "0 0 10px #27AC31";
+                }
+                else {
+                    assignmentModeQnCorrect += 1;
+                    document.getElementById("assignmentModeScore").style.textShadow = "0 0 10px red";
+                }
+                window.setTimeout(function() {
+                    document.getElementById("assignmentModeScore").style.textShadow = "";
+                }, 1000);
+                
                 assignmentModeScore.innerHTML = assignmentModeQnCorrect + "/" + assignmentModeQnAttempted;
                 assignmentModeExplanation.innerHTML = `
                     <div class="alert alert-${answer[0] == "1" ? "success" : "danger"}" role="alert">
@@ -362,13 +403,20 @@ generateSocketAuth().then(result => {
                 `;
             }
             else if(answer[3] == "pvp") {
-                if(answer[4] == "first") {
+                if(answer[4] == "first" && answer[0] == "1") {
                     // the user was first
-
+                    document.getElementById("pvpModeUserScore").style.textShadow = "0 0 10px #27AC31";
                 }
-                else {
+                else if(answer[0] == "1") {
                     // the user was second
+                    document.getElementById("pvpModeUserScore").style.textShadow = "0 0 10px #098659";
                 }
+                else if(answer[0] == "0") {
+                    document.getElementById("pvpModeUserScore").style.textShadow = "0 0 10px red";
+                }
+                window.setTimeout(function() {
+                    document.getElementById("pvpModeUserScore").style.textShadow = "";
+                }, 1000);
 
                 await displayNextPvpQn();
                 // console.log(slowpoke);
