@@ -443,7 +443,7 @@ class Socket implements MessageComponentInterface {
                                     // Check if the scores didn't tie
                                     if($client->pvpScore !== $player->pvpScore) {
                                         // Retrieve player and client's rank points
-                                        $result_player = yield $pool->query("select rank, rank_points from leaderboard where account_id = {$player->userinfoID}");
+                                        $result_player = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$player->userinfoID}");
                                         echo "\nplayer id $player->userinfoID\n";
                                         // $result_player = yield $statement->execute();
                                         yield $result_player->advance();
@@ -461,7 +461,7 @@ class Socket implements MessageComponentInterface {
                                                 $player_rank = 0; break;
                                         }
 
-                                        $result_client = yield $pool->query("select rank, rank_points from leaderboard where account_id = {$client->userinfoID}");
+                                        $result_client = yield $pool->query("select `rank`, `rank_points` from leaderboard where account_id = {$client->userinfoID}");
                                         // $result_client = yield $statement->execute();
                                         yield $result_client->advance();
                                         $row_client = $result_client->getCurrent();
