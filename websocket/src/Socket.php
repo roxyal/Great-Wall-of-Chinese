@@ -570,6 +570,7 @@ class Socket implements MessageComponentInterface {
                                                 break;
                                             case $rank_points >= 1000:
                                                 $new_rank_list[$x] = "Bling Bling";
+                                                break;
                                             default:
                                                 $new_rank_list[$x] = "Bronze";
                                             }

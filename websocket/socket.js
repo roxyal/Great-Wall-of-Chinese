@@ -431,12 +431,24 @@ generateSocketAuth().then(result => {
                 else {
                     // To make smoother animations, find the number of Phaser updates() that have passed since last location data
                     let dt = coords[4]-moves[sender][moves[sender].length-1][3];
+
+                    // Get the coordinate difference between current position and last position
+                    let dx = coords[2]-moves[sender][moves[sender].length-1][1];
+                    let dy = coords[3]-moves[sender][moves[sender].length-1][2];
+
                     // Only send location data newer than x updates from the previous data
                     if(dt > 5) {
                         // To prevent sending every single movement to Phaser, wait until there are >2 movements in the same player's queue
                         // if(moves[sender].length > 2) {
-                            movePlayer(sender, coords[1], coords[2], coords[3], dt);
-                            moves[sender] = [[coords[1], coords[2], coords[3], coords[4]]];
+
+                        // Loop through the difference in x and y
+                        for(let x = 0; x < dx; x++) {
+                            for(let y = 0; y < dy; y++) {
+                                movePlayer(sender, coords[1], coords[2], coords[3], dt);
+                            }
+                        }
+
+                        moves[sender] = [[coords[1], coords[2], coords[3], coords[4]]];
                         // }
                     }
                 }
@@ -514,9 +526,6 @@ generateSocketAuth().then(result => {
                 }
                 console.log(playerSprite);
                 console.log(opponentSprite);
-                // change sprite
-                // change score
-                // add pvp rank multiplier
                 // individual qn overview for teachers?
                 // teacher view assignment result
                 // handle same result for pvp
@@ -524,8 +533,8 @@ generateSocketAuth().then(result => {
                 // adventure mode score/assignment score
                 // graphic display of correct ans for pvp
                 // pvp waiting for opponent
-                document.getElementById("characterAvatarUserPVP").src = playerSprite;
-                document.getElementById("characterAvatarOpponentPVP").src = opponentSprite;
+                document.getElementById("characterAvatarUserPVP").getElementsByTagName("img")[0].src = playerSprite;
+                document.getElementById("characterAvatarOpponentPVP").getElementsByTagName("img")[0].src = opponentSprite;
             }
             else if(type == "challenge rejected") {
                 if(!message.includes("sadface")) {
