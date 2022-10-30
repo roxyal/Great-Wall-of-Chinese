@@ -347,8 +347,8 @@ generateSocketAuth().then(result => {
 
         if(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
             let scores = e.data.match(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/);
-            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]+"/"+(pvpModeCurrentQn-1); 
-            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
+            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]; 
+            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3];
         }
 
         if(/^\[answer\] (.+)/.test(e.data)) {
