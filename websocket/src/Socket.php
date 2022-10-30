@@ -764,8 +764,8 @@ class Socket implements MessageComponentInterface {
                 $pool = \Amp\Mysql\pool($config);
 
                 if($customRoom !== "") {
-                    $statement = yield $pool->prepare("select count(*) as count from custom_levels where customLevelName = :custom and account_id = :acid");
-                    $result = yield $statement->execute(['custom' => $customRoom, 'acid' => $client->userinfoID]);
+                    $result = yield $pool->query("select count(*) as count from custom_levels where customLevelName = '$customRoom' and account_id = {$client->userinfoID}");
+                    // $result = yield $statement->execute(['custom' => $customRoom, 'acid' => $client->userinfoID]);
                     // $s = yield $pool->query("select count(*) as count from custom_levels where custom_game_id = $customRoom and account_id = $client->userinfoID");
                     // while (yield $s->advance()) {
                     //     \var_dump($s->getCurrent());
@@ -863,8 +863,8 @@ class Socket implements MessageComponentInterface {
 
                         // get the first question
                         if($customRoom !== "") {
-                            $statement = yield $pool->prepare("select * from custom_levels where customLevelName = `:custom` and account_id = :acid");
-                            $result = yield $statement->execute(['custom' => $customRoom, 'acid' => $player->userinfoID]);
+                            $result = yield $pool->query("select * from custom_levels where customLevelName = '$customRoom' and account_id = $player->userinfoID");
+                            // $result = yield $statement->execute(['custom' => $customRoom, 'acid' => $player->userinfoID]);
                             // var_dump($customRoom);
                             yield $result->advance();
                             $row = $result->getCurrent();
