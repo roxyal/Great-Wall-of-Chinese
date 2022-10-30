@@ -33,23 +33,28 @@ function viewAssignmentSubmissions(e){
 	let viewSubmissions = document.getElementById('viewSubmissions-modal')
 	viewSubmissions.addEventListener('show.bs.modal', function (event){
 
+		document.getElementById("viewSubmissionsRows").innerHTML = "";
+		document.getElementById("assignment_name").innerHTML = assignmentToView;
+		let submissionsHTML = "";
+
 		var xmlhttp = new XMLHttpRequest();
       	xmlhttp.onreadystatechange = function(){
             if (this.readyState == 4 && this.status == 200){
 				console.log(this.responseText);
 				if(this.responseText.length > 0) {
 					let students = this.responseText.split('|');
+					// console.log(students);
 					for(let i=0; i<students.length; i++) {
 						let student = students[i].split(",");
-						let submissionsHTML = `<tr>
+						submissionsHTML += `<tr>
 							<td>${student[0]}</td>
 							<td>${student[1]}</td>
 							<td>${student[2]}</td>
 						</tr>`;
-						console.log(submissionsHTML);
+						// console.log(submissionsHTML);
 
-						document.getElementById("viewSubmissionsRows").innerHTML += submissionsHTML;
 					}
+					document.getElementById("viewSubmissionsRows").innerHTML = submissionsHTML;
 				}
 			}
 		}
