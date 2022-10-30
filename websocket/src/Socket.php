@@ -553,6 +553,8 @@ class Socket implements MessageComponentInterface {
                                     unset($client->currentRoom);
                                     unset($player->currentQuestion);
                                     unset($player->currentRoom);
+                                    if(isset($player->customQuestionQueue)) unset($player->customQuestionQueue);
+                                    if(isset($client->customQuestionQueue)) unset($client->customQuestionQueue);
                                     
                                     // Make the player available for pvp
                                     $client->pvpStatus = ["Available", "", time(), 0];
