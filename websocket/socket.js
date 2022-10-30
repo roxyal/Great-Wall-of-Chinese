@@ -433,8 +433,9 @@ generateSocketAuth().then(result => {
                     let dt = coords[4]-moves[sender][moves[sender].length-1][3];
 
                     // Get the coordinate difference between current position and last position
-                    let dx = coords[2]-moves[sender][moves[sender].length-1][1];
-                    let dy = coords[3]-moves[sender][moves[sender].length-1][2];
+                    let dx = Math.abs(parseInt(coords[2]-moves[sender][moves[sender].length-1][1]));
+                    let dy = Math.abs(parseInt(coords[3]-moves[sender][moves[sender].length-1][2]));
+                    let direction = parseInt(coords[2]-moves[sender][moves[sender].length-1][1]) < 0 ? "left" : "right";
 
                     // Only send location data newer than x updates from the previous data
                     if(dt > 5) {
@@ -444,7 +445,7 @@ generateSocketAuth().then(result => {
                         // Loop through the difference in x and y
                         for(let x = 0; x < dx; x++) {
                             for(let y = 0; y < dy; y++) {
-                                movePlayer(sender, coords[1], coords[2], coords[3], dt);
+                                movePlayer(sender, coords[1], coords[2], coords[3], dt, direction);
                             }
                         }
 

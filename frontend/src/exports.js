@@ -1,5 +1,5 @@
-export function movePlayer(username, characterType, posX, posY, dt) {
-    moving(username, characterType, posX, posY, dt);
+export function movePlayer(username, characterType, posX, posY, dt, direction) {
+    moving(username, characterType, posX, posY, dt, direction);
 }
 
 // Spawn new players that log in

@@ -604,10 +604,10 @@ function create() {
             this.otherPlayers[username]["name"] = this.add.text(this.otherPlayers[username]["sprite"].x, this.otherPlayers[username]["sprite"].y + this.otherPlayers[username]["sprite"].height, username, {fill: "white", backgroundColor: "black", fontSize: "12px"}).setOrigin(0.5);
         }
         else {
-            moving(username, characterType, posX, posY);
+            moving(username, characterType, posX, posY, this.otherPlayers[username].x > posX ? "left" : "right");
         }
     }
-    moving = (username, characterType, posX, posY) => {
+    moving = (username, characterType, posX, posY, direction) => {
         if(this.otherPlayers.hasOwnProperty(username)) {
             console.log("moving player "+username);
             let player = this.otherPlayers[username];
@@ -634,15 +634,16 @@ function create() {
 
             // Check direction of player moving
             player["sprite"].anims.play(spriteName+"Running", true);
-            if (posX > player["sprite"].x) {
+            if (posX > player["sprite"].x || direction == "left") {
                 // moving left
                 player["sprite"].flipX = false;
                 for(let x=player["sprite"].x; x<posX; x++) {
-                    let incrementValue = Phaser.Math.Interpolation.SmootherStep(x/posX, player["sprite"].x, posX);
-                    console.log(x, incrementValue);
-                    player["sprite"].x = incrementValue;
+                    player["sprite"].x ++;
+                    // let incrementValue = Phaser.Math.Interpolation.SmootherStep(x/posX, player["sprite"].x, posX);
+                    // console.log(x, incrementValue);
+                    // player["sprite"].x = incrementValue;
                 }
-            } else if (posX < player["sprite"].x) {
+            } else if (posX < player["sprite"].x || direction == "right") {
                 // moving right
                 player["sprite"].flipX = true;
                 for(let x=player["sprite"].x; x>posX; x--) {
@@ -719,7 +720,7 @@ function update() {
 
     // Update player's sprite and position on the socket every x ticks
     timer++;
-    if(move && timer % 5 == 0) {
+    if(move && timer % 25 == 0) {
         console.log("PHASER: x"+this.player.x+" y"+this.player.y);
         updateMovement(this.player.x, this.player.y, timer);
     }
