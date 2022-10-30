@@ -420,6 +420,7 @@ class Socket implements MessageComponentInterface {
                         $result = yield $statement->execute(['rid' => $client->currentRoom["room"]]);
                         yield $result->advance();
                         $row = $result->getCurrent();
+                        var_dump($client->pvpScore);
 
                         if($row["requester_id"] == $client->userinfoID) {
                             $statement = yield $pool->prepare("update pvp_session set status = 2, requester_score = :score where pvp_room_id = :rid");
