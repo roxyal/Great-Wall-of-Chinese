@@ -528,8 +528,8 @@ class Socket implements MessageComponentInterface {
                                         $player_multi = $player_rank < $client_rank ? $multiplier[$player_rank][$client_rank] : 200-$multiplier[$player_rank][$client_rank];
                                         $client_multi = 200-$player_multi;
 
-                                        $player_new_rp = $player_rank_points + 25*($player_multi/100);
-                                        $client_new_rp = $client_rank_points - 25*($client_multi/100);
+                                        $player_new_rp = round($player_rank_points + 25*($player_multi/100));
+                                        $client_new_rp = round($client_rank_points - 25*($client_multi/100));
                                     }
                                     elseif ($client->pvpScore > $player->pvpScore) {
                                         // Client won
@@ -538,8 +538,8 @@ class Socket implements MessageComponentInterface {
                                         $client_multi = $client_rank < $player_rank ? $multiplier[$client_rank][$player_rank] : 200-$multiplier[$client_rank][$player_rank];
                                         $player_multi = 200-$client_multi;
 
-                                        $player_new_rp = $player_rank_points - 25*($player_multi/100);
-                                        $client_new_rp = $client_rank_points + 25*($client_multi/100);
+                                        $player_new_rp = round($player_rank_points - 25*($player_multi/100));
+                                        $client_new_rp = round($client_rank_points + 25*($client_multi/100));
                                     }
                                     else {
                                         // Tie

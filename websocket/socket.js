@@ -286,6 +286,12 @@ generateSocketAuth().then(result => {
                     </div>
                 `;
             }
+
+            document.getElementById("pvpModeOption1").disabled = true;
+            document.getElementById("pvpModeOption2").disabled = true;
+            document.getElementById("pvpModeOption3").disabled = true;
+            document.getElementById("pvpModeOption4").disabled = true;
+
             pvpModeProgress = 0; 	// progress in terms of percentage, starts at 0%
             pvpModeQnCorrect = 0; 	// num of questions correct, starts at 0
             pvpModeQnAttempted = 0; 	// num of questions attempted, starts at 0
@@ -418,6 +424,7 @@ generateSocketAuth().then(result => {
                     document.getElementById("pvpModeUserScore").style.textShadow = "";
                 }, 1000);
 
+                // if(pvpModeCurrentQn <= 4) 
                 await displayNextPvpQn();
                 // console.log(slowpoke);
                 // if(slowpoke.length <= pvpModeCurrentQn) {
@@ -577,10 +584,7 @@ generateSocketAuth().then(result => {
                 console.log(opponentSprite);
                 // individual qn overview for teachers?
                 // teacher view assignment result
-                // handle same result for pvp
                 // add your rank in leaderboard
-                // adventure mode score/assignment score
-                // graphic display of correct ans for pvp
                 // pvp waiting for opponent
                 document.getElementById("characterAvatarUserPVP").getElementsByTagName("img")[0].src = playerSprite;
                 document.getElementById("characterAvatarOpponentPVP").getElementsByTagName("img")[0].src = opponentSprite;

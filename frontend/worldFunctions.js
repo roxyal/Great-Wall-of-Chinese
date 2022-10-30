@@ -806,16 +806,19 @@ function submitPvpAns(answer) {
     document.getElementById("pvpModeOption2").disabled = true;
     document.getElementById("pvpModeOption3").disabled = true;
     document.getElementById("pvpModeOption4").disabled = true;
+
+    // add waiting message
+    document.getElementById("pvpModeExplanation").innerHTML = `<div class="alert alert-warning text-center">Waiting for opponent's answer...</div>`;
 }
 function displayNextPvpQn(){
     return new Promise(function(resolve) {
         console.log("displaying next question");
         console.log(questionQueue);
         
-        pvpModeCurrentQn++;
+        if(pvpModeCurrentQn <= 4) pvpModeCurrentQn++;
         console.log(pvpModeCurrentQn);
         document.getElementById('pvpModeQuestionNo').innerHTML = "Question " + pvpModeCurrentQn;
-        
+        document.getElementById("pvpModeExplanation").innerHTML = "";
         // let loadQn = window.setInterval(function() {
             if(questionQueue.length > 0) {
                 // console.log("queue", questionQueue);
