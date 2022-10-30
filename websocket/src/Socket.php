@@ -536,10 +536,10 @@ class Socket implements MessageComponentInterface {
                                             }
                                         }
                                         // Update the database with new leaderboard points and rank
-                                        $player_sql = "UPDATE leaderboard SET rank='{$new_rank_list[0]}', rank_points={$player_new_rp} WHERE account_id = {$player->userinfoID}";
+                                        $player_sql = "UPDATE leaderboard SET `rank`='{$new_rank_list[0]}', `rank_points`={$player_new_rp} WHERE `account_id` = {$player->userinfoID}";
                                         yield $pool->query($player_sql);
 
-                                        $client_sql = "UPDATE leaderboard SET rank='{$new_rank_list[1]}', rank_points={$client_new_rp} WHERE account_id = {$client->userinfoID}";
+                                        $client_sql = "UPDATE leaderboard SET `rank`='{$new_rank_list[1]}', `rank_points`={$client_new_rp} WHERE `account_id` = {$client->userinfoID}";
                                         yield $pool->query($client_sql);
                                     }
 
