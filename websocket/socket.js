@@ -246,11 +246,11 @@ generateSocketAuth().then(result => {
 
                         Your Score: ${res[2]}<br/>
                         Correct Questions: ${res[1]}/5<br/>
-                        Rank points: <span style="color:forestgreen;text-shadow:0 0 10px green"><i class="fa-solid fa-arrow-up"></i> ${res[5]}</span><br/><br/>
+                        Rank Points: <span style="color:forestgreen;text-shadow:0 0 10px green"><i class="fa-solid fa-arrow-up"></i> ${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
                         Correct Questions: ${res[3]}/5<br/>
-                        Rank points: <span style="color:red"><i class="fa-solid fa-arrow-down"></i> ${res[6]}</span>
+                        Rank Points: <span style="color:red"><i class="fa-solid fa-arrow-down"></i> ${res[6]}</span>
                     </div>
                 `;
             }
@@ -262,11 +262,11 @@ generateSocketAuth().then(result => {
 
                         Your Score: ${res[2]}<br/>
                         Correct Questions: ${res[1]}/5<br/>
-                        Rank points: <span style="color:red;text-shadow:0 0 10px red"><i class="fa-solid fa-arrow-down"></i> ${res[5]}</span><br/><br/>
+                        Rank Points: <span style="color:red;text-shadow:0 0 10px red"><i class="fa-solid fa-arrow-down"></i> ${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
                         Correct Questions: ${res[3]}/5<br/>
-                        Rank points: <span style="color:forestgreen"><i class="fa-solid fa-arrow-up"></i> ${res[6]}</span>
+                        Rank Points: <span style="color:forestgreen"><i class="fa-solid fa-arrow-up"></i> ${res[6]}</span>
                     </div>
                 `;
             }
@@ -347,8 +347,8 @@ generateSocketAuth().then(result => {
 
         if(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/.test(e.data)) {
             let scores = e.data.match(/^\[pvp score\] (\d) (\d+) (\d) (\d+)/);
-            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"/"+((pvpModeCurrentQn-1)*50)+"<br/>Questions Correct: "+scores[1]+"/"+(pvpModeCurrentQn-1); 
-            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"/"+((pvpModeCurrentQn-1)*50)+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
+            document.getElementById("pvpModeUserScore").innerHTML = "Your score: "+scores[2]+"<br/>Questions Correct: "+scores[1]+"/"+(pvpModeCurrentQn-1); 
+            document.getElementById("pvpModeOpponentScore").innerHTML = "Opponent's score: "+scores[4]+"<br/>Questions Correct: "+scores[3]+"/"+pvpModeCurrentQn;
         }
 
         if(/^\[answer\] (.+)/.test(e.data)) {
