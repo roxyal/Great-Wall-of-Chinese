@@ -439,10 +439,67 @@ class Socket implements MessageComponentInterface {
                                     $client->send("[result] ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore." ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore);
 
                                     $player->send("[result] ".count($player->currentRoom["sessionCorrect"])." ".$player->pvpScore." ".count($client->currentRoom["sessionCorrect"])." ".$client->pvpScore);
+                                    
 
                                     // TODO: Update the leaderboard
                                     // ...
+                                    
+                                    // Retrieve player and client's rank points
+                                    $player_statement = yield $pool->prepare("select rank_points from leaderboard where account_id = {$player->userinfoID}");
+                                    $result_player = yield $statement->execute();
+                                    yield $result_player->advance();
+                                    $row_player = $result_player->getCurrent();
+                                    //$player_rank = $row_player['rank'];
+                                    $player_rank_points = $row_player['rank_points'];
 
+
+                                    $client_statement = yield $pool->prepare("select rank_points from leaderboard where account_id = {$client->userinfoID}");
+                                    $result_client = yield $statement->execute();
+                                    yield $result_client->advance();
+                                    $row_client = $result_client->getCurrent();
+                                    //$client_rank = $row_client['rank'];
+                                    $client_rank_points = $row_client['rank_points'];
+                                    
+                                    if ($player->pvpScore > $client->pvpScore){
+                                        
+                                        $player_new_rp = $player_rank_points + 25;
+                                        $client_new_rp = $client_rank_points - 25;
+                                    }
+                                    else{
+                                        $player_new_rp = $player_rank_points - 25;
+                                        $client_new_rp = $client_rank_points + 25;
+                                    }
+                                    
+                                    // If player's rank_points become negative - score, it will still be 0
+                                    if  ($player_new_rp < 0) $player_new_rp = 0;
+                                    if  ($client_new_rp < 0) $client_new_rp = 0; 
+                                    
+                                    // iterate twice because there is client/player 's
+                                    // $new_rank_list will be overwritten with new rank 
+                                    $new_rank_list = [$player_new_rp, $client_new_rp];
+                                    for ($x=0; $x < count($new_rank_list); $x++)
+                                    {
+                                        $rank_points = $new_rank_list[$x];
+                                        switch ($rank_points) {
+                                          case $rank_points > 100 && $rank_points < 300:
+                                            $new_rank_list[$x] = "Silver";
+                                            break;
+                                          case $rank_points > 300 && $rank_points < 1000:
+                                            $new_rank_list[$x] = "Gold";
+                                            break;
+                                          case $rank_points > 1000:
+                                            $new_rank_list[$x] = "Bling Bling";
+                                          default:
+                                            $new_rank_list[$x] = "Bronze";
+                                        }
+                                    }
+                                    // Update the database with new leaderboard points and rank
+                                    $player_sql = "UPDATE leaderboard SET rank={$new_rank_list[0]}, rank_points={$player_new_rp} WHERE account_id = {$player->userinfoID}";
+                                    $statement_player = yield $pool->query($player_sql);
+
+                                    $client_sql = "UPDATE leaderboard SET rank={$new_rank_list[1]}, rank_points={$client_new_rp} WHERE account_id = {$client->userinfoID}";
+                                    $statement_client = yield $pool->query($client_sql);
+                                    
                                     unset($client->currentQuestion);
                                     unset($client->currentRoom);
                                     unset($player->currentQuestion);
