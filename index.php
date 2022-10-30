@@ -1,3 +1,3 @@
 <?php 
-include "./scripts/config.php"; 
+header('Location: /frontend/main_menu');
 ?>
