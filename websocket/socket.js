@@ -246,11 +246,11 @@ generateSocketAuth().then(result => {
 
                         Your Score: ${res[2]}<br/>
                         Correct Questions: ${res[1]}/5<br/>
-                        Rank points: <span style="color:forestgreen;text-shadow:0 0 10px green">${res[5]}</span><br/><br/>
+                        Rank points: <span style="color:forestgreen;text-shadow:0 0 10px green"><i class="fa-solid fa-arrow-up"></i> ${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
                         Correct Questions: ${res[3]}/5<br/>
-                        Rank points: <span style="color:red">${res[6]}</span>
+                        Rank points: <span style="color:red"><i class="fa-solid fa-arrow-down"></i> ${res[6]}</span>
                     </div>
                 `;
             }
@@ -262,11 +262,11 @@ generateSocketAuth().then(result => {
 
                         Your Score: ${res[2]}<br/>
                         Correct Questions: ${res[1]}/5<br/>
-                        Rank points: <span style="color:red;text-shadow:0 0 10px red">${res[5]}</span><br/><br/>
+                        Rank points: <span style="color:red;text-shadow:0 0 10px red"><i class="fa-solid fa-arrow-down"></i> ${res[5]}</span><br/><br/>
 
                         Opponent's Score: ${res[4]}<br/>
                         Correct Questions: ${res[3]}/5<br/>
-                        Rank points: <span style="color:forestgreen">${res[6]}</span>
+                        Rank points: <span style="color:forestgreen"><i class="fa-solid fa-arrow-up"></i> ${res[6]}</span>
                     </div>
                 `;
             }
