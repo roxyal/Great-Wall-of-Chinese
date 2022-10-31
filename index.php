@@ -1,3 +1,3 @@
 <?php 
-header('Location: /frontend/main_menu');
+header('Location: ./Great-Wall-of-Chinese/frontend/main_menu');
 ?>
