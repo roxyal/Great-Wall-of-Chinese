@@ -18,6 +18,7 @@ This game aims to provide users with an educational gaming experience (with the 
 * Create assignments and send them out to students through the game
 
 # Framework
+Project is created with
 * PHP & Javascript - For implementing the backend logic as well as integration with the frontend
 * PHP Websocket - Handling the server/client side communication (Chat system and PVP)
 * Bootstrap - For the fast designing of the frontend
