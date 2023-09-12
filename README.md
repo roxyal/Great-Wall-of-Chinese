@@ -17,3 +17,9 @@ This game aims to provide users with an educational gaming experience (with the 
 * View summary report based on all players’ playing history to assess students’ competency in the sections
 * Create assignments and send them out to students through the game
 
+# Framework
+* PHP & Javascript - For implementing the backend logic as well as integration with the frontend
+* PHP Websocket - Handling the server/client side communication (Chat system and PVP)
+* Bootstrap - For the fast designing of the frontend
+* MySQL - Storing of all players as well as teachers information details
+* Phaser - Rendering of the different characters
